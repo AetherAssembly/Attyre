@@ -43,7 +43,7 @@ python3 -m http.server 8000
 
 The app will be available at `http://localhost:8000`.
 
-> **Note:** The Suggest Outfit feature calls OpenStreetMap Nominatim and Open-Meteo from your browser directly. These work fine in local dev with no extra config.
+> **Note:** The Suggest Outfit feature calls OpenStreetMap Nominatim and Open-Meteo from your browser directly. These work in local dev with no extra config, but if you make frequent requests you may hit provider rate limits (especially Nominatim), and occasional transient CORS/request failures can occur. If that happens, slow down request frequency and retry after a short wait.
 
 ---
 
