@@ -112,7 +112,7 @@ jobs:
       # Posts a simple pass/fail comment on the PR — updates instead of spamming
       - name: Comment result on PR
         if: always()
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const outcome = '${{ job.status }}';
