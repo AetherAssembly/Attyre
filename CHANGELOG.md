@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Mode Initialization Cleanup**: Simplified dark/accessibility mode application and favicon switching logic on startup and route renders.
 - **Codebase Structure Updates**: Refactored page modules (`home`, `wardrobe`, `suggest`, `calendar`) for cleaner rendering flow and reusable UI behavior.
 - **Version Bump**: Updated app constant to `APP_VERSION = '2026.04.24'` for this release.
+- **Github Workflows**: Added Github Workflows for Pull Requests and Issues.
 
 ## Prior Release [v1.5.0] - 2026-03-10
 
