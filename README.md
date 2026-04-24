@@ -2,7 +2,6 @@
 
 [![Version](https://img.shields.io/badge/version-2026.04.24-C9A96E)](CHANGELOG.md)
 [![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENSE)
-[![No Account Required](https://img.shields.io/badge/no%20account-required-4A7C59)](Privacy-Policy.html)
 [![Privacy Policy](https://img.shields.io/badge/privacy-policy-16a34a)](Privacy-Policy.html)
 
 Smart wardrobe manager with weather-based suggestions, planning tools, and local-first privacy.
