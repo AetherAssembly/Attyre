@@ -28,7 +28,9 @@ Attyre is a static client-side app with no build step — the files are served a
 
 ### Prerequisites
 
-- Python 3 (for the local dev server — comes pre-installed on macOS and most Linux distros)
+- Python 3 (for the local dev server)
+  - Verify installation: `python3 --version`
+  - If Python 3 is not installed, download it from: https://www.python.org/downloads/
 
 ### Setup
 
