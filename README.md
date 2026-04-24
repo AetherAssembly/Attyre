@@ -162,7 +162,7 @@ Requires modern browser support for:
 
 ## License
 
-GNU GPL v3.0.
+GNU AGPL v3.0.
 
 ## Live App
 
