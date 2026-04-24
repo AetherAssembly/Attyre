@@ -28,7 +28,9 @@ Attyre is a static client-side app with no build step — the files are served a
 
 ### Prerequisites
 
-- Python 3 (for the local dev server — comes pre-installed on macOS and most Linux distros)
+- Python 3 (for the local dev server)
+  - Verify installation: `python3 --version`
+  - If Python 3 is not installed, download it from: https://www.python.org/downloads/
 
 ### Setup
 
@@ -43,7 +45,7 @@ python3 -m http.server 8000
 
 The app will be available at `http://localhost:8000`.
 
-> **Note:** The Suggest Outfit feature calls OpenStreetMap Nominatim and Open-Meteo from your browser directly. These work fine in local dev with no extra config.
+> **Note:** The Suggest Outfit feature calls OpenStreetMap Nominatim and Open-Meteo from your browser directly. These work in local dev with no extra config, but if you make frequent requests you may hit provider rate limits (especially Nominatim), and occasional transient CORS/request failures can occur. If that happens, slow down request frequency and retry after a short wait.
 
 ---
 
