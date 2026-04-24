@@ -1,0 +1,174 @@
+// pages/suggest.js
+
+import * as store from '../store.js';
+import * as engine from '../engine.js';
+
+function esc(t) {
+  return String(t ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+}
+
+const CATEGORY_EMOJI = { top:'👕', bottom:'👖', outerwear:'🧥', shoes:'👟', accessory:'👜' };
+
+export function renderSuggest(container) {
+  const wrap = document.createElement('div');
+  wrap.className = 'page-wrap';
+
+  wrap.innerHTML = `
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Suggest outfit</h1>
+        <p class="page-subtitle">Weather-based recommendations from your wardrobe</p>
+      </div>
+    </div>
+
+    <div class="suggest-tips">
+      <strong>Better suggestions:</strong> add weather tags to items, set warmth levels, and include country in city name (e.g. <em>Lyon France</em>).
+    </div>
+
+    <div class="section-card">
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label" for="city-input">Your city</label>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <input type="text" id="city-input" placeholder="e.g. Pittsburgh PA or Paris France" style="flex:1;margin-bottom:0">
+          <button class="btn btn-primary" id="suggest-btn">Get suggestions</button>
+        </div>
+        <div class="field-error" id="city-error" style="display:none"></div>
+      </div>
+    </div>
+
+    <div id="results"></div>
+  `;
+
+  container.appendChild(wrap);
+
+  const cityInput = wrap.querySelector('#city-input');
+  const suggestBtn = wrap.querySelector('#suggest-btn');
+  const cityError = wrap.querySelector('#city-error');
+  const results = wrap.querySelector('#results');
+
+  // Allow enter key
+  cityInput.addEventListener('keydown', e => { if (e.key === 'Enter') suggestBtn.click(); });
+
+  suggestBtn.addEventListener('click', async () => {
+    cityError.style.display = 'none';
+    results.innerHTML = '';
+
+    const city = cityInput.value.trim();
+    if (!city) {
+      cityError.textContent = 'Please enter a city name.';
+      cityError.style.display = 'block';
+      return;
+    }
+
+    suggestBtn.disabled = true;
+    results.innerHTML = `<div class="loading-row"><div class="spinner"></div><span>Fetching weather for ${esc(city)}…</span></div>`;
+
+    async function fetchWithRetry(url, opts = {}, retries = 2) {
+      for (let i = 0; i <= retries; i++) {
+        try {
+          const r = await fetch(url, opts);
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          return r;
+        } catch (e) {
+          if (i === retries) throw e;
+          await new Promise(r => setTimeout(r, 800 * (i + 1)));
+        }
+      }
+    }
+
+    try {
+      // Geocode
+      const geoRes = await fetchWithRetry(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`,
+        { headers: { 'User-Agent': 'Attyre/2026.04.24 (attyre.aetherassembly.org)' } }
+      );
+      const geoData = await geoRes.json();
+      if (!geoData?.length) {
+        results.innerHTML = '';
+        cityError.textContent = `City not found — try adding the country, e.g. "Lyon France".`;
+        cityError.style.display = 'block';
+        suggestBtn.disabled = false;
+        return;
+      }
+
+      const { lat, lon, display_name } = geoData[0];
+
+      // Weather
+      const wxRes = await fetchWithRetry(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+      const wxData = await wxRes.json();
+      const tempC = wxData.current_weather.temperature;
+      const tempF = Math.round(tempC * 9 / 5 + 32);
+
+      const suggestion = engine.suggestForTemp(tempC);
+      const items = store.getItems();
+
+      // Weather card
+      const weatherCardHtml = `
+        <div class="weather-card">
+          <div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap">
+            <div>
+              <div class="weather-temp">${tempF}°F</div>
+              <div style="font-size:13px;color:var(--text-muted);margin-top:2px">${tempC}°C</div>
+            </div>
+            <div>
+              <div class="weather-condition">${suggestion.reason}</div>
+              <div class="weather-city">${esc(display_name.split(',').slice(0,2).join(','))}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      if (items.length === 0) {
+        results.innerHTML = weatherCardHtml + `
+          <div class="section-card" style="text-align:center;padding:32px">
+            <p style="margin-bottom:14px">Your wardrobe is empty — add items to get outfit suggestions.</p>
+            <a href="#/wardrobe/add" class="btn btn-primary">Add an item</a>
+          </div>`;
+        suggestBtn.disabled = false;
+        return;
+      }
+
+      const ranked = engine.rankItems(items, suggestion);
+
+      if (ranked.length === 0) {
+        results.innerHTML = weatherCardHtml + `
+          <div class="alert alert-info">
+            No strong matches for today's weather. Try adding weather tags to your wardrobe items.
+          </div>`;
+        suggestBtn.disabled = false;
+        return;
+      }
+
+      const listHtml = ranked.map(({ item, score }) => `
+        <div class="suggestion-item" data-id="${esc(item.id)}">
+          <div class="suggestion-thumb">
+            ${item.imageUri ? `<img src="${esc(item.imageUri)}" alt="">` : `<span style="font-size:24px">${CATEGORY_EMOJI[item.category] || '📦'}</span>`}
+          </div>
+          <div class="suggestion-info">
+            <div class="suggestion-name">${esc(item.name)}</div>
+            <div class="suggestion-meta">${item.color ? esc(item.color) + ' · ' : ''}${esc(item.category)}</div>
+          </div>
+          <span class="suggestion-score">${score} pt${score !== 1 ? 's' : ''}</span>
+        </div>
+      `).join('');
+
+      results.innerHTML = weatherCardHtml + `
+        <div class="section-card-title" style="margin-bottom:10px">Recommended items</div>
+        <div class="suggestion-list">${listHtml}</div>
+      `;
+
+      // Click to go to item
+      results.querySelectorAll('.suggestion-item').forEach(el => {
+        el.addEventListener('click', () => { window.location.hash = `#/wardrobe/${el.dataset.id}`; });
+      });
+
+      suggestBtn.disabled = false;
+    } catch (err) {
+      console.error(err);
+      results.innerHTML = '';
+      cityError.textContent = 'Failed to fetch weather. Check your connection and try again.';
+      cityError.style.display = 'block';
+      suggestBtn.disabled = false;
+    }
+  });
+}

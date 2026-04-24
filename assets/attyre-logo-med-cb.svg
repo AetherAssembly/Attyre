@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="220" viewBox="0 0 200 185">
+  <g transform="translate(50, 6)">
+    <path d="M 50,26 L 53,17 L 59,11 L 67,11 L 73,17 L 71,24 L 64,27"
+      fill="none" stroke="#0173B2" stroke-width="4"
+      stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 50,26 L 13,70 L 8,77 L 12,85 L 88,85 L 92,77 L 87,70 Z"
+      fill="none" stroke="#0173B2" stroke-width="4"
+      stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 39,72 L 50,41 L 61,72"
+      fill="none" stroke="#0173B2" stroke-width="3.5"
+      stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="43" y1="61" x2="57" y2="61"
+      stroke="#0173B2" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M 50,34 L 54,41 L 50,48 L 46,41 Z"
+      fill="none" stroke="#0173B2" stroke-width="3"
+      stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="100" y="138" text-anchor="middle"
+    font-family="'Futura', 'Century Gothic', 'Gill Sans', 'Trebuchet MS', sans-serif"
+    font-size="34" font-weight="700" letter-spacing="9"
+    fill="#0173B2">ATTYRE</text>
+</svg>

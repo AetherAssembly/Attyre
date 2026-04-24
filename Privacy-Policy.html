@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy Policy — Attyre</title>
+  <style>
+    :root {
+      --accent-start: #E879F9;
+      --accent-mid:   #A855F7;
+      --accent-end:   #818CF8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f9f9fb;
+      color: #1a1a2e;
+      line-height: 1.7;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      display: block;
+      margin: 0 auto 2rem;
+      height: 48px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      background: linear-gradient(135deg, var(--accent-start), var(--accent-mid), var(--accent-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 2.5rem;
+    }
+
+    h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
+      color: #A855F7;
+    }
+
+    p {
+      margin-bottom: 0.75rem;
+      color: #333;
+    }
+
+    ul {
+      margin: 0.5rem 0 0.75rem 1.25rem;
+      color: #333;
+    }
+
+    ul li {
+      margin-bottom: 0.35rem;
+    }
+
+    .callout {
+      background: linear-gradient(135deg, #f3e8ff, #ede9fe);
+      border-left: 3px solid var(--accent-mid);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    .callout strong {
+      color: #7c3aed;
+    }
+
+    a {
+      color: #A855F7;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e0e0e0;
+      font-size: 0.85rem;
+      color: #888;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <img src="assets/attyre-wordmark.svg" alt="Attyre" class="logo" />
+    <script>
+      (function(){
+        try {
+          const isAcc = localStorage.getItem('attyre_accessibility') === 'true';
+          const img = document.querySelector('.logo');
+          if (img) {
+            img.src = isAcc ? 'assets/attyre-wordmark-cb.svg' : 'assets/attyre-wordmark.svg';
+          }
+        } catch(e) { console.error(e); }
+      })();
+    </script>
+
+    <h1>Privacy Policy</h1>
+    <p class="subtitle">Last updated: April 2026 &nbsp;·&nbsp; Attyre by Aether Assembly &nbsp;·&nbsp; <a href="https://attyre.aetherassembly.org">attyre.aetherassembly.org</a></p>
+
+    <div class="callout">
+      <strong>Short version:</strong> Attyre collects nothing. Your wardrobe data never leaves your device. There are no accounts, no servers, no tracking, and no third-party data sharing of any kind.
+    </div>
+
+    <h2>1. Who We Are</h2>
+    <p>Attyre is a free, browser-based wardrobe management app developed and maintained by Aether Assembly — a small team consisting of Aster, Ollie, and Milo. You can reach us at <a href="mailto:support@aetherassembly.org">support@aetherassembly.org</a> or via our <a href="https://forms.gle/T4i7GGzaT3HUrffm9">contact form</a>.</p>
+
+    <h2>2. Data We Do Not Collect</h2>
+    <p>We do not collect, store, transmit, or process any personal data on our servers — because we don't have any servers. Specifically, we do not collect:</p>
+    <ul>
+      <li>Your name, email address, or any identifying information</li>
+      <li>Your location or IP address</li>
+      <li>Your wardrobe items, photos, or notes</li>
+      <li>Usage data, analytics, or behavioural telemetry</li>
+      <li>Cookies of any kind</li>
+    </ul>
+
+    <h2>3. Data Stored on Your Device</h2>
+    <p>Attyre stores the following data in your browser's <code>localStorage</code> — on your device only:</p>
+    <ul>
+      <li>Your clothing items (names, categories, tags, warmth levels, notes)</li>
+      <li>Any photos you attach to items (stored as base64 data URLs)</li>
+      <li>Saved outfit combinations and calendar plans</li>
+      <li>App preferences (dark mode, colorblind mode)</li>
+    </ul>
+    <p>This data is entirely under your control. You can export it, delete it, or wipe it at any time from the Settings page. Clearing your browser's cache or localStorage will permanently delete all Attyre data — there is no cloud backup.</p>
+
+    <h2>4. Third-Party APIs</h2>
+    <p>When you use the <strong>Suggest Outfit</strong> feature, Attyre makes two outbound requests to fetch weather data. No personal data is sent — only the city name you type:</p>
+    <ul>
+      <li><strong>OpenStreetMap Nominatim</strong> (<a href="https://nominatim.openstreetmap.org" target="_blank" rel="noopener">nominatim.openstreetmap.org</a>) — converts a city name to coordinates. Subject to the <a href="https://operations.osmfoundation.org/policies/nominatim/" target="_blank" rel="noopener">Nominatim Usage Policy</a>.</li>
+      <li><strong>Open-Meteo</strong> (<a href="https://open-meteo.com" target="_blank" rel="noopener">open-meteo.com</a>) — fetches current temperature for those coordinates. Subject to the <a href="https://open-meteo.com/en/terms" target="_blank" rel="noopener">Open-Meteo Terms</a>.</li>
+    </ul>
+    <p>Both are free, open services with no affiliation to Aether Assembly. Their own privacy policies apply to any data they may collect from API requests.</p>
+    <p>If you do not use the Suggest Outfit feature, no outbound requests are made at all.</p>
+
+    <h2>5. Children's Privacy</h2>
+    <p>Attyre is a general-purpose tool with no age restrictions. Because we collect no personal data from anyone, there is nothing specific to disclose regarding children's privacy.</p>
+
+    <h2>6. Your Rights</h2>
+    <p>Since we hold no data about you, there is nothing to request, correct, or delete on our end. To manage or delete your own data, use the Export and Import tools in the app's Settings page, or clear your browser's localStorage directly.</p>
+
+    <h2>7. Support</h2>
+    <p>Attyre is actively maintained by Aether Assembly. Support is provided for the current release and the two most recent major versions. For help, questions, or to report an issue:</p>
+    <ul>
+      <li>Email: <a href="mailto:support@aetherassembly.org">support@aetherassembly.org</a></li>
+      <li>Contact form: <a href="https://forms.gle/T4i7GGzaT3HUrffm9">forms.gle/T4i7GGzaT3HUrffm9</a></li>
+    </ul>
+
+    <h2>8. Changes to This Policy</h2>
+    <p>If this policy changes in a meaningful way — for example, if a future version of Attyre introduces any form of data collection — we will update the date at the top of this page and note what changed. We will never introduce data collection silently.</p>
+
+    <h2>9. Contact</h2>
+    <p>Questions or concerns? Reach us at <a href="mailto:support@aetherassembly.org">support@aetherassembly.org</a> or via our <a href="https://forms.gle/T4i7GGzaT3HUrffm9">contact form</a>.</p>
+
+    <footer>
+      &copy; 2026 Aether Assembly &nbsp;·&nbsp; Attyre &nbsp;·&nbsp; <a href="index.html">Back to App</a>
+    </footer>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#E879F9"/>
+      <stop offset="48%"  stop-color="#A855F7"/>
+      <stop offset="100%" stop-color="#818CF8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Hook -->
+  <path d="M 50,26 L 53,17 L 59,11 L 67,11 L 73,17 L 71,24 L 64,27"
+    fill="none" stroke="url(#grad)" stroke-width="4"
+    stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Outer hanger frame with faceted corners at arm tips -->
+  <path d="M 50,26 L 13,70 L 8,77 L 12,85 L 88,85 L 92,77 L 87,70 Z"
+    fill="none" stroke="url(#grad)" stroke-width="4"
+    stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Inner A — two legs -->
+  <path d="M 39,72 L 50,41 L 61,72"
+    fill="none" stroke="url(#grad)" stroke-width="3.5"
+    stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Inner A — crossbar -->
+  <line x1="43" y1="61" x2="57" y2="61"
+    stroke="url(#grad)" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- Inner A — apex diamond (matches AetherAssembly teardrop cutout style) -->
+  <path d="M 50,34 L 54,41 L 50,48 L 46,41 Z"
+    fill="none" stroke="url(#grad)" stroke-width="3"
+    stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
