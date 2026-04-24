@@ -1,0 +1,45 @@
+version: 2
+
+updates:
+  # ── npm dependencies (wrangler, cropper.js CDN locks, etc.) ──────────────
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '09:00'
+      timezone: Europe/London
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - skip-changelog
+    commit-message:
+      prefix: chore
+      include: scope
+    # Group all non-major updates into a single PR to reduce noise
+    groups:
+      non-major:
+        update-types:
+          - minor
+          - patch
+
+  # ── GitHub Actions versions ───────────────────────────────────────────────
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '09:00'
+      timezone: Europe/London
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - skip-changelog
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      actions:
+        update-types:
+          - minor
+          - patch
