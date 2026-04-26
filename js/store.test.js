@@ -27,8 +27,16 @@ global.LZString = {
   decompress: (str) => str.startsWith('compressed:') ? str.slice(11) : null,
 };
 
+// Mock localStorage and randomUUID
 global.localStorage = storageMock;
-global.crypto = { randomUUID: () => 'test-id-' + Math.random() };
+
+// Use Node's built-in crypto.randomUUID
+import { randomUUID } from 'crypto';
+Object.defineProperty(global.crypto, 'randomUUID', {
+  value: randomUUID,
+  writable: true,
+  configurable: true,
+});
 
 // Import after mocks are set up
 import * as store from './store.js';
