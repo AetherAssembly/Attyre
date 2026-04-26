@@ -230,6 +230,13 @@ function getWarmthLabel(level) {
 }
 
 function openCropModal(imageSrc, onCrop) {
+  // Check if Cropper.js is available
+  if (typeof Cropper === 'undefined') {
+    alert('Image cropper is not available. The image will be used as-is.');
+    onCrop(imageSrc);
+    return;
+  }
+
   // Create modal
   const modal = document.createElement('div');
   modal.className = 'crop-modal';
@@ -246,21 +253,28 @@ function openCropModal(imageSrc, onCrop) {
   document.body.appendChild(modal);
 
   const img = modal.querySelector('#crop-image');
-  const cropper = new Cropper(img, {
-    aspectRatio: NaN, // Free crop
-    viewMode: 1,
-  });
+  try {
+    const cropper = new Cropper(img, {
+      aspectRatio: NaN, // Free crop
+      viewMode: 1,
+    });
 
-  modal.querySelector('#crop-cancel').addEventListener('click', () => {
-    cropper.destroy();
-    document.body.removeChild(modal);
-  });
+    modal.querySelector('#crop-cancel').addEventListener('click', () => {
+      cropper.destroy();
+      document.body.removeChild(modal);
+    });
 
-  modal.querySelector('#crop-apply').addEventListener('click', () => {
-    const canvas = cropper.getCroppedCanvas();
-    const croppedDataUrl = canvas.toDataURL();
-    onCrop(croppedDataUrl);
-    cropper.destroy();
+    modal.querySelector('#crop-apply').addEventListener('click', () => {
+      const canvas = cropper.getCroppedCanvas();
+      const croppedDataUrl = canvas.toDataURL();
+      onCrop(croppedDataUrl);
+      cropper.destroy();
+      document.body.removeChild(modal);
+    });
+  } catch (err) {
+    console.error('Cropper initialization failed:', err);
     document.body.removeChild(modal);
-  });
+    alert('Image cropping is not available. The image will be used as-is.');
+    onCrop(imageSrc);
+  }
 }
