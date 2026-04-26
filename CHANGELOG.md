@@ -5,7 +5,28 @@ All notable changes to Attyre will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Current Version [v2026.04.24] - 2026-04-24
+## Current Version [v2026.04.26] - 2026-04-26 *(automated fixes by Claude Code)*
+
+### Fixed (v2026.04.26)
+
+- **Category validation error now visible**: `add-item` and `item-detail` forms were missing the `category-error` element, so the "Category is required" message was silently swallowed — error paragraph now rendered correctly under the category select.
+- **Crop button re-usable after first crop**: After applying a crop in the add-item form, the replacement preview button had no event listener attached, making subsequent crops impossible — listener is now re-wired via a recursive helper after each crop.
+- **localStorage quota errors surfaced**: `saveItems` was catching `QuotaExceededError` silently; it now re-throws so callers can alert the user when storage is full.
+
+### Changed (v2026.04.26)
+
+- **PWA manifest colours corrected**: `theme_color` was a leftover placeholder purple (`#6C63FF`) — updated to the app's actual gold (`#C9A96E`); `background_color` updated to match light-mode page background (`#F5F0E8`); placeholder screenshot SVGs updated to match; `start_url` corrected from `/index.html` to `/`.
+
+### Technical Improvements (v2026.04.26)
+
+- **SRI hashes added to CDN scripts**: `integrity` + `crossorigin="anonymous"` attributes added to all three CDN tags (lz-string, Cropper.js JS and CSS) to guard against CDN compromise.
+- **APP_VERSION CI regex tightened**: Deploy-preview workflow regex now enforces the strict `YYYY.MM.DD` format instead of accepting any sequence of digits and dots.
+- **Label-sync workflow fixed**: Added `pip install pyyaml` step before the YAML parse step, which would otherwise fail with `ModuleNotFoundError` since `yaml` is not in Python's standard library.
+- **LZString null check corrected**: `getItems` fallback now checks `=== null` instead of falsy, correctly handling the edge case where LZString returns an empty string.
+
+---
+
+## Prior Release [v2026.04.24] - 2026-04-24
 
 ### Added (Current Version)
 

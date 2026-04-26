@@ -24,6 +24,7 @@ export function renderAddItem(container) {
             <option value="">Select a category</option>
             ${CATEGORIES.map(cat => `<option value="${cat}">${capitalize(cat)}</option>`).join('')}
           </select>
+          <p class="error" id="category-error"></p>
 
           <!-- Color -->
           <label for="color">Color</label>
@@ -131,17 +132,20 @@ function attachEventListeners(container) {
       // Store in input as data attribute for later retrieval
       imageInput.dataset.base64 = dataUrl;
 
-      // Attach crop event
-      const cropBtn = previewContainer.querySelector('#crop-btn');
-      cropBtn.addEventListener('click', () => {
-        openCropModal(dataUrl, (croppedDataUrl) => {
-          previewContainer.innerHTML = `
-            <img src="${croppedDataUrl}" alt="Preview" class="image-preview">
-            <button id="crop-btn" class="btn secondary">Crop Image</button>
-          `;
-          imageInput.dataset.base64 = croppedDataUrl;
+      function attachCropHandler(btn, srcUrl) {
+        btn.addEventListener('click', () => {
+          openCropModal(srcUrl, (croppedDataUrl) => {
+            previewContainer.innerHTML = `
+              <img src="${croppedDataUrl}" alt="Preview" class="image-preview">
+              <button id="crop-btn" class="btn secondary">Crop Image</button>
+            `;
+            imageInput.dataset.base64 = croppedDataUrl;
+            attachCropHandler(previewContainer.querySelector('#crop-btn'), croppedDataUrl);
+          });
         });
-      });
+      }
+
+      attachCropHandler(previewContainer.querySelector('#crop-btn'), dataUrl);
     };
     reader.readAsDataURL(file);
   });
@@ -226,6 +230,13 @@ function getWarmthLabel(level) {
 }
 
 function openCropModal(imageSrc, onCrop) {
+  // Check if Cropper.js is available
+  if (typeof Cropper === 'undefined') {
+    alert('Image cropper is not available. The image will be used as-is.');
+    onCrop(imageSrc);
+    return;
+  }
+
   // Create modal
   const modal = document.createElement('div');
   modal.className = 'crop-modal';
@@ -242,21 +253,28 @@ function openCropModal(imageSrc, onCrop) {
   document.body.appendChild(modal);
 
   const img = modal.querySelector('#crop-image');
-  const cropper = new Cropper(img, {
-    aspectRatio: NaN, // Free crop
-    viewMode: 1,
-  });
+  try {
+    const cropper = new Cropper(img, {
+      aspectRatio: NaN, // Free crop
+      viewMode: 1,
+    });
 
-  modal.querySelector('#crop-cancel').addEventListener('click', () => {
-    cropper.destroy();
-    document.body.removeChild(modal);
-  });
+    modal.querySelector('#crop-cancel').addEventListener('click', () => {
+      cropper.destroy();
+      document.body.removeChild(modal);
+    });
 
-  modal.querySelector('#crop-apply').addEventListener('click', () => {
-    const canvas = cropper.getCroppedCanvas();
-    const croppedDataUrl = canvas.toDataURL();
-    onCrop(croppedDataUrl);
-    cropper.destroy();
+    modal.querySelector('#crop-apply').addEventListener('click', () => {
+      const canvas = cropper.getCroppedCanvas();
+      const croppedDataUrl = canvas.toDataURL();
+      onCrop(croppedDataUrl);
+      cropper.destroy();
+      document.body.removeChild(modal);
+    });
+  } catch (err) {
+    console.error('Cropper initialization failed:', err);
     document.body.removeChild(modal);
-  });
+    alert('Image cropping is not available. The image will be used as-is.');
+    onCrop(imageSrc);
+  }
 }

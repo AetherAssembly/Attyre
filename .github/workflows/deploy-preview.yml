@@ -97,8 +97,8 @@ jobs:
 
       - name: Check APP_VERSION is present in js/app.js
         run: |
-          if grep -qP "APP_VERSION\s*=\s*'[\d.]+'" js/app.js; then
-            VERSION=$(grep -oP "APP_VERSION\s*=\s*'\K[^']+" js/app.js)
+          if grep -qP "APP_VERSION\s*=\s*'\d{4}\.\d{2}\.\d{2}'" js/app.js; then
+            VERSION=$(grep -oP "APP_VERSION\s*=\s*'\K\d{4}\.\d{2}\.\d{2}(?=')" js/app.js)
             echo "PASS  APP_VERSION = $VERSION"
           else
             echo "FAIL  APP_VERSION not found in js/app.js"

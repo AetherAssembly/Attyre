@@ -1,0 +1,23 @@
+{
+  "name": "attyre",
+  "version": "2026.04.26",
+  "description": "Smart wardrobe manager with weather-based suggestions, planning tools, and local-first privacy",
+  "type": "module",
+  "scripts": {
+    "dev": "python3 -m http.server 8000",
+    "test": "node --test js/**/*.test.js"
+  },
+  "keywords": [
+    "wardrobe",
+    "outfit",
+    "weather",
+    "planner",
+    "fashion",
+    "pwa"
+  ],
+  "author": "AetherAssembly",
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "wrangler": "^3.72.0"
+  }
+}

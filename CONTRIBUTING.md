@@ -30,7 +30,7 @@ Attyre is a static client-side app with no build step — the files are served a
 
 - Python 3 (for the local dev server)
   - Verify installation: `python3 --version`
-  - If Python 3 is not installed, download it from: https://www.python.org/downloads/
+  - If Python 3 is not installed, download it from [Python](https://www.python.org/downloads/)
 
 ### Setup
 

@@ -78,11 +78,17 @@ export function renderSuggest(container) {
 
     try {
       // Geocode
-      const geoRes = await fetchWithRetry(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`,
-        { headers: { 'User-Agent': 'Attyre/2026.04.24 (attyre.aetherassembly.org)' } }
-      );
-      const geoData = await geoRes.json();
+      let geoRes, geoData;
+      try {
+        geoRes = await fetchWithRetry(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`,
+          { headers: { 'User-Agent': 'Attyre/2026.04.26 (attyre.aetherassembly.org)' } }
+        );
+        geoData = await geoRes.json();
+      } catch (geoErr) {
+        throw new Error(`Geocoding service unavailable. If you're offline or blocking third-party APIs, the suggestion will not work. Error: ${geoErr.message}`);
+      }
+
       if (!geoData?.length) {
         results.innerHTML = '';
         cityError.textContent = `City not found — try adding the country, e.g. "Lyon France".`;
@@ -94,11 +100,20 @@ export function renderSuggest(container) {
       const { lat, lon, display_name } = geoData[0];
 
       // Weather
-      const wxRes = await fetchWithRetry(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-      const wxData = await wxRes.json();
-      const tempC = wxData.current_weather.temperature;
-      const tempF = Math.round(tempC * 9 / 5 + 32);
+      let wxRes, wxData;
+      try {
+        wxRes = await fetchWithRetry(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+        wxData = await wxRes.json();
+      } catch (wxErr) {
+        throw new Error(`Weather service unavailable. Please check your connection and try again. Error: ${wxErr.message}`);
+      }
 
+      const tempC = wxData.current_weather?.temperature;
+      if (typeof tempC !== 'number') {
+        throw new Error('Invalid weather data received.');
+      }
+
+      const tempF = Math.round(tempC * 9 / 5 + 32);
       const suggestion = engine.suggestForTemp(tempC);
       const items = store.getItems();
 
@@ -164,9 +179,9 @@ export function renderSuggest(container) {
 
       suggestBtn.disabled = false;
     } catch (err) {
-      console.error(err);
+      console.error('Suggestion error:', err);
       results.innerHTML = '';
-      cityError.textContent = 'Failed to fetch weather. Check your connection and try again.';
+      cityError.textContent = err.message || 'Failed to fetch weather. Check your connection and try again.';
       cityError.style.display = 'block';
       suggestBtn.disabled = false;
     }
