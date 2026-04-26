@@ -12,7 +12,7 @@ import { renderSettings } from './pages/settings.js';
 import { renderStats } from './pages/stats.js';
 
 const app = document.getElementById('app');
-export const APP_VERSION = '2026.04.24';
+export const APP_VERSION = '2026.04.26';
 
 // ── Mode helpers ──────────────────────────────────────────
 

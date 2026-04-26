@@ -2,12 +2,12 @@
   "name": "Attyre - Smart Wardrobe Manager",
   "short_name": "Attyre",
   "description": "A weather-aware outfit suggestion app that runs entirely in your browser. Manage your wardrobe and get weather-based outfit suggestions.",
-  "start_url": "/index.html",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "theme_color": "#6C63FF",
-  "background_color": "#ffffff",
+  "theme_color": "#C9A96E",
+  "background_color": "#F5F0E8",
   "icons": [
     {
       "src": "assets/attyre-logo-medium.svg",
@@ -60,13 +60,13 @@
   ],
   "screenshots": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect fill='%236C63FF' width='540' height='720'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='80' font-family='system-ui' fill='white'>Attyre</text></svg>",
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect fill='%23C9A96E' width='540' height='720'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='80' font-family='system-ui' fill='white'>Attyre</text></svg>",
       "sizes": "540x720",
       "type": "image/svg+xml",
       "form_factor": "narrow"
     },
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1280 720'><rect fill='%236C63FF' width='1280' height='720'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='120' font-family='system-ui' fill='white'>Attyre</text></svg>",
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1280 720'><rect fill='%23C9A96E' width='1280' height='720'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='120' font-family='system-ui' fill='white'>Attyre</text></svg>",
       "sizes": "1280x720",
       "type": "image/svg+xml",
       "form_factor": "wide"

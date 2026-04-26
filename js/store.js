@@ -11,7 +11,7 @@ export function getItems() {
     const data = localStorage.getItem(ITEMS_KEY);
     if (!data) return [];
     const decompressed = LZString.decompress(data);
-    return decompressed ? JSON.parse(decompressed) : JSON.parse(data); // Fallback for uncompressed data
+    return decompressed !== null ? JSON.parse(decompressed) : JSON.parse(data); // Fallback for uncompressed data
   } catch (e) {
     console.error('Failed to get items:', e);
     return [];
@@ -22,6 +22,7 @@ export function saveItems(items) {
   try {
     localStorage.setItem(ITEMS_KEY, LZString.compress(JSON.stringify(items)));
   } catch (e) {
+    if (e.name === 'QuotaExceededError') throw e;
     console.error('Failed to save items:', e);
   }
 }

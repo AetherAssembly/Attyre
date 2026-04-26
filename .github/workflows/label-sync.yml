@@ -19,7 +19,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      # Parse .github/labels.yml → labels.json using Python's built-in yaml module
+      - name: Install PyYAML
+        run: pip install pyyaml -q
+
+      # Parse .github/labels.yml → labels.json
       - name: Parse labels.yml
         run: |
           python3 -c "

@@ -31,6 +31,7 @@ export function renderItemDetail(container, itemId) {
             <option value="">Select a category</option>
             ${CATEGORIES.map(cat => `<option value="${cat}" ${item.category === cat ? 'selected' : ''}>${capitalize(cat)}</option>`).join('')}
           </select>
+          <p class="error" id="category-error"></p>
 
           <!-- Color -->
           <label for="color">Color</label>

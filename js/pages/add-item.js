@@ -24,6 +24,7 @@ export function renderAddItem(container) {
             <option value="">Select a category</option>
             ${CATEGORIES.map(cat => `<option value="${cat}">${capitalize(cat)}</option>`).join('')}
           </select>
+          <p class="error" id="category-error"></p>
 
           <!-- Color -->
           <label for="color">Color</label>
@@ -131,17 +132,20 @@ function attachEventListeners(container) {
       // Store in input as data attribute for later retrieval
       imageInput.dataset.base64 = dataUrl;
 
-      // Attach crop event
-      const cropBtn = previewContainer.querySelector('#crop-btn');
-      cropBtn.addEventListener('click', () => {
-        openCropModal(dataUrl, (croppedDataUrl) => {
-          previewContainer.innerHTML = `
-            <img src="${croppedDataUrl}" alt="Preview" class="image-preview">
-            <button id="crop-btn" class="btn secondary">Crop Image</button>
-          `;
-          imageInput.dataset.base64 = croppedDataUrl;
+      function attachCropHandler(btn, srcUrl) {
+        btn.addEventListener('click', () => {
+          openCropModal(srcUrl, (croppedDataUrl) => {
+            previewContainer.innerHTML = `
+              <img src="${croppedDataUrl}" alt="Preview" class="image-preview">
+              <button id="crop-btn" class="btn secondary">Crop Image</button>
+            `;
+            imageInput.dataset.base64 = croppedDataUrl;
+            attachCropHandler(previewContainer.querySelector('#crop-btn'), croppedDataUrl);
+          });
         });
-      });
+      }
+
+      attachCropHandler(previewContainer.querySelector('#crop-btn'), dataUrl);
     };
     reader.readAsDataURL(file);
   });
