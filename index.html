@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" integrity="sha512-cyzxRvewl+FOKTtpBzYjW6x6IAYUCZy3sGP40hn+DQkqeluGRCax7qztK2ImL64SA+C7kVWdLI6wvdlStawhyw==" crossorigin="anonymous">
 </head>
 <body>
+  <a href="#app" class="skip-link">Skip to main content</a>
   <!-- Desktop layout -->
   <div class="app-shell">
 
@@ -134,6 +135,8 @@
     </div>
   </div>
 
+  <div id="sr-announce" aria-live="polite" aria-atomic="true"
+       style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden"></div>
   <script type="module" src="js/app.js"></script>
   <script>
     // Hamburger / sidebar toggle

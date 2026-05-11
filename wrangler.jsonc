@@ -8,7 +8,7 @@
   "assets": {
     "directory": ".",
     "include": ["index.html", "style.css", "manifest.json", "js/**/*", "assets/**/*", "*.html", "*.svg"],
-    "exclude": ["node_modules", ".git", ".github", ".claude", "*.md", "*.test.js", "*.json", "package.json", "wrangler.jsonc"]
+    "exclude": ["node_modules", ".git", ".github", "*.md", "*.test.js", "*.json", "package.json", "wrangler.jsonc"]
   },
   "compatibility_flags": [
     "nodejs_compat"
