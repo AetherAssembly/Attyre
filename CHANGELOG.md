@@ -5,52 +5,69 @@ All notable changes to Attyre will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Current Version [v2026.04.26] - 2026-04-26 *(automated fixes by Claude Code)*
+## Current Version [v2026.05.11]
 
-### Fixed (v2026.04.26)
+### Fixed
 
-- **Category validation error now visible**: `add-item` and `item-detail` forms were missing the `category-error` element, so the "Category is required" message was silently swallowed — error paragraph now rendered correctly under the category select.
-- **Crop button re-usable after first crop**: After applying a crop in the add-item form, the replacement preview button had no event listener attached, making subsequent crops impossible — listener is now re-wired via a recursive helper after each crop.
-- **localStorage quota errors surfaced**: `saveItems` was catching `QuotaExceededError` silently; it now re-throws so callers can alert the user when storage is full.
+- **Mobile app shell invisible on older phones**: `.app-shell` used `height: 100dvh` with no fallback — `dvh` is unsupported on iOS < 16 and Chrome < 108, causing the shell to collapse to zero height and render nothing. Added `height: 100vh` fallback immediately before the `dvh` line.
+- **Initial page never renders on slow mobile connections**: `app.js` registered a `DOMContentLoaded` listener unconditionally, but ES modules are fetched asynchronously — on real phones the event can fire before the module loads, leaving `#app` permanently empty. Now guards with a `document.readyState` check so `renderPage()` always runs.
+- **PWA `start_url` mismatch on iOS**: `manifest.json` had `"start_url": "/"` while the app uses hash routing — launching from the iOS home screen landed on a bare static file. Changed to `"/index.html#/"`.
 
-### Changed (v2026.04.26)
+### Added
 
-- **PWA manifest colours corrected**: `theme_color` was a leftover placeholder purple (`#6C63FF`) — updated to the app's actual gold (`#C9A96E`); `background_color` updated to match light-mode page background (`#F5F0E8`); placeholder screenshot SVGs updated to match; `start_url` corrected from `/index.html` to `/`.
+- **Skip-to-content link**: Keyboard/switch-access users can now press Tab on any page to reveal a "Skip to main content" link that jumps focus directly to the `#app` region.
+- **Global `:focus-visible` ring**: All interactive elements (buttons, links, item cards, calendar days) now show a visible gold focus outline when navigated by keyboard. Accessibility mode uses a thicker blue outline.
+- **`prefers-reduced-motion` support**: All CSS transitions and animations are suppressed when the OS "Reduce Motion" setting is enabled.
+- **Screen reader page announcements**: A hidden `aria-live` region announces the page title on every navigation and announces when accessibility mode is toggled on/off.
+- **Wardrobe filter result announcements**: Screen readers are told how many items match the current filters (or "No items match your filters") whenever filters change.
+- **Calendar date announcements**: Selecting a calendar day announces the date and whether an outfit is planned for that day.
+- **Calendar keyboard navigation**: Calendar day cells now have `tabindex="0"` and respond to Enter/Space for selection, plus full ARIA grid semantics (`role="grid"`, `role="gridcell"`, `aria-selected`).
+- **Item cards are focusable buttons**: Item cards changed from `<div>` to `<button>` — screen readers now announce them with the correct role and keyboard users get Enter/Space activation for free.
+- **Outfit selector `aria-pressed` state**: When picking items for a calendar day, each card reflects its selected state via `aria-pressed` so screen readers can track selection without relying on visual-only border/background changes.
+- **Form error linkage**: Name and category inputs in the add-item form are now connected to their inline error messages via `aria-describedby`.
 
-### Technical Improvements (v2026.04.26)
+### Changed
 
-- **SRI hashes added to CDN scripts**: `integrity` + `crossorigin="anonymous"` attributes added to all three CDN tags (lz-string, Cropper.js JS and CSS) to guard against CDN compromise.
-- **APP_VERSION CI regex tightened**: Deploy-preview workflow regex now enforces the strict `YYYY.MM.DD` format instead of accepting any sequence of digits and dots.
-- **Label-sync workflow fixed**: Added `pip install pyyaml` step before the YAML parse step, which would otherwise fail with `ModuleNotFoundError` since `yaml` is not in Python's standard library.
-- **LZString null check corrected**: `getItems` fallback now checks `=== null` instead of falsy, correctly handling the edge case where LZString returns an empty string.
+- **Accessibility mode improvements**: Beyond the existing color swap, accessibility mode now also increases the base font size to 16 px, strengthens border contrast, and thickens nav icon strokes for better legibility.
 
 ---
 
-## Prior Release [v2026.04.24] - 2026-04-24
+## Prior Releases [v2026.04.24] - 2026-04-24
 
-### Added (Current Version)
+### Added
 
 - **Responsive App Shell**: Added a full desktop sidebar + mobile topbar/bottom-nav navigation system for clearer routing and faster access to core pages.
 - **New Stats Page**: Introduced a dedicated stats view (`#/stats`) with category/season/warmth breakdowns, usage insights, and most-worn/never-worn analysis.
 - **Expanded Wardrobe Filtering**: Added weather-tag filter chips on wardrobe browsing in addition to text, category, and season filters.
 
-### Changed (Current Version)
+### Changed
 
 - **Visual Redesign (v2)**: Reworked the global interface with a warm theme, updated typography, refreshed cards, buttons, alerts, and page layouts.
 - **Home Experience**: Redesigned quick actions, outfit inspiration, saved outfit preview, and usage highlights for better at-a-glance insights.
 - **Suggest Workflow**: Improved city input UX, loading/error states, weather card presentation, and ranked suggestion display.
 - **Calendar Planning UX**: Rebuilt month navigation and date selection with richer day states (today/selected/has-outfit) and streamlined outfit assignment.
 - **Component Refresh**: Updated item cards with SVG category icons and improved fallback rendering when images are unavailable.
+- **PWA manifest colours corrected**: `theme_color` was a leftover placeholder purple (`#6C63FF`) — updated to the app's actual gold (`#C9A96E`); `background_color` updated to match light-mode page background (`#F5F0E8`); placeholder screenshot SVGs updated to match; `start_url` corrected from `/index.html` to `/`.
 
-### Technical Improvements (Current Version)
+### Technical Improvements
 
 - **Router Enhancements**: Added `stats` route integration and synchronized active-state handling across sidebar and bottom navigation.
 - **Mode Initialization Cleanup**: Simplified dark/accessibility mode application and favicon switching logic on startup and route renders.
 - **Codebase Structure Updates**: Refactored page modules (`home`, `wardrobe`, `suggest`, `calendar`) for cleaner rendering flow and reusable UI behavior.
 - **Version Bump**: Updated app constant to `APP_VERSION = '2026.04.24'` for this release.
 - **Github Workflows**: Added Github Workflows for Pull Requests and Issues.
+- **SRI hashes added to CDN scripts**: `integrity` + `crossorigin="anonymous"` attributes added to all three CDN tags (lz-string, Cropper.js JS and CSS) to guard against CDN compromise.
+- **APP_VERSION CI regex tightened**: Deploy-preview workflow regex now enforces the strict `YYYY.MM.DD` format instead of accepting any sequence of digits and dots.
+- **Label-sync workflow fixed**: Added `pip install pyyaml` step before the YAML parse step, which would otherwise fail with `ModuleNotFoundError` since `yaml` is not in Python's standard library.
+- **LZString null check corrected**: `getItems` fallback now checks `=== null` instead of falsy, correctly handling the edge case where LZString returns an empty string.
 
-## Prior Release [v1.5.0] - 2026-03-10
+### Fixed
+
+- **Category validation error now visible**: `add-item` and `item-detail` forms were missing the `category-error` element, so the "Category is required" message was silently swallowed — error paragraph now rendered correctly under the category select.
+- **Crop button re-usable after first crop**: After applying a crop in the add-item form, the replacement preview button had no event listener attached, making subsequent crops impossible — listener is now re-wired via a recursive helper after each crop.
+- **localStorage quota errors surfaced**: `saveItems` was catching `QuotaExceededError` silently; it now re-throws so callers can alert the user when storage is full.
+
+## [v1.5.0] - 2026-03-10
 
 ### Added (v1.5.0)
 

@@ -12,7 +12,16 @@ import { renderSettings } from './pages/settings.js';
 import { renderStats } from './pages/stats.js';
 
 const app = document.getElementById('app');
-export const APP_VERSION = '2026.04.26';
+export const APP_VERSION = '2026.05.11';
+
+// ── Screen reader announcer ───────────────────────────────
+
+export function announceToScreenReader(message) {
+  const el = document.getElementById('sr-announce');
+  if (!el) return;
+  el.textContent = '';
+  setTimeout(() => { el.textContent = message; }, 50);
+}
 
 // ── Mode helpers ──────────────────────────────────────────
 
@@ -21,6 +30,7 @@ export function updateAccessibilityMode(on) {
   document.documentElement.classList.remove('colorblind-mode');
   const icon = document.querySelector('link[rel="icon"]');
   if (icon) icon.href = on ? 'assets/attyre-logo-sm-cb.svg' : 'assets/attyre-logo-small.svg';
+  announceToScreenReader(on ? 'Accessibility mode enabled' : 'Accessibility mode disabled');
 }
 
 export function updateDarkMode(on) {
@@ -71,6 +81,8 @@ async function renderPage() {
 
   updateActiveNav(hash);
   app.style.opacity = '1';
+  const pageTitle = app.querySelector('h1');
+  if (pageTitle) announceToScreenReader(pageTitle.textContent.trim());
 }
 
 function updateActiveNav(hash) {
@@ -88,7 +100,9 @@ function updateActiveNav(hash) {
 }
 
 window.addEventListener('hashchange', renderPage);
-document.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => { initModes(); renderPage(); });
+} else {
   initModes();
   renderPage();
-});
+}

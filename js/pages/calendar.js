@@ -2,6 +2,7 @@
 
 import * as store from '../store.js';
 import { renderItemCard } from '../components/item-card.js';
+import { announceToScreenReader } from '../app.js';
 
 function esc(t) {
   return String(t ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
@@ -57,9 +58,9 @@ export function renderCalendar(container) {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
         </div>
-        <div class="calendar-grid">
-          ${WEEKDAYS.map(d => `<div class="calendar-day-header">${d}</div>`).join('')}
-          ${Array(firstDay).fill(0).map(() => `<div class="calendar-day other-month"></div>`).join('')}
+        <div class="calendar-grid" role="grid" aria-label="${MONTHS[month]} ${year}">
+          ${WEEKDAYS.map(d => `<div class="calendar-day-header" role="columnheader" aria-label="${d}">${d}</div>`).join('')}
+          ${Array(firstDay).fill(0).map(() => `<div class="calendar-day other-month" role="gridcell" aria-hidden="true"></div>`).join('')}
           ${Array.from({length: daysInMonth}, (_, i) => {
             const d = i + 1;
             const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
@@ -70,7 +71,8 @@ export function renderCalendar(container) {
             if (isToday) cls += ' today';
             if (isSelected) cls += ' selected';
             if (hasOutfit) cls += ' has-outfit';
-            return `<div class="${cls}" data-date="${dateStr}">${d}</div>`;
+            const label = `${MONTHS[month]} ${d}, ${year}${hasOutfit ? ', outfit planned' : ''}`;
+            return `<div class="${cls}" role="gridcell" tabindex="0" data-date="${dateStr}" aria-selected="${isSelected}" aria-label="${label}">${d}</div>`;
           }).join('')}
         </div>
       </div>
@@ -96,6 +98,9 @@ export function renderCalendar(container) {
         renderCalGrid();
         renderOutfitPanel();
       });
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }
+      });
     });
   }
 
@@ -105,6 +110,11 @@ export function renderCalendar(container) {
     const allItems = store.getItems();
     const d = new Date(selectedDateStr + 'T12:00:00');
     const dateLabel = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    announceToScreenReader(
+      itemIds.length > 0
+        ? `${dateLabel}: ${itemIds.length} item outfit planned`
+        : `${dateLabel}: no outfit planned`
+    );
 
     if (itemIds.length === 0) {
       outfitPanel.innerHTML = `
@@ -177,18 +187,22 @@ export function renderCalendar(container) {
     allItems.forEach(item => {
       const card = renderItemCard(item);
       card.style.cursor = 'pointer';
-      card.style.border = selected.has(item.id) ? '2px solid var(--accent)' : '1px solid var(--border)';
-      card.style.background = selected.has(item.id) ? 'var(--gold-light)' : '';
+      const isOn = selected.has(item.id);
+      card.style.border = isOn ? '2px solid var(--accent)' : '1px solid var(--border)';
+      card.style.background = isOn ? 'var(--gold-light)' : '';
+      card.setAttribute('aria-pressed', isOn ? 'true' : 'false');
 
       card.addEventListener('click', () => {
         if (selected.has(item.id)) {
           selected.delete(item.id);
           card.style.border = '1px solid var(--border)';
           card.style.background = '';
+          card.setAttribute('aria-pressed', 'false');
         } else {
           selected.add(item.id);
           card.style.border = '2px solid var(--accent)';
           card.style.background = 'var(--gold-light)';
+          card.setAttribute('aria-pressed', 'true');
         }
       });
 

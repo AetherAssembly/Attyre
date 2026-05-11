@@ -1,12 +1,12 @@
 # Attyre
 
-[![Version](https://img.shields.io/badge/version-2026.04.26-C9A96E)](CHANGELOG.md)
-[![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-2026.05.11-C9A96E)](CHANGELOG.md)
+[![License: AGPL v3](https://img.shields.io/badge/license-AGPLv3-blue.svg)](LICENSE)
 [![Privacy Policy](https://img.shields.io/badge/privacy-policy-16a34a)](Privacy-Policy.html)
 
 Smart wardrobe manager with weather-based suggestions, planning tools, and local-first privacy.
 
-Current app version: 2026.04.26
+Current app version: 2026.05.11
 
 ## What Attyre Does
 
@@ -73,8 +73,13 @@ Current app version: 2026.04.26
 ### Accessibility and Theming
 
 - Dark mode toggle.
-- Accessibility mode toggle with safe high-contrast palette and icon support.
-- Accessibility mode also switches favicon variant.
+- Accessibility mode toggle with safe high-contrast blue palette, larger font, stronger borders, thicker nav icon strokes, and colorblind-friendly favicon variant.
+- Skip-to-content link visible on keyboard focus.
+- Global focus ring on all interactive elements; thicker in accessibility mode.
+- `prefers-reduced-motion` support: all transitions and animations are suppressed when the OS setting is enabled.
+- Screen reader announcements via hidden `aria-live` region for page navigation, filter results, and calendar date selection.
+- Item cards are `<button>` elements for keyboard and screen reader compatibility.
+- Calendar grid uses ARIA grid semantics with keyboard Enter/Space day selection.
 
 ## Data Model and Storage
 
@@ -115,6 +120,7 @@ Scoring:
 
 - Web app manifest is included.
 - Standalone display and app shortcuts are configured.
+- `start_url` uses `"/index.html#/"` for correct hash-router launch from home screen.
 - Install prompts depend on browser and platform support.
 
 ## External Dependencies
@@ -128,7 +134,7 @@ CDN dependencies loaded in app shell:
 
 - Nominatim search endpoint for city geocoding.
 - Open-Meteo forecast endpoint for current weather.
-- User-Agent currently set to Attyre/2026.04.26 (attyre.aetherassembly.org) for Nominatim requests.
+- User-Agent currently set to Attyre/2026.05.11 (attyre.aetherassembly.org) for Nominatim requests.
 
 ## Project Structure
 
@@ -162,7 +168,7 @@ Requires modern browser support for:
 
 ## License
 
-GNU AGPL v3.0.
+[GNU AGPL v3.0.](LICENSE)
 
 ## Live App
 
