@@ -1,0 +1,10 @@
+node_modules/
+.git/
+.github/
+.claude/
+*.md
+*.test.js
+package.json
+package-lock.json
+wrangler.jsonc
+LICENSE
