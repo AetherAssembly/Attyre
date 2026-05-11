@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## Prior Release [v2026.04.24] - 2026-04-24
+## Prior Releases [v2026.04.24] - 2026-04-24
 
 ### Added
 
@@ -67,7 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Crop button re-usable after first crop**: After applying a crop in the add-item form, the replacement preview button had no event listener attached, making subsequent crops impossible — listener is now re-wired via a recursive helper after each crop.
 - **localStorage quota errors surfaced**: `saveItems` was catching `QuotaExceededError` silently; it now re-throws so callers can alert the user when storage is full.
 
-## Prior Release [v1.5.0] - 2026-03-10
+## [v1.5.0] - 2026-03-10
 
 ### Added (v1.5.0)
 

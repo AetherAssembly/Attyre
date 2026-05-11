@@ -3,9 +3,6 @@
 import * as store from '../store.js';
 import { updateAccessibilityMode, updateDarkMode, APP_VERSION } from '../app.js';
 
-function esc(t) {
-  return String(t ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-}
 
 export function renderSettings(container) {
   const isAccessibility = store.isAccessibilityMode();
