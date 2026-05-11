@@ -15,7 +15,8 @@ function esc(t) {
 }
 
 export function renderItemCard(item) {
-  const card = document.createElement('div');
+  const card = document.createElement('button');
+  card.type = 'button';
   card.className = 'item-card';
 
   const thumb = item.imageUri

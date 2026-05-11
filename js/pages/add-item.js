@@ -15,12 +15,12 @@ export function renderAddItem(container) {
         <form id="add-item-form">
           <!-- Name -->
           <label for="name">Name *</label>
-          <input type="text" id="name" name="name" placeholder="e.g. Blue Jeans" required>
+          <input type="text" id="name" name="name" placeholder="e.g. Blue Jeans" required aria-describedby="name-error">
           <p class="error" id="name-error"></p>
 
           <!-- Category -->
           <label for="category">Category *</label>
-          <select id="category" name="category" required>
+          <select id="category" name="category" required aria-describedby="category-error">
             <option value="">Select a category</option>
             ${CATEGORIES.map(cat => `<option value="${cat}">${capitalize(cat)}</option>`).join('')}
           </select>

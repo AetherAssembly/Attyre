@@ -2,6 +2,7 @@
 
 import * as store from '../store.js';
 import { renderItemCard } from '../components/item-card.js';
+import { announceToScreenReader } from '../app.js';
 
 const ALL_WEATHER_TAGS = ['sunny','cloudy','rain','light-rain','heavy-rain','snow','wind','humid','foggy','cold','hot'];
 
@@ -98,8 +99,10 @@ export function renderWardrobe(container) {
 
     if (filtered.length === 0) {
       area.innerHTML = `<p style="text-align:center;color:var(--text-muted);padding:32px 0;font-size:14px">No items match your filters.</p>`;
+      announceToScreenReader('No items match your filters');
       return;
     }
+    announceToScreenReader(`${filtered.length} item${filtered.length !== 1 ? 's' : ''} shown`);
 
     const grid = document.createElement('div');
     grid.className = 'item-grid';

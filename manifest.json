@@ -2,7 +2,7 @@
   "name": "Attyre - Smart Wardrobe Manager",
   "short_name": "Attyre",
   "description": "A weather-aware outfit suggestion app that runs entirely in your browser. Manage your wardrobe and get weather-based outfit suggestions.",
-  "start_url": "/",
+  "start_url": "/index.html#/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
