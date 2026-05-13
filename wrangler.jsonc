@@ -6,9 +6,7 @@
     "enabled": true
   },
   "assets": {
-    "directory": ".",
-    "include": ["index.html", "style.css", "manifest.json", "js/**/*", "assets/**/*", "*.html", "*.svg"],
-    "exclude": ["node_modules", ".git", ".github", "*.md", "*.test.js", "*.json", "package.json", "wrangler.jsonc"]
+    "directory": "."
   },
   "compatibility_flags": [
     "nodejs_compat"
