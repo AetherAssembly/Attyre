@@ -5,7 +5,7 @@
 Security fixes are applied to the current release and the two most recent releases.
 
 | Version | Status |
-|---|---|
+| - | - |
 | 2026.05.11 | ✅ Active support |
 | 2026.04.26 | ✅ Active support |
 | 2026.04.24 | ✅ Active support |
