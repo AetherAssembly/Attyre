@@ -5,25 +5,18 @@ import * as engine from '../engine.js';
 import { CATEGORY_EMOJI } from '../components/item-card.js';
 
 function esc(t) {
-  return String(t ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  return String(t ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
 }
 
 export function renderHome(container) {
   const items = store.getItems();
-  const logoSrc = store.isAccessibilityMode() ? 'assets/attyre-wordmark-cb.svg' : 'assets/attyre-wordmark.svg';
 
-  // Stats
   const cats = { top: 0, bottom: 0, outerwear: 0, shoes: 0, accessory: 0 };
   items.forEach(i => { if (cats[i.category] !== undefined) cats[i.category]++; });
 
-  // Outfit of day (neutral 18°C so it doesn't lean too cold/warm)
   const suggestion = engine.suggestForTemp(18);
   const ranked = engine.rankItems(items, suggestion);
-
-  // Most worn
   const mostWorn = items.filter(i => i.usage > 0).sort((a,b) => (b.usage||0)-(a.usage||0)).slice(0,5);
-
-  // Saved outfits
   const savedOutfits = store.getSavedOutfits();
 
   const wrap = document.createElement('div');
@@ -49,7 +42,6 @@ export function renderHome(container) {
       <span>Your data is stored locally in this browser. <strong>Export a backup in Settings</strong> before clearing your cache.</span>
     </div>
 
-    <!-- Quick tiles -->
     <div class="quick-tiles">
       <a href="#/wardrobe" class="quick-tile">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.57a2 2 0 00-1.34-2.23z"/></svg>
@@ -69,36 +61,14 @@ export function renderHome(container) {
       </a>
     </div>
 
-    <!-- Wardrobe count row -->
     <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-card-icon">👕</div>
-        <div class="stat-card-value">${cats.top}</div>
-        <div class="stat-card-label">Tops</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card-icon">👖</div>
-        <div class="stat-card-value">${cats.bottom}</div>
-        <div class="stat-card-label">Bottoms</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card-icon">🧥</div>
-        <div class="stat-card-value">${cats.outerwear}</div>
-        <div class="stat-card-label">Outerwear</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card-icon">👟</div>
-        <div class="stat-card-value">${cats.shoes}</div>
-        <div class="stat-card-label">Shoes</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card-icon">👜</div>
-        <div class="stat-card-value">${cats.accessory}</div>
-        <div class="stat-card-label">Accessories</div>
-      </div>
+      <div class="stat-card"><div class="stat-card-icon">👕</div><div class="stat-card-value">${cats.top}</div><div class="stat-card-label">Tops</div></div>
+      <div class="stat-card"><div class="stat-card-icon">👖</div><div class="stat-card-value">${cats.bottom}</div><div class="stat-card-label">Bottoms</div></div>
+      <div class="stat-card"><div class="stat-card-icon">🧥</div><div class="stat-card-value">${cats.outerwear}</div><div class="stat-card-label">Outerwear</div></div>
+      <div class="stat-card"><div class="stat-card-icon">👟</div><div class="stat-card-value">${cats.shoes}</div><div class="stat-card-label">Shoes</div></div>
+      <div class="stat-card"><div class="stat-card-icon">👜</div><div class="stat-card-value">${cats.accessory}</div><div class="stat-card-label">Accessories</div></div>
     </div>
 
-    <!-- Outfit inspiration -->
     ${ranked.length > 0 ? `
     <div class="outfit-inspiration">
       <div class="outfit-inspiration-header">
@@ -123,7 +93,6 @@ export function renderHome(container) {
     </div>
     ` : ''}
 
-    <!-- Most worn -->
     ${mostWorn.length > 0 ? `
     <div class="section-card">
       <div class="section-card-title">Most worn</div>
@@ -142,7 +111,6 @@ export function renderHome(container) {
     </div>
     ` : ''}
 
-    <!-- Saved outfits preview -->
     ${savedOutfits.length > 0 ? `
     <div class="section-card">
       <div class="section-card-title">Saved outfits</div>
@@ -161,11 +129,24 @@ export function renderHome(container) {
 
   container.appendChild(wrap);
 
-  // Shuffle
+  // Shuffle: Fisher-Yates random pick instead of same 18°C suggestion every time
   const shuffleBtn = wrap.querySelector('#shuffle-btn');
   if (shuffleBtn) {
     shuffleBtn.addEventListener('click', () => {
-      window.location.hash = '#/';
+      const allItems = store.getItems();
+      if (!allItems.length) return;
+      const shuffled = [...allItems].sort(() => Math.random() - 0.5).slice(0, 4);
+      const chips = wrap.querySelector('#outfit-chips');
+      if (chips) {
+        chips.innerHTML = shuffled.map(item => `
+          <div class="outfit-item-chip">
+            <div class="outfit-item-chip-thumb">
+              ${item.imageUri ? `<img src="${esc(item.imageUri)}" alt="">` : `<span>${CATEGORY_EMOJI[item.category] || '📦'}</span>`}
+            </div>
+            <span class="outfit-item-chip-name">${esc(item.name)}</span>
+          </div>
+        `).join('');
+      }
     });
   }
 }

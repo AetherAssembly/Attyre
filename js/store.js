@@ -15,7 +15,7 @@ export function getItems() {
     const data = localStorage.getItem(ITEMS_KEY);
     if (!data) return [];
     const decompressed = LZString.decompress(data);
-    return decompressed !== null ? JSON.parse(decompressed) : JSON.parse(data); // Fallback for uncompressed data
+    return decompressed !== null ? JSON.parse(decompressed) : JSON.parse(data);
   } catch (e) {
     console.error('Failed to get items from storage:', e);
     return [];
@@ -44,15 +44,10 @@ export function saveItems(items) {
  * Creates and saves a new item to storage.
  * @param {Object} itemData - Item data (id and createdAt are auto-generated)
  * @returns {Object} The created item with id and createdAt
- * @throws {Error} If storage quota is exceeded
  */
 export function addItem(itemData) {
   const items = getItems();
-  const newItem = {
-    id: crypto.randomUUID(),
-    ...itemData,
-    createdAt: new Date().toISOString(),
-  };
+  const newItem = { id: crypto.randomUUID(), ...itemData, createdAt: new Date().toISOString() };
   items.push(newItem);
   saveItems(items);
   return newItem;
@@ -63,165 +58,89 @@ export function addItem(itemData) {
  * @param {string} id - Item ID to update
  * @param {Object} changes - Partial item data to merge
  * @returns {Object|null} Updated item, or null if not found
- * @throws {Error} If storage quota is exceeded
  */
 export function updateItem(id, changes) {
   const items = getItems();
   const index = items.findIndex(item => item.id === id);
   if (index === -1) return null;
-
   items[index] = { ...items[index], ...changes };
   saveItems(items);
   return items[index];
 }
 
 /**
- * Increments the usage counter for an item (wear count).
- * @param {string} id - Item ID to increment
- * @throws {Error} If storage quota is exceeded
+ * Increments the usage counter for an item.
+ * @param {string} id - Item ID
  */
 export function incrementItemUsage(id) {
   const item = getItemById(id);
-  if (item) {
-    const usage = (item.usage || 0) + 1;
-    updateItem(id, { usage });
-  }
+  if (item) updateItem(id, { usage: (item.usage || 0) + 1 });
 }
 
 /**
  * Deletes an item from storage.
  * @param {string} id - Item ID to delete
- * @throws {Error} If storage quota is exceeded
  */
 export function deleteItem(id) {
   const items = getItems();
-  const filtered = items.filter(item => item.id !== id);
-  saveItems(filtered);
+  saveItems(items.filter(item => item.id !== id));
 }
 
 /**
  * Retrieves a single item by ID.
  * @param {string} id - Item ID to find
- * @returns {Object|null} Item if found, null otherwise
+ * @returns {Object|null}
  */
 export function getItemById(id) {
-  const items = getItems();
-  return items.find(item => item.id === id) || null;
+  return getItems().find(item => item.id === id) || null;
 }
 
-/**
- * Checks if colorblind mode is enabled (legacy).
- * @deprecated Use isAccessibilityMode() instead
- * @returns {boolean}
- */
+/** @deprecated Use isAccessibilityMode() instead */
 export function isColorblind() {
-  const value = localStorage.getItem(COLORBLIND_KEY);
-  return value === 'true';
+  return localStorage.getItem(COLORBLIND_KEY) === 'true';
 }
 
-/**
- * Sets colorblind mode (legacy).
- * @deprecated Use setAccessibilityMode() instead
- * @param {boolean} bool - Enable/disable
- */
+/** @deprecated Use setAccessibilityMode() instead */
 export function setColorblind(bool) {
   localStorage.setItem(COLORBLIND_KEY, bool ? 'true' : 'false');
 }
 
 /**
  * Exports all items as a JSON string.
- * @returns {string} JSON-serialized items array
  */
 export function exportJSON() {
-  const items = getItems();
-  return JSON.stringify(items, null, 2);
+  return JSON.stringify(getItems(), null, 2);
 }
 
 /**
- * Imports items from a JSON string with validation.
- * @param {string} jsonString - JSON string containing items array
+ * Imports items from a JSON string, replacing existing items.
+ * @param {string} jsonString
  * @returns {number} Count of imported items
- * @throws {Error} If JSON is invalid or items are malformed
- * @throws {Error} If storage quota is exceeded
  */
 export function importJSON(jsonString) {
   let parsed;
-  try {
-    parsed = JSON.parse(jsonString);
-  } catch (e) {
-    throw new Error('Invalid JSON format');
-  }
-
-  if (!Array.isArray(parsed)) {
-    throw new Error('Import data must be an array of items');
-  }
-
-  // Validate required fields for each item
+  try { parsed = JSON.parse(jsonString); } catch (e) { throw new Error('Invalid JSON format'); }
+  if (!Array.isArray(parsed)) throw new Error('Import data must be an array of items');
   for (let i = 0; i < parsed.length; i++) {
     const item = parsed[i];
-    if (!item.id || typeof item.id !== 'string') {
-      throw new Error(`Item ${i}: missing or invalid id`);
-    }
-    if (!item.name || typeof item.name !== 'string') {
-      throw new Error(`Item ${i}: missing or invalid name`);
-    }
-    if (!item.category || typeof item.category !== 'string') {
-      throw new Error(`Item ${i}: missing or invalid category`);
-    }
-    if (!item.createdAt || typeof item.createdAt !== 'string') {
-      throw new Error(`Item ${i}: missing or invalid createdAt timestamp`);
-    }
+    if (!item.id || typeof item.id !== 'string') throw new Error(`Item ${i}: missing or invalid id`);
+    if (!item.name || typeof item.name !== 'string') throw new Error(`Item ${i}: missing or invalid name`);
+    if (!item.category || typeof item.category !== 'string') throw new Error(`Item ${i}: missing or invalid category`);
+    if (!item.createdAt || typeof item.createdAt !== 'string') throw new Error(`Item ${i}: missing or invalid createdAt timestamp`);
   }
-
   saveItems(parsed);
   return parsed.length;
 }
 
-// Dark mode
+export function isDarkMode() { return localStorage.getItem(DARK_MODE_KEY) === 'true'; }
+export function setDarkMode(bool) { localStorage.setItem(DARK_MODE_KEY, bool ? 'true' : 'false'); }
 
-/**
- * Checks if dark mode is enabled.
- * @returns {boolean}
- */
-export function isDarkMode() {
-  const value = localStorage.getItem(DARK_MODE_KEY);
-  return value === 'true';
-}
-
-/**
- * Enables or disables dark mode.
- * @param {boolean} bool - Enable/disable dark mode
- */
-export function setDarkMode(bool) {
-  localStorage.setItem(DARK_MODE_KEY, bool ? 'true' : 'false');
-}
-
-// Accessibility mode (high-contrast, colorblind-friendly)
 const ACCESSIBILITY_KEY = 'attyre_accessibility';
-
-/**
- * Checks if accessibility mode (high-contrast) is enabled.
- * @returns {boolean}
- */
-export function isAccessibilityMode() {
-  const value = localStorage.getItem(ACCESSIBILITY_KEY);
-  return value === 'true';
-}
-
-/**
- * Enables or disables accessibility mode.
- * @param {boolean} bool - Enable/disable accessibility mode
- */
-export function setAccessibilityMode(bool) {
-  localStorage.setItem(ACCESSIBILITY_KEY, bool ? 'true' : 'false');
-}
+export function isAccessibilityMode() { return localStorage.getItem(ACCESSIBILITY_KEY) === 'true'; }
+export function setAccessibilityMode(bool) { localStorage.setItem(ACCESSIBILITY_KEY, bool ? 'true' : 'false'); }
 
 // Saved outfits
 
-/**
- * Retrieves all saved outfit combinations.
- * @returns {Array<Object>} Array of saved outfits
- */
 export function getSavedOutfits() {
   try {
     const data = localStorage.getItem(SAVED_OUTFITS_KEY);
@@ -232,57 +151,31 @@ export function getSavedOutfits() {
   }
 }
 
-/**
- * Saves a new outfit combination.
- * @param {Array<string>} itemIds - Item IDs to include in outfit
- * @param {string} [name='Unnamed Outfit'] - Display name for outfit
- * @returns {Object} The created outfit with id and createdAt
- * @throws {Error} If storage quota is exceeded
- */
 export function saveOutfit(itemIds, name = 'Unnamed Outfit') {
   const outfits = getSavedOutfits();
-  const newOutfit = {
-    id: crypto.randomUUID(),
-    name,
-    itemIds,
-    createdAt: new Date().toISOString(),
-  };
+  const newOutfit = { id: crypto.randomUUID(), name, itemIds, createdAt: new Date().toISOString() };
   outfits.push(newOutfit);
   try {
     localStorage.setItem(SAVED_OUTFITS_KEY, JSON.stringify(outfits));
   } catch (e) {
-    if (e.name === 'QuotaExceededError') {
-      throw new Error('Storage quota exceeded. Cannot save outfit.');
-    }
+    if (e.name === 'QuotaExceededError') throw new Error('Storage quota exceeded. Cannot save outfit.');
     throw e;
   }
   return newOutfit;
 }
 
-/**
- * Deletes a saved outfit by ID.
- * @param {string} id - Outfit ID to delete
- * @throws {Error} If storage quota is exceeded
- */
 export function deleteSavedOutfit(id) {
-  const outfits = getSavedOutfits();
-  const filtered = outfits.filter(outfit => outfit.id !== id);
+  const filtered = getSavedOutfits().filter(o => o.id !== id);
   try {
     localStorage.setItem(SAVED_OUTFITS_KEY, JSON.stringify(filtered));
   } catch (e) {
-    if (e.name === 'QuotaExceededError') {
-      throw new Error('Storage quota exceeded. Cannot delete outfit.');
-    }
+    if (e.name === 'QuotaExceededError') throw new Error('Storage quota exceeded.');
     throw e;
   }
 }
 
-// Outfit dates (for calendar)
+// Outfit dates (calendar)
 
-/**
- * Retrieves all outfit dates and their assigned items.
- * @returns {Object} Object mapping date strings (YYYY-MM-DD) to item ID arrays
- */
 export function getOutfitDates() {
   try {
     const data = localStorage.getItem(OUTFIT_DATES_KEY);
@@ -293,32 +186,32 @@ export function getOutfitDates() {
   }
 }
 
-/**
- * Saves an outfit assignment for a specific date.
- * @param {string} date - Date string in YYYY-MM-DD format
- * @param {Array<string>} itemIds - Item IDs assigned to this date
- * @throws {Error} If storage quota is exceeded
- */
 export function saveOutfitDate(date, itemIds) {
   const dates = getOutfitDates();
   dates[date] = itemIds;
   try {
     localStorage.setItem(OUTFIT_DATES_KEY, JSON.stringify(dates));
   } catch (e) {
-    if (e.name === 'QuotaExceededError') {
-      throw new Error('Storage quota exceeded. Cannot save outfit date.');
-    }
+    if (e.name === 'QuotaExceededError') throw new Error('Storage quota exceeded. Cannot save outfit date.');
     throw e;
   }
 }
 
 /**
- * Retrieves the outfit assigned to a specific date.
+ * Deletes the outfit assignment for a specific date.
  * @param {string} date - Date string in YYYY-MM-DD format
- * @returns {Array<string>|null} Array of item IDs, or null if no outfit assigned
  */
-export function getOutfitForDate(date) {
+export function deleteOutfitDate(date) {
   const dates = getOutfitDates();
-  return dates[date] || null;
+  delete dates[date];
+  try {
+    localStorage.setItem(OUTFIT_DATES_KEY, JSON.stringify(dates));
+  } catch (e) {
+    if (e.name === 'QuotaExceededError') throw new Error('Storage quota exceeded.');
+    throw e;
+  }
 }
 
+export function getOutfitForDate(date) {
+  return getOutfitDates()[date] || null;
+}

@@ -5,12 +5,10 @@ import { renderItemCard } from '../components/item-card.js';
 import { announceToScreenReader } from '../app.js';
 
 function esc(t) {
-  return String(t ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  return String(t ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
 }
 
-function toDateStr(d) {
-  return d.toISOString().split('T')[0];
-}
+function toDateStr(d) { return d.toISOString().split('T')[0]; }
 
 const WEEKDAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -47,7 +45,7 @@ export function renderCalendar(container) {
     const today = toDateStr(new Date());
     const outfitDates = store.getOutfitDates();
 
-    let html = `
+    calRoot.innerHTML = `
       <div class="section-card" style="padding:16px">
         <div class="calendar-nav">
           <button class="btn btn-icon" id="prev-month" aria-label="Previous month">
@@ -59,9 +57,9 @@ export function renderCalendar(container) {
           </button>
         </div>
         <div class="calendar-grid" role="grid" aria-label="${MONTHS[month]} ${year}">
-          ${WEEKDAYS.map(d => `<div class="calendar-day-header" role="columnheader" aria-label="${d}">${d}</div>`).join('')}
+          ${WEEKDAYS.map(d => `<div class="calendar-day-header" role="columnheader">${d}</div>`).join('')}
           ${Array(firstDay).fill(0).map(() => `<div class="calendar-day other-month" role="gridcell" aria-hidden="true"></div>`).join('')}
-          ${Array.from({length: daysInMonth}, (_, i) => {
+          ${Array.from({ length: daysInMonth }, (_, i) => {
             const d = i + 1;
             const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
             const isToday = dateStr === today;
@@ -71,36 +69,18 @@ export function renderCalendar(container) {
             if (isToday) cls += ' today';
             if (isSelected) cls += ' selected';
             if (hasOutfit) cls += ' has-outfit';
-            const label = `${MONTHS[month]} ${d}, ${year}${hasOutfit ? ', outfit planned' : ''}`;
-            return `<div class="${cls}" role="gridcell" tabindex="0" data-date="${dateStr}" aria-selected="${isSelected}" aria-label="${label}">${d}</div>`;
+            return `<div class="${cls}" role="gridcell" tabindex="0" data-date="${dateStr}" aria-selected="${isSelected}" aria-label="${MONTHS[month]} ${d}, ${year}${hasOutfit ? ', outfit planned' : ''}">${d}</div>`;
           }).join('')}
         </div>
       </div>
     `;
 
-    calRoot.innerHTML = html;
-
-    calRoot.querySelector('#prev-month').addEventListener('click', () => {
-      viewDate.setMonth(viewDate.getMonth() - 1);
-      renderCalGrid();
-      renderOutfitPanel();
-    });
-
-    calRoot.querySelector('#next-month').addEventListener('click', () => {
-      viewDate.setMonth(viewDate.getMonth() + 1);
-      renderCalGrid();
-      renderOutfitPanel();
-    });
+    calRoot.querySelector('#prev-month').addEventListener('click', () => { viewDate.setMonth(viewDate.getMonth() - 1); renderCalGrid(); renderOutfitPanel(); });
+    calRoot.querySelector('#next-month').addEventListener('click', () => { viewDate.setMonth(viewDate.getMonth() + 1); renderCalGrid(); renderOutfitPanel(); });
 
     calRoot.querySelectorAll('.calendar-day[data-date]').forEach(el => {
-      el.addEventListener('click', () => {
-        selectedDateStr = el.dataset.date;
-        renderCalGrid();
-        renderOutfitPanel();
-      });
-      el.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }
-      });
+      el.addEventListener('click', () => { selectedDateStr = el.dataset.date; renderCalGrid(); renderOutfitPanel(); });
+      el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); } });
     });
   }
 
@@ -110,11 +90,7 @@ export function renderCalendar(container) {
     const allItems = store.getItems();
     const d = new Date(selectedDateStr + 'T12:00:00');
     const dateLabel = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-    announceToScreenReader(
-      itemIds.length > 0
-        ? `${dateLabel}: ${itemIds.length} item outfit planned`
-        : `${dateLabel}: no outfit planned`
-    );
+    announceToScreenReader(itemIds.length > 0 ? `${dateLabel}: ${itemIds.length} item outfit planned` : `${dateLabel}: no outfit planned`);
 
     if (itemIds.length === 0) {
       outfitPanel.innerHTML = `
@@ -129,7 +105,6 @@ export function renderCalendar(container) {
       outfitPanel.querySelector('#select-btn').addEventListener('click', () => showSelector());
     } else {
       const outfitItems = itemIds.map(id => store.getItemById(id)).filter(Boolean);
-
       outfitPanel.innerHTML = `
         <div class="section-card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
@@ -144,19 +119,16 @@ export function renderCalendar(container) {
           <div class="item-grid" id="outfit-items-grid"></div>
         </div>
       `;
-
       const grid = outfitPanel.querySelector('#outfit-items-grid');
       outfitItems.forEach(item => {
         const card = renderItemCard(item);
         card.addEventListener('click', () => { window.location.hash = `#/wardrobe/${item.id}`; });
         grid.appendChild(card);
       });
-
       outfitPanel.querySelector('#change-btn').addEventListener('click', () => showSelector());
+      // Use store.deleteOutfitDate instead of writing localStorage directly
       outfitPanel.querySelector('#delete-btn').addEventListener('click', () => {
-        const dates = store.getOutfitDates();
-        delete dates[selectedDateStr];
-        localStorage.setItem('attyre_outfit_dates', JSON.stringify(dates));
+        store.deleteOutfitDate(selectedDateStr);
         renderCalGrid();
         renderOutfitPanel();
       });
@@ -183,7 +155,6 @@ export function renderCalendar(container) {
     `;
 
     const grid = outfitPanel.querySelector('#selector-grid');
-
     allItems.forEach(item => {
       const card = renderItemCard(item);
       card.style.cursor = 'pointer';
@@ -191,7 +162,6 @@ export function renderCalendar(container) {
       card.style.border = isOn ? '2px solid var(--accent)' : '1px solid var(--border)';
       card.style.background = isOn ? 'var(--gold-light)' : '';
       card.setAttribute('aria-pressed', isOn ? 'true' : 'false');
-
       card.addEventListener('click', () => {
         if (selected.has(item.id)) {
           selected.delete(item.id);
@@ -205,7 +175,6 @@ export function renderCalendar(container) {
           card.setAttribute('aria-pressed', 'true');
         }
       });
-
       grid.appendChild(card);
     });
 
@@ -216,7 +185,6 @@ export function renderCalendar(container) {
       renderCalGrid();
       renderOutfitPanel();
     });
-
     outfitPanel.querySelector('#cancel-sel-btn').addEventListener('click', renderOutfitPanel);
   }
 
