@@ -1,12 +1,12 @@
 # Attyre
 
-[![Version](https://img.shields.io/badge/version-2026.05.11-C9A96E)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2026.05.17-C9A96E)](CHANGELOG.md)
 [![License: AGPL v3](https://img.shields.io/badge/license-AGPLv3-blue.svg)](LICENSE)
 [![Privacy Policy](https://img.shields.io/badge/privacy-policy-16a34a)](Privacy-Policy.html)
 
 Smart wardrobe manager with weather-based suggestions, planning tools, and local-first privacy.
 
-Current app version: 2026.05.11
+Current app version: 2026.05.17
 
 ## What Attyre Does
 
@@ -46,8 +46,8 @@ Current app version: 2026.05.11
 
 ### Image Handling
 
-- Add flow includes optional image upload.
-- Cropper.js is used in add flow for image cropping.
+- Add and edit flows both include optional image upload.
+- Cropper.js is used in both add and edit flows for image cropping.
 - Images are stored as data URLs.
 
 ### Suggest Outfit
@@ -128,13 +128,13 @@ Scoring:
 CDN dependencies loaded in app shell:
 
 - LZString 1.5.0 for item data compression.
-- Cropper.js 1.5.13 for image cropping in add flow.
+- Cropper.js 1.5.13 for image cropping in add and edit flows.
 
 ## External APIs
 
 - Nominatim search endpoint for city geocoding.
 - Open-Meteo forecast endpoint for current weather.
-- User-Agent currently set to Attyre/2026.05.11 (attyre.aetherassembly.org) for Nominatim requests.
+- User-Agent currently set to Attyre/2026.05.17 (attyre.aetherassembly.org) for Nominatim requests.
 
 ## Project Structure
 
