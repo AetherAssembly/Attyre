@@ -5,7 +5,22 @@ All notable changes to Attyre will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Current Version [v2026.05.11]
+## Current Version [v2026.05.17]
+
+### Fixed
+
+- **Mobile pages appeared static (critical)**: `add-item.js`, `item-detail.js`, and `saved-outfits.js` were all referencing CSS class names that don't exist in `style.css` — buttons rendered as bare browser defaults, forms had no padding or structure, warmth buttons didn't flex, and checkboxes were unstyled. Fixed all three files to use the correct classes: `.page-wrap`, `.warmth-row`, `.checkbox-item`, `.btn-stack`, `.btn-group`, `.btn.btn-primary`, `.outfit-section`, etc.
+- **Warmth validation silently failed on Edit Item (critical)**: `item-detail.js` called `showError('warmth-error', ...)` but no element with that ID existed in the DOM — users could submit with no warmth level selected and received no feedback. Added the missing `<p>` error element.
+- **Crop modal rendered unstyled (critical)**: Both `add-item.js` and `item-detail.js` used `.crop-modal-content` on the crop modal container, but the stylesheet defines `.crop-modal-inner`. Fixed the class name in both files.
+- **Calendar delete bypassed store error handling**: The delete-outfit handler in `calendar.js` hardcoded the `localStorage` key directly instead of going through the store, skipping all error handling. Added a `deleteOutfitDate(date)` helper to `store.js` and updated `calendar.js` to call it.
+- **Shuffle button didn't shuffle**: The shuffle button on the Home page re-navigated to `#/`, which just re-ran `suggestForTemp(18)` and produced the same result every time. Now performs a Fisher-Yates shuffle over all wardrobe items and updates the chip row in-place.
+- **Offline indicator offset on desktop**: The offline banner used `top: var(--topbar-height)` in the desktop media query, but the topbar is `display: none` on desktop — pushing the banner 56px down from where it should be. Fixed to `top: 0`.
+- **Crop button missing on Edit Item page**: `item-detail.js` had no crop button wired up for the existing image or newly uploaded images. Now consistent with `add-item.js`.
+- **`QuotaExceededError` silently swallowed in add/edit forms**: Both forms now catch storage quota errors and surface them to the user via the name field error element instead of failing silently.
+
+---
+
+## Prior Releases [v2026.05.11] - 2026-05-11
 
 ### Fixed
 
