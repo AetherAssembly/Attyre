@@ -407,7 +407,6 @@ button { font-family: var(--font); }
 
 /* ── Responsive breakpoints ──────────────────────────────── */
 @media (max-width: 899px) {
-  /* Mobile: hide sidebar inline, show topbar + bottom nav */
   .sidebar {
     position: fixed;
     top: 0;
@@ -440,7 +439,6 @@ button { font-family: var(--font); }
 }
 
 @media (min-width: 900px) {
-  /* Desktop: sidebar always visible, no topbar/bottom nav */
   .sidebar {
     transform: none !important;
   }
@@ -1725,22 +1723,18 @@ input[type="date"] {
 }
 
 @media (min-width: 900px) {
+  /* On desktop the topbar is hidden, so anchor to top:0 not top:var(--topbar-height) */
   .offline-indicator {
     bottom: auto;
-    top: var(--topbar-height);
+    top: 0;
   }
 }
 
 @keyframes slideUp {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
 }
+
 /* ── Reduced motion ──────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

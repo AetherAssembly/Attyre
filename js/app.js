@@ -12,7 +12,7 @@ import { renderSettings } from './pages/settings.js';
 import { renderStats } from './pages/stats.js';
 
 const app = document.getElementById('app');
-export const APP_VERSION = '2026.05.11';
+export const APP_VERSION = '2026.05.17';
 
 // ── Screen reader announcer ───────────────────────────────
 
