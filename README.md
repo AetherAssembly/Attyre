@@ -1,12 +1,12 @@
 # Attyre
 
-[![Version](https://img.shields.io/badge/version-2026.05.17-C9A96E)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2026.05.18-C9A96E)](CHANGELOG.md)
 [![License: AGPL v3](https://img.shields.io/badge/license-AGPLv3-blue.svg)](LICENSE)
 [![Privacy Policy](https://img.shields.io/badge/privacy-policy-16a34a)](Privacy-Policy.html)
 
 Smart wardrobe manager with weather-based suggestions, planning tools, and local-first privacy.
 
-Current app version: 2026.05.17
+Current app version: 2026.05.18
 
 ## What Attyre Does
 
