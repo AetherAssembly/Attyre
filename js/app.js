@@ -1,6 +1,7 @@
 // app.js — Router & initialization
 
 import * as store from './store.js';
+import { initTauriFs } from './tauri-fs.js';
 import { renderHome } from './pages/home.js';
 import { renderWardrobe } from './pages/wardrobe.js';
 import { renderAddItem } from './pages/add-item.js';
@@ -12,7 +13,7 @@ import { renderSettings } from './pages/settings.js';
 import { renderStats } from './pages/stats.js';
 
 const app = document.getElementById('app');
-export const APP_VERSION = '2026.05.17';
+export const APP_VERSION = '2.0.0';
 
 // ── Screen reader announcer ───────────────────────────────
 
@@ -50,6 +51,16 @@ function parseRoute() {
   return { hash, parts };
 }
 
+function renderErrorCard(message) {
+  app.innerHTML = `
+    <div style="padding:2rem;text-align:center;max-width:400px;margin:4rem auto;">
+      <p style="font-size:2rem;margin-bottom:1rem;">⚠️</p>
+      <h2 style="margin-bottom:.5rem;">Something went wrong</h2>
+      <p style="opacity:.7;margin-bottom:1.5rem;">${message}</p>
+      <a href="#/" style="display:inline-block;padding:.6rem 1.2rem;background:var(--color-primary,#C9A96E);color:#fff;border-radius:8px;text-decoration:none;">Go Home</a>
+    </div>`;
+}
+
 async function renderPage() {
   const { hash, parts } = parseRoute();
   initModes();
@@ -59,24 +70,29 @@ async function renderPage() {
   await new Promise(r => setTimeout(r, 120));
   app.innerHTML = '';
 
-  if (hash === '/' || hash === '') {
-    renderHome(app);
-  } else if (parts[0] === 'wardrobe') {
-    if (parts.length === 1)       renderWardrobe(app);
-    else if (parts[1] === 'add')  renderAddItem(app);
-    else                          renderItemDetail(app, parts[1]);
-  } else if (parts[0] === 'suggest') {
-    renderSuggest(app);
-  } else if (parts[0] === 'calendar') {
-    renderCalendar(app);
-  } else if (parts[0] === 'saved-outfits') {
-    renderSavedOutfits(app);
-  } else if (parts[0] === 'stats') {
-    renderStats(app);
-  } else if (parts[0] === 'settings') {
-    renderSettings(app);
-  } else {
-    renderHome(app);
+  try {
+    if (hash === '/' || hash === '') {
+      renderHome(app);
+    } else if (parts[0] === 'wardrobe') {
+      if (parts.length === 1)       renderWardrobe(app);
+      else if (parts[1] === 'add')  renderAddItem(app);
+      else                          renderItemDetail(app, parts[1]);
+    } else if (parts[0] === 'suggest') {
+      renderSuggest(app);
+    } else if (parts[0] === 'calendar') {
+      renderCalendar(app);
+    } else if (parts[0] === 'saved-outfits') {
+      renderSavedOutfits(app);
+    } else if (parts[0] === 'stats') {
+      renderStats(app);
+    } else if (parts[0] === 'settings') {
+      renderSettings(app);
+    } else {
+      renderHome(app);
+    }
+  } catch (err) {
+    console.error('Page render failed:', err);
+    renderErrorCard('Unable to load this page. Try refreshing or going home.');
   }
 
   updateActiveNav(hash);
@@ -99,10 +115,15 @@ function updateActiveNav(hash) {
   });
 }
 
-window.addEventListener('hashchange', renderPage);
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => { initModes(); renderPage(); });
-} else {
+async function init() {
+  await initTauriFs(); // resolves instantly in the browser (no-op)
   initModes();
   renderPage();
+}
+
+window.addEventListener('hashchange', renderPage);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
 }

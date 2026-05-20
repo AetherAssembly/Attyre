@@ -8,6 +8,15 @@ function esc(t) {
 }
 
 export function renderSavedOutfits(container) {
+  try {
+    _renderSavedOutfits(container);
+  } catch (err) {
+    console.error('renderSavedOutfits failed:', err);
+    container.innerHTML = `<div class="page-wrap"><div class="alert alert-warning" style="margin-top:2rem"><span class="alert-icon">⚠</span><span>Saved Outfits failed to load. <a href="#/">Go home</a></span></div></div>`;
+  }
+}
+
+function _renderSavedOutfits(container) {
   const outfits = store.getSavedOutfits();
 
   const wrap = document.createElement('div');

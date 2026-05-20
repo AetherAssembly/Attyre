@@ -6,10 +6,9 @@ Security fixes are applied to the current release and the two most recent releas
 
 | Version | Status |
 | - | - |
-| 2026.05.11 | ✅ Active support |
-| 2026.04.26 | ✅ Active support |
-| 2026.04.24 | ✅ Active support |
-| < 2026.04.24 | ❌ Not supported |
+| v2.0.0 | ✅ Active support |
+| v1.5.0 | ✅ Active support |
+| < v1.5.0 | ❌ Not supported |
 
 As new versions are released, this table will be updated to reflect the current support window. Versions outside the support window are no longer actively patched.
 

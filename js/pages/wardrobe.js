@@ -7,6 +7,15 @@ import { announceToScreenReader } from '../app.js';
 const ALL_WEATHER_TAGS = ['sunny','cloudy','rain','light-rain','heavy-rain','snow','wind','humid','foggy','cold','hot'];
 
 export function renderWardrobe(container) {
+  try {
+    _renderWardrobe(container);
+  } catch (err) {
+    console.error('renderWardrobe failed:', err);
+    container.innerHTML = `<div class="page-wrap"><div class="alert alert-warning" style="margin-top:2rem"><span class="alert-icon">⚠</span><span>Wardrobe failed to load. <a href="#/">Go home</a></span></div></div>`;
+  }
+}
+
+function _renderWardrobe(container) {
   const items = store.getItems();
   const sorted = [...items].reverse();
 

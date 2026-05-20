@@ -5,6 +5,15 @@ import { updateAccessibilityMode, updateDarkMode, APP_VERSION } from '../app.js'
 
 
 export function renderSettings(container) {
+  try {
+    _renderSettings(container);
+  } catch (err) {
+    console.error('renderSettings failed:', err);
+    container.innerHTML = `<div class="page-wrap"><div class="alert alert-warning" style="margin-top:2rem"><span class="alert-icon">⚠</span><span>Settings failed to load. <a href="#/">Go home</a></span></div></div>`;
+  }
+}
+
+function _renderSettings(container) {
   const isAccessibility = store.isAccessibilityMode();
   const isDarkMode = store.isDarkMode();
   const itemCount = store.getItems().length;
@@ -132,6 +141,17 @@ export function renderSettings(container) {
         <div style="flex:1">
           <div class="settings-row-label">Get help</div>
           <div class="settings-row-hint">support@aetherassembly.org</div>
+        </div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;opacity:0.35"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+
+      <a href="mailto:contact@aetherassembly.org" class="settings-row settings-link-row">
+        <div class="settings-link-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="settings-row-label">Contact us</div>
+          <div class="settings-row-hint">contact@aetherassembly.org</div>
         </div>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;opacity:0.35"><polyline points="9 18 15 12 9 6"/></svg>
       </a>

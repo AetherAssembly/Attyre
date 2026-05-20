@@ -1,5 +1,7 @@
 // components/item-card.js
 
+import { resolveImageUri } from '../tauri-fs.js';
+
 const CATEGORY_ICON = {
   top:       `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.57a2 2 0 00-1.34-2.23z"/></svg>`,
   bottom:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v6l-4 12H7L3 9z"/><line x1="12" y1="9" x2="12" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/></svg>`,
@@ -20,7 +22,7 @@ export function renderItemCard(item) {
   card.className = 'item-card';
 
   const thumb = item.imageUri
-    ? `<img src="${item.imageUri}" alt="${esc(item.name)}">`
+    ? `<img src="${esc(resolveImageUri(item.imageUri))}" alt="${esc(item.name)}">`
     : `<span style="color:var(--border-strong)">${CATEGORY_ICON[item.category] || ''}<style>.item-card-thumb svg{width:36px;height:36px}</style></span>`;
 
   card.innerHTML = `

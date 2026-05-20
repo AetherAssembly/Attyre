@@ -1,7 +1,6 @@
 // store.js - localStorage management for Attyre
 
 const ITEMS_KEY = 'attyre_items';
-const COLORBLIND_KEY = 'attyre_colorblind';
 const DARK_MODE_KEY = 'attyre_dark_mode';
 const SAVED_OUTFITS_KEY = 'attyre_saved_outfits';
 const OUTFIT_DATES_KEY = 'attyre_outfit_dates';
@@ -93,16 +92,6 @@ export function deleteItem(id) {
  */
 export function getItemById(id) {
   return getItems().find(item => item.id === id) || null;
-}
-
-/** @deprecated Use isAccessibilityMode() instead */
-export function isColorblind() {
-  return localStorage.getItem(COLORBLIND_KEY) === 'true';
-}
-
-/** @deprecated Use setAccessibilityMode() instead */
-export function setColorblind(bool) {
-  localStorage.setItem(COLORBLIND_KEY, bool ? 'true' : 'false');
 }
 
 /**

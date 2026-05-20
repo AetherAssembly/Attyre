@@ -1,12 +1,12 @@
 # Attyre
 
-[![Version](https://img.shields.io/badge/version-2026.05.18-C9A96E)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-v2.0.0-C9A96E)](CHANGELOG.md)
 [![License: AGPL v3](https://img.shields.io/badge/license-AGPLv3-blue.svg)](LICENSE)
 [![Privacy Policy](https://img.shields.io/badge/privacy-policy-16a34a)](Privacy-Policy.html)
 
 Smart wardrobe manager with weather-based suggestions, planning tools, and local-first privacy.
 
-Current app version: 2026.05.18
+Current app version: v2.0.0
 
 ## What Attyre Does
 
@@ -134,7 +134,7 @@ CDN dependencies loaded in app shell:
 
 - Nominatim search endpoint for city geocoding.
 - Open-Meteo forecast endpoint for current weather.
-- User-Agent currently set to Attyre/2026.05.17 (attyre.aetherassembly.org) for Nominatim requests.
+- User-Agent currently set to Attyre/2.0.0 (attyre.org) for Nominatim requests.
 
 ## Project Structure
 
@@ -172,4 +172,4 @@ Requires modern browser support for:
 
 ## Live App
 
-[https://attyre.aetherassembly.org](https://attyre.aetherassembly.org)
+[https://attyre.org](https://attyre.org)

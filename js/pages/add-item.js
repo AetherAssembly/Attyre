@@ -1,6 +1,7 @@
 // pages/add-item.js - Add item form page
 
 import * as store from '../store.js';
+import { isTauri, saveImageFile } from '../tauri-fs.js';
 
 const CATEGORIES = ['top', 'bottom', 'outerwear', 'shoes', 'accessory'];
 const SEASONS = ['spring', 'summer', 'fall', 'winter'];
@@ -148,7 +149,7 @@ function attachEventListeners(container) {
     reader.readAsDataURL(file);
   });
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     clearErrors(container);
 
@@ -166,7 +167,12 @@ function attachEventListeners(container) {
     const occasions = Array.from(form.querySelectorAll('input[name="occasions"]:checked')).map(cb => cb.value);
     const weatherTags = Array.from(form.querySelectorAll('input[name="weatherTags"]:checked')).map(cb => cb.value);
 
-    const itemData = { name, category, color, warmth, seasons, occasions, weatherTags, notes, imageUri: imageInput.dataset.base64 || '' };
+    // In Tauri: save image to $APPDATA/images/ and store a filename reference.
+    // In the browser: store the base64 data URL as before.
+    const rawImage = imageInput.dataset.base64 || '';
+    const imageUri = rawImage && isTauri() ? await saveImageFile(rawImage) : rawImage;
+
+    const itemData = { name, category, color, warmth, seasons, occasions, weatherTags, notes, imageUri };
 
     try {
       store.addItem(itemData);
