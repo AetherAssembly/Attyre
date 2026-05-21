@@ -3,7 +3,7 @@
 // Usage: TAG=v2.0.1 node scripts/generate-update-manifest.js
 // Expects artifacts in ./artifacts/{linux,windows,macos-arm,macos-intel}/ subdirs.
 
-import { readdirSync, readFileSync, writeFileSync, statSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, basename } from 'node:path';
 
 const tag = process.env.TAG;
@@ -27,13 +27,13 @@ function walkDir(dir, results = []) {
 const platforms = {};
 
 const platformDirs = {
-  'linux':       { key: 'linux-x86_64',    sigSuffix: '.AppImage.tar.gz.sig',   urlSuffix: '.AppImage.tar.gz' },
-  'windows':     { key: 'windows-x86_64',  sigSuffix: '.nsis.zip.sig',          urlSuffix: '.nsis.zip' },
-  'macos-arm':   { key: 'darwin-aarch64',  sigSuffix: '.app.tar.gz.sig',        urlSuffix: '.app.tar.gz' },
-  'macos-intel': { key: 'darwin-x86_64',   sigSuffix: '.app.tar.gz.sig',        urlSuffix: '.app.tar.gz' },
+  'linux':       { key: 'linux-x86_64',   sigSuffix: '.AppImage.tar.gz.sig' },
+  'windows':     { key: 'windows-x86_64', sigSuffix: '.nsis.zip.sig' },
+  'macos-arm':   { key: 'darwin-aarch64', sigSuffix: '.app.tar.gz.sig' },
+  'macos-intel': { key: 'darwin-x86_64',  sigSuffix: '.app.tar.gz.sig' },
 };
 
-for (const [dir, { key, sigSuffix, urlSuffix }] of Object.entries(platformDirs)) {
+for (const [dir, { key, sigSuffix }] of Object.entries(platformDirs)) {
   const files = walkDir(join('artifacts', dir));
   const sigFile = files.find(f => f.endsWith(sigSuffix));
   if (!sigFile) { console.warn(`[warn] No .sig found for ${dir} — skipping`); continue; }
