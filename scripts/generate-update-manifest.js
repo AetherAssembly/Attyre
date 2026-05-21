@@ -27,10 +27,8 @@ function walkDir(dir, results = []) {
 const platforms = {};
 
 const platformDirs = {
-  'linux':       { key: 'linux-x86_64',   sigSuffix: '.AppImage.tar.gz.sig' },
-  'windows':     { key: 'windows-x86_64', sigSuffix: '.nsis.zip.sig' },
-  'macos-arm':   { key: 'darwin-aarch64', sigSuffix: '.app.tar.gz.sig' },
-  'macos-intel': { key: 'darwin-x86_64',  sigSuffix: '.app.tar.gz.sig' },
+  'linux':   { key: 'linux-x86_64',   sigSuffix: '.AppImage.tar.gz.sig' },
+  'windows': { key: 'windows-x86_64', sigSuffix: '.nsis.zip.sig' },
 };
 
 for (const [dir, { key, sigSuffix }] of Object.entries(platformDirs)) {

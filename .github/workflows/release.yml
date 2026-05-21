@@ -77,76 +77,8 @@ jobs:
             src-tauri/target/release/bundle/msi/*.msi.zip
             src-tauri/target/release/bundle/msi/*.msi.zip.sig
 
-  build-macos-arm:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - uses: dtolnay/rust-toolchain@stable
-
-      - run: npm ci
-
-      - name: Build (macOS arm64)
-        env:
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-        run: npm run tauri build -- --bundles app,dmg
-
-      # Rename .app.tar.gz to include arch (avoids name collision with Intel build)
-      - name: Rename update artifacts
-        run: |
-          cd src-tauri/target/release/bundle/macos
-          for f in *.app.tar.gz.sig; do mv "$f" "${f%.app.tar.gz.sig}-aarch64.app.tar.gz.sig"; done
-          for f in *.app.tar.gz; do mv "$f" "${f%.app.tar.gz}-aarch64.app.tar.gz"; done
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: macos-arm
-          path: |
-            src-tauri/target/release/bundle/dmg/*.dmg
-            src-tauri/target/release/bundle/macos/*-aarch64.app.tar.gz
-            src-tauri/target/release/bundle/macos/*-aarch64.app.tar.gz.sig
-
-  build-macos-intel:
-    runs-on: macos-13
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - uses: dtolnay/rust-toolchain@stable
-
-      - run: npm ci
-
-      - name: Build (macOS x86_64)
-        env:
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-        run: npm run tauri build -- --bundles app,dmg
-
-      # Rename .app.tar.gz to include arch (avoids name collision with arm64 build)
-      - name: Rename update artifacts
-        run: |
-          cd src-tauri/target/release/bundle/macos
-          for f in *.app.tar.gz.sig; do mv "$f" "${f%.app.tar.gz.sig}-x86_64.app.tar.gz.sig"; done
-          for f in *.app.tar.gz; do mv "$f" "${f%.app.tar.gz}-x86_64.app.tar.gz"; done
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: macos-intel
-          path: |
-            src-tauri/target/release/bundle/dmg/*.dmg
-            src-tauri/target/release/bundle/macos/*-x86_64.app.tar.gz
-            src-tauri/target/release/bundle/macos/*-x86_64.app.tar.gz.sig
-
   publish:
-    needs: [build-linux, build-windows, build-macos-arm, build-macos-intel]
+    needs: [build-linux, build-windows]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -175,6 +107,4 @@ jobs:
             --generate-notes \
             artifacts/linux/* \
             artifacts/windows/* \
-            artifacts/macos-arm/* \
-            artifacts/macos-intel/* \
             latest.json

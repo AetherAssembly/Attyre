@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Tauri 2 desktop app for Linux, Windows, and macOS (`npm run tauri:dev`, `npm run tauri:build`)
+- Tauri 2 desktop app for Linux and Windows (`npm run tauri:dev`, `npm run tauri:build`)
 - Vite dev server replacing `python3 -m http.server` — hot module replacement, proper error overlays
 - Filesystem image storage on desktop via custom `save_image` Rust command — images saved to `$APPDATA/images/` instead of localStorage, avoiding the 5–10 MB browser quota
 - Service worker with network-first caching strategy for PWA offline support
@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `npm run lint:css` script to catch CSS class name regressions before they ship
 - `contact@aetherassembly.org` added as a second support contact in Settings
 - **Auto-updater**: Settings page now shows a "Check for Updates" button (desktop only); a dismissible banner appears on startup if a new version is available
-- **GitHub Actions release workflow**: pushing a version tag (`v*.*.*`) automatically builds Linux, Windows, and macOS artifacts, generates a signed `latest.json` update manifest, and publishes the GitHub release
+- **GitHub Actions release workflow**: pushing a version tag (`v*.*.*`) automatically builds Linux and Windows artifacts, generates a signed `latest.json` update manifest, and publishes the GitHub release
 - **Add Item overhaul**: photo is now required and moved to the top of the form; dominant color is auto-detected from the uploaded image via Canvas API; item name is optional and auto-generated (`Shirt_001`, `Pants_002`, etc.) if left blank; warmth buttons now show temperature ranges; weather tags are auto-suggested when a warmth level is selected
 - **Warmth scale clarified**: scale now runs 1 (Freezing, ≤0°C) → 5 (Hot, 25°C+) left to right, matching natural temperature intuition
 
