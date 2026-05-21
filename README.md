@@ -1,175 +1,181 @@
 # Attyre
 
-[![Version](https://img.shields.io/badge/version-2026.05.18-C9A96E)](CHANGELOG.md)
-[![License: AGPL v3](https://img.shields.io/badge/license-AGPLv3-blue.svg)](LICENSE)
+> Your wardrobe, weather-aware.
+
+[![Version](https://img.shields.io/badge/version-v2.0.0-C9A96E)](CHANGELOG.md)
+[![License: AGPL v3](https://img.shields.io/badge/license-AGPL--3.0-blue)](LICENSE)
 [![Privacy Policy](https://img.shields.io/badge/privacy-policy-16a34a)](Privacy-Policy.html)
+[![Tauri](https://img.shields.io/badge/tauri-2-24C8DB?logo=tauri&logoColor=white)](https://tauri.app/)
 
-Smart wardrobe manager with weather-based suggestions, planning tools, and local-first privacy.
+[![Linux](https://img.shields.io/badge/Linux-AppImage%20%C2%B7%20.deb%20%C2%B7%20.rpm-FCC624?logo=linux&logoColor=black)](https://github.com/AetherAssembly/Attyre/releases)
+[![Windows](https://img.shields.io/badge/Windows-MSI%20%C2%B7%20NSIS-0078D4?logo=windows&logoColor=white)](https://github.com/AetherAssembly/Attyre/releases)
+[![macOS](https://img.shields.io/badge/macOS-DMG-000000?logo=apple&logoColor=white)](https://github.com/AetherAssembly/Attyre/releases)
+[![Web](https://img.shields.io/badge/web-attyre.org-C9A96E)](https://attyre.org)
 
-Current app version: 2026.05.18
+Manage your wardrobe, get weather-based outfit suggestions, and plan what to wear — all offline, no account required, all data stays on your device.
 
-## What Attyre Does
+---
 
-- Manage clothing items with category, color, warmth, seasons, occasions, weather tags, notes, and optional image.
-- Suggest outfits using live weather based on city input.
-- Plan outfits by date in a calendar view.
-- Save and reuse outfit combinations.
-- Track usage and view stats across categories, seasons, warmth, and wear counts.
-- Run fully client-side with no account or backend.
+## Features
 
-## Current UI and Navigation
+- **Wardrobe management** — add items with category, color, warmth, seasons, occasions, weather tags, notes, and an optional photo
+- **Weather-based suggestions** — enter any city to get ranked outfit picks based on live temperature and conditions
+- **Outfit planning** — calendar view to assign outfits to specific dates; usage counts update automatically
+- **Saved outfits** — name and save combinations to reuse later
+- **Stats dashboard** — total wears, most worn, never worn, breakdowns by category, season, warmth, and occasion
+- **Wardrobe filters** — search by name or color, filter by category, season, or weather tags
+- **Image cropping** — built-in crop tool when adding or editing item photos
+- **Dark mode and accessibility mode** — colorblind-friendly palette, larger text, stronger borders
+- **Backup and restore** — export your wardrobe as JSON; import merges with existing items
+- **Fully offline** — no account, no backend, no tracking
 
-- Desktop layout uses a left sidebar with routes for Home, Wardrobe, Suggest Outfit, Plan Outfit, Saved Outfits, Stats, and Settings.
-- Mobile layout uses a top bar, hamburger sidebar, and bottom navigation.
-- Active route highlighting is synchronized across desktop and mobile nav items.
+---
 
-## Routes
+## Download
 
-- #/ home dashboard
-- #/wardrobe wardrobe list and filters
-- #/wardrobe/add add item form
-- #/wardrobe/:id item detail and edit
-- #/suggest weather-based suggestions
-- #/calendar outfit planning by date
-- #/saved-outfits saved combinations
-- #/stats analytics dashboard
-- #/settings preferences, backup/restore, links, version
+Grab the latest build from the [Releases](https://github.com/AetherAssembly/Attyre/releases) page, or use the web app at [attyre.org](https://attyre.org) — no install needed.
 
-## Feature Details
+| Platform | Formats |
+| --- | --- |
+| Linux (x86_64) | AppImage · `.deb` (Debian/Ubuntu) · `.rpm` (Fedora/RHEL/openSUSE) |
+| Windows | MSI · NSIS installer |
+| macOS (Apple Silicon) | DMG |
+| macOS (Intel) | DMG |
+| Web | [attyre.org](https://attyre.org) |
 
-### Wardrobe Management
+> **macOS note:** Attyre is not code-signed with an Apple Developer certificate. On first launch, macOS Gatekeeper will block it. To open it: right-click the app → **Open** → **Open** again in the dialog. You only need to do this once.
 
-- Add, edit, and delete items.
-- Search by name and color.
-- Filter by category and season.
-- Filter by weather tags using multi-select chips.
+---
 
-### Image Handling
+## Windows
 
-- Add and edit flows both include optional image upload.
-- Cropper.js is used in both add and edit flows for image cropping.
-- Images are stored as data URLs.
+Run the NSIS installer (`Attyre_2.0.0_x64-setup.exe`) and follow the prompts, or use the `.msi` for silent/managed installs.
 
-### Suggest Outfit
+> Attyre is not signed with a Microsoft certificate. Windows SmartScreen may show a warning. Click **More info** → **Run anyway** to proceed.
 
-- Geocoding via OpenStreetMap Nominatim.
-- Weather via Open-Meteo current weather endpoint.
-- Retry logic with backoff for external API calls.
-- Ranking engine scores by category fit and weather-tag fit.
+### Uninstall
 
-### Planning and Saved Outfits
+Go to **Settings → Apps**, find Attyre, and uninstall from there.
 
-- Calendar supports month navigation and day selection.
-- Assign one or more items to a date.
-- Increment item usage when outfits are saved to a date.
-- Save named outfit combinations and delete when needed.
+---
 
-### Stats and Insights
+## Linux
 
-- Summary cards for total items, total wears, planned days, never worn.
-- Breakdowns by category, season, warmth, and occasion.
-- Most worn list and never worn list.
+> To run AppImages easily, try [Gear Lever](https://github.com/mijorus/gearlever) (GNOME) or [Shelly](https://shellyalpm.com/) (CachyOS).
 
-### Accessibility and Theming
+### Debian / Ubuntu
 
-- Dark mode toggle.
-- Accessibility mode toggle with safe high-contrast blue palette, larger font, stronger borders, thicker nav icon strokes, and colorblind-friendly favicon variant.
-- Skip-to-content link visible on keyboard focus.
-- Global focus ring on all interactive elements; thicker in accessibility mode.
-- `prefers-reduced-motion` support: all transitions and animations are suppressed when the OS setting is enabled.
-- Screen reader announcements via hidden `aria-live` region for page navigation, filter results, and calendar date selection.
-- Item cards are `<button>` elements for keyboard and screen reader compatibility.
-- Calendar grid uses ARIA grid semantics with keyboard Enter/Space day selection.
+```bash
+sudo apt install ./Attyre_2.0.0_amd64.deb
+```
 
-## Data Model and Storage
+> Using `apt install ./` rather than `dpkg -i` ensures apt resolves any missing dependencies automatically.
 
-Data is stored in browser localStorage.
+#### Uninstall
 
-- attyre_items item collection, stored compressed with LZString when saved.
-- attyre_saved_outfits saved outfit combinations.
-- attyre_outfit_dates date-to-item mapping for planning.
-- attyre_dark_mode dark mode preference.
-- attyre_accessibility accessibility mode preference.
-- attyre_colorblind legacy key retained for backward compatibility.
+```bash
+sudo apt remove attyre
+```
 
-Important: clearing browser storage removes app data.
+### Fedora / RHEL / Rocky / Alma
 
-## Backup and Restore
+```bash
+sudo dnf install ./Attyre-2.0.0-1.x86_64.rpm
+```
 
-- Export writes a JSON backup file for items.
-- Import validates basic item shape before saving.
-- Import success redirects users to wardrobe view.
+#### Uninstall
 
-## Suggestion Logic
+```bash
+sudo dnf remove attyre
+```
 
-Temperature bands used by the engine:
+### openSUSE
 
-- 0C and below: very cold labels and cold/snow tags.
-- up to 10C: cold labels and cold/wind tags.
-- up to 18C: cool labels and cloudy tags.
-- up to 24C: mild labels and sunny tags.
-- above 24C: warm labels and hot/sunny tags.
+```bash
+sudo zypper install ./Attyre-2.0.0-1.x86_64.rpm
+```
 
-Scoring:
+#### Uninstall
 
-- +2 when mapped category matches a needed label.
-- +1 per matching weather tag.
-- Top unique categories are selected, up to four items.
+```bash
+sudo zypper remove attyre
+```
 
-## Progressive Web App
+---
 
-- Web app manifest is included.
-- Standalone display and app shortcuts are configured.
-- `start_url` uses `"/index.html#/"` for correct hash-router launch from home screen.
-- Install prompts depend on browser and platform support.
+## macOS
 
-## External Dependencies
+Download the `.dmg` for your chip (Apple Silicon or Intel), open it, and drag **Attyre** to your Applications folder.
 
-CDN dependencies loaded in app shell:
+Because Attyre is unsigned, Gatekeeper will block it on first launch. To open it anyway:
 
-- LZString 1.5.0 for item data compression.
-- Cropper.js 1.5.13 for image cropping in add and edit flows.
+1. Right-click **Attyre.app** in Applications → **Open**
+2. Click **Open** in the security dialog
 
-## External APIs
+You only need to do this once. After that, Attyre opens normally.
 
-- Nominatim search endpoint for city geocoding.
-- Open-Meteo forecast endpoint for current weather.
-- User-Agent currently set to Attyre/2026.05.17 (attyre.aetherassembly.org) for Nominatim requests.
+### Uninstall
 
-## Project Structure
+Drag **Attyre** from Applications to the Trash. App data is stored in `~/Library/Application Support/attyre` — delete that folder too if you want a clean removal.
 
-Top-level structure:
+---
 
-- index.html app shell and navigation
-- style.css full styling and theme tokens
-- manifest.json PWA metadata and shortcuts
-- js/app.js router, mode initialization, version export
-- js/store.js local storage operations and backup helpers
-- js/engine.js pure suggestion engine and ranking
-- js/pages/* route-level page renderers
-- js/components/item-card.js reusable item card view
-- assets/* logos and icons
+## Development
 
-## Privacy and Security
+### Prerequisites
 
-- Local-first by design: no app backend.
-- No login and no analytics pipeline in app code.
-- User-facing docs include privacy and security policy files.
+- Node.js 18+
+- npm
+- Rust stable toolchain — only needed for the desktop app, see [tauri.app/start/prerequisites](https://tauri.app/start/prerequisites/)
 
-## Browser Support
+### Setup
 
-Requires modern browser support for:
+```bash
+git clone https://github.com/AetherAssembly/Attyre.git
+cd Attyre
+npm install
+```
 
-- ES modules
-- fetch
-- crypto.randomUUID
-- localStorage
-- FileReader
+### Run
+
+**Web (Vite dev server):**
+
+```bash
+npm run dev
+```
+
+App available at `http://localhost:1420`.
+
+**Desktop (Tauri):**
+
+```bash
+npm run tauri:dev
+```
+
+### Build
+
+```bash
+npm run build          # Vite only → dist/
+npm run tauri:build    # Full desktop build → src-tauri/target/release/bundle/
+```
+
+The default build targets in `tauri.conf.json` are set for Linux (AppImage, deb, rpm). To build for other platforms locally, pass `--bundles` to override:
+
+```bash
+npm run tauri build -- --bundles nsis       # Windows installer
+npm run tauri build -- --bundles dmg        # macOS disk image
+```
+
+Release builds for all platforms are handled automatically by GitHub Actions when a version tag is pushed.
+
+---
+
+## Privacy
+
+All data is stored locally on your device; in `localStorage` on the web, and in the OS app data directory on desktop. Nothing is sent to any server except optional weather lookups (city name only) to [OpenStreetMap Nominatim](https://nominatim.openstreetmap.org) and [Open-Meteo](https://open-meteo.com), which you trigger explicitly. See [Privacy-Policy.html](Privacy-Policy.html).
+
+---
 
 ## License
 
-[GNU AGPL v3.0.](LICENSE)
-
-## Live App
-
-[https://attyre.aetherassembly.org](https://attyre.aetherassembly.org)
+[AGPL-3.0](LICENSE)

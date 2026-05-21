@@ -123,7 +123,7 @@
     </script>
 
     <h1>Privacy Policy</h1>
-    <p class="subtitle">Last updated: May 2026 &nbsp;·&nbsp; Attyre by AetherAssembly &nbsp;·&nbsp; <a href="https://attyre.aetherassembly.org">attyre.aetherassembly.org</a></p>
+    <p class="subtitle">Last updated: May 2026 &nbsp;·&nbsp; Attyre by AetherAssembly &nbsp;·&nbsp; <a href="https://attyre.org">attyre.org</a></p>
 
     <div class="callout">
       <strong>Short version:</strong> Attyre collects nothing. Your wardrobe data never leaves your device. There are no accounts, no servers, no tracking, and no third-party data sharing of any kind.
@@ -143,14 +143,16 @@
     </ul>
 
     <h2>3. Data Stored on Your Device</h2>
-    <p>Attyre stores the following data in your browser's <code>localStorage</code> — on your device only:</p>
+    <p>Attyre stores the following data locally — on your device only:</p>
     <ul>
       <li>Your clothing items (names, categories, tags, warmth levels, notes)</li>
-      <li>Any photos you attach to items (stored as base64 data URLs)</li>
+      <li>Any photos you attach to items</li>
       <li>Saved outfit combinations and calendar plans</li>
       <li>App preferences (dark mode, accessibility mode)</li>
     </ul>
-    <p>This data is entirely under your control. You can export it, delete it, or wipe it at any time from the Settings page. Clearing your browser's cache or localStorage will permanently delete all Attyre data — there is no cloud backup.</p>
+    <p><strong>Web app:</strong> data is stored in your browser's <code>localStorage</code>. Clearing your browser cache or localStorage will permanently delete all Attyre data.</p>
+    <p><strong>Desktop app:</strong> data is stored in your OS app data directory (<code>%APPDATA%\attyre</code> on Windows, <code>~/.local/share/attyre</code> on Linux, <code>~/Library/Application Support/attyre</code> on macOS). Photos are saved as image files in an <code>images/</code> subfolder. Uninstalling the app does not automatically delete this folder.</p>
+    <p>This data is entirely under your control. You can export it, delete it, or wipe it at any time from the Settings page. There is no cloud backup.</p>
 
     <h2>4. Third-Party APIs</h2>
     <p>When you use the <strong>Suggest Outfit</strong> feature, Attyre makes two outbound requests to fetch weather data. No personal data is sent — only the city name you type:</p>

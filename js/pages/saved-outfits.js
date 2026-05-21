@@ -8,6 +8,15 @@ function esc(t) {
 }
 
 export function renderSavedOutfits(container) {
+  try {
+    _renderSavedOutfits(container);
+  } catch (err) {
+    console.error('renderSavedOutfits failed:', err);
+    container.innerHTML = `<div class="page-wrap"><div class="alert alert-warning" style="margin-top:2rem"><span class="alert-icon">⚠</span><span>Saved Outfits failed to load. <a href="#/">Go home</a></span></div></div>`;
+  }
+}
+
+function _renderSavedOutfits(container) {
   const outfits = store.getSavedOutfits();
 
   const wrap = document.createElement('div');
@@ -48,7 +57,7 @@ export function renderSavedOutfits(container) {
           <span class="outfit-section-name">${esc(outfit.name)}</span>
           <div class="btn-group">
             <span class="tag">${outfitItems.length} item${outfitItems.length !== 1 ? 's' : ''}</span>
-            <button class="btn-icon danger delete-outfit-btn" aria-label="Delete outfit">
+            <button class="btn-icon danger" data-action="delete-outfit" aria-label="Delete outfit">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
             </button>
           </div>
@@ -63,7 +72,7 @@ export function renderSavedOutfits(container) {
         itemsGrid.appendChild(card);
       }
 
-      const deleteBtn = outfitEl.querySelector('.delete-outfit-btn');
+      const deleteBtn = outfitEl.querySelector('[data-action="delete-outfit"]');
       deleteBtn.addEventListener('click', () => {
         store.deleteSavedOutfit(outfit.id);
         outfitEl.remove();

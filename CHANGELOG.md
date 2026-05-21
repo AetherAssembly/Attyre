@@ -5,7 +5,37 @@ All notable changes to Attyre will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Current Version [v2026.05.18]
+## [v2.0.0] - 2026-05-20
+
+### Added
+
+- Tauri 2 desktop app for Linux, Windows, and macOS (`npm run tauri:dev`, `npm run tauri:build`)
+- Vite dev server replacing `python3 -m http.server` — hot module replacement, proper error overlays
+- Filesystem image storage on desktop via custom `save_image` Rust command — images saved to `$APPDATA/images/` instead of localStorage, avoiding the 5–10 MB browser quota
+- Service worker with network-first caching strategy for PWA offline support
+- Per-page error boundaries — each render function now catches its own failures and shows an inline error message rather than a blank screen
+- `npm run lint:css` script to catch CSS class name regressions before they ship
+- `contact@aetherassembly.org` added as a second support contact in Settings
+- **Auto-updater**: Settings page now shows a "Check for Updates" button (desktop only); a dismissible banner appears on startup if a new version is available
+- **GitHub Actions release workflow**: pushing a version tag (`v*.*.*`) automatically builds Linux, Windows, and macOS artifacts, generates a signed `latest.json` update manifest, and publishes the GitHub release
+- **Add Item overhaul**: photo is now required and moved to the top of the form; dominant color is auto-detected from the uploaded image via Canvas API; item name is optional and auto-generated (`Shirt_001`, `Pants_002`, etc.) if left blank; warmth buttons now show temperature ranges; weather tags are auto-suggested when a warmth level is selected
+- **Warmth scale clarified**: scale now runs 1 (Freezing, ≤0°C) → 5 (Hot, 25°C+) left to right, matching natural temperature intuition
+
+### Fixed
+
+- Mobile navigation bug: router now wraps all page renders in try/catch so a render error can never leave the page faded out and frozen
+- Service worker no longer registers on localhost, preventing stale cached pages from masking dead dev servers
+- Tauri dev server (port 1420) no longer leaks as an orphan process after the app window closes
+
+### Changed
+
+- Versioning scheme changed from date-based (`2026.05.18`) to semantic versioning (`v2.0.0`)
+- App domain updated to `attyre.org`
+- Desktop: "Your data is stored locally in this browser" warning is hidden — data is persisted in the OS app data directory, not the browser cache
+
+---
+
+## [v1.5.0] - 2026-05-18
 
 ### Fixed
 
@@ -20,7 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## Prior Releases [v2026.05.11] - 2026-05-11
+## [v1.3.0] - 2026-05-11
 
 ### Fixed
 
@@ -47,7 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## Prior Releases [v2026.04.24] - 2026-04-24
+## [v1.2.0] - 2026-04-24
 
 ### Added
 
@@ -82,9 +112,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Crop button re-usable after first crop**: After applying a crop in the add-item form, the replacement preview button had no event listener attached, making subsequent crops impossible — listener is now re-wired via a recursive helper after each crop.
 - **localStorage quota errors surfaced**: `saveItems` was catching `QuotaExceededError` silently; it now re-throws so callers can alert the user when storage is full.
 
-## [v1.5.0] - 2026-03-10
+## [v1.1.0] - 2026-03-10
 
-### Added (v1.5.0)
+### Added (v1.1.0)
 
 - **Accessibility Mode**: Comprehensive colorblind-friendly interface supporting all types of colorblindness (protanopia,deuteranopia, tritanopia, achromatopsia) with safe color palette and visual icons
 - **Advanced Wardrobe Filtering**: Category and season filters in addition to text search
@@ -95,20 +125,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Image Crop Tool**: Integrated Cropper.js for cropping item photos before saving
 - **Quick Links**: Added links to Landing Pad newsletter, Helpdesk Discord, and GitHub profile in settings
 
-### Changed (v1.5.0)
+### Changed (v1.1.0)
 
 - **Colorblind Mode** renamed to **Accessibility Mode** with expanded functionality
 - **Wardrobe Search** now includes dropdown filters for better organization
 - **Status Messages** now include icons (✓, ⚠, ❌) alongside colors for better accessibility
 
-### Technical Improvements (v1.5.0)
+### Technical Improvements (v1.1.0)
 
 - Added usage tracking for wardrobe items
 - Implemented API retry mechanism for better reliability
 - Updated CSS custom properties for consistent theming
 - Enhanced mobile CSS with improved touch interactions
 
-## Initial Release of Attyre [v1.0.0] - 2026-03-03
+## [v1.0.0] - 2026-03-03
 
 ### Added (v1.0.0)
 

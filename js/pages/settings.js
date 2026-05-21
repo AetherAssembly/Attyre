@@ -2,9 +2,19 @@
 
 import * as store from '../store.js';
 import { updateAccessibilityMode, updateDarkMode, APP_VERSION } from '../app.js';
+import { isTauri } from '../tauri-fs.js';
 
 
 export function renderSettings(container) {
+  try {
+    _renderSettings(container);
+  } catch (err) {
+    console.error('renderSettings failed:', err);
+    container.innerHTML = `<div class="page-wrap"><div class="alert alert-warning" style="margin-top:2rem"><span class="alert-icon">⚠</span><span>Settings failed to load. <a href="#/">Go home</a></span></div></div>`;
+  }
+}
+
+function _renderSettings(container) {
   const isAccessibility = store.isAccessibilityMode();
   const isDarkMode = store.isDarkMode();
   const itemCount = store.getItems().length;
@@ -135,7 +145,33 @@ export function renderSettings(container) {
         </div>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;opacity:0.35"><polyline points="9 18 15 12 9 6"/></svg>
       </a>
+
+      <a href="mailto:contact@aetherassembly.org" class="settings-row settings-link-row">
+        <div class="settings-link-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="settings-row-label">Contact us</div>
+          <div class="settings-row-hint">contact@aetherassembly.org</div>
+        </div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;opacity:0.35"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
     </div>
+
+    <!-- Updates (desktop only) -->
+    ${isTauri() ? `
+    <div class="section-card" id="updates-card">
+      <div class="section-card-title">Updates</div>
+      <div class="settings-row" style="flex-wrap:wrap;gap:10px">
+        <div>
+          <div class="settings-row-label">Check for updates</div>
+          <div class="settings-row-hint">Current version: ${APP_VERSION}</div>
+        </div>
+        <button id="check-updates-btn" class="btn btn-secondary btn-sm">Check now</button>
+      </div>
+      <p id="update-status" style="font-size:13px;color:var(--text-muted);padding:0 0 4px 0;margin:0"></p>
+    </div>
+    ` : ''}
 
     <!-- Version -->
     <div class="section-card">
@@ -201,6 +237,15 @@ export function renderSettings(container) {
     };
     reader.readAsText(file);
   });
+
+  // Updates
+  if (isTauri()) {
+    const checkBtn = wrap.querySelector('#check-updates-btn');
+    const statusEl = wrap.querySelector('#update-status');
+    checkBtn.addEventListener('click', () => {
+      import('../updater.js').then(m => m.checkForUpdates(statusEl, checkBtn));
+    });
+  }
 
   // Version
   wrap.querySelector('#version-display').textContent = APP_VERSION;

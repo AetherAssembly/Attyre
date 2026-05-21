@@ -2,6 +2,7 @@
 
 import * as store from '../store.js';
 import * as engine from '../engine.js';
+import { resolveImageUri } from '../tauri-fs.js';
 
 function esc(t) {
   return String(t ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
@@ -82,7 +83,7 @@ export function renderSuggest(container) {
       try {
         geoRes = await fetchWithRetry(
           `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`,
-          { headers: { 'User-Agent': 'Attyre/2026.04.26 (attyre.aetherassembly.org)' } }
+          { headers: { 'User-Agent': 'Attyre/2.0.0 (attyre.org)' } }
         );
         geoData = await geoRes.json();
       } catch (geoErr) {
@@ -157,7 +158,7 @@ export function renderSuggest(container) {
       const listHtml = ranked.map(({ item, score }) => `
         <div class="suggestion-item" data-id="${esc(item.id)}">
           <div class="suggestion-thumb">
-            ${item.imageUri ? `<img src="${esc(item.imageUri)}" alt="">` : `<span style="font-size:24px">${CATEGORY_EMOJI[item.category] || '📦'}</span>`}
+            ${item.imageUri ? `<img src="${esc(resolveImageUri(item.imageUri))}" alt="">` : `<span style="font-size:24px">${CATEGORY_EMOJI[item.category] || '📦'}</span>`}
           </div>
           <div class="suggestion-info">
             <div class="suggestion-name">${esc(item.name)}</div>

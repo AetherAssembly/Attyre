@@ -7,6 +7,15 @@ import { announceToScreenReader } from '../app.js';
 const ALL_WEATHER_TAGS = ['sunny','cloudy','rain','light-rain','heavy-rain','snow','wind','humid','foggy','cold','hot'];
 
 export function renderWardrobe(container) {
+  try {
+    _renderWardrobe(container);
+  } catch (err) {
+    console.error('renderWardrobe failed:', err);
+    container.innerHTML = `<div class="page-wrap"><div class="alert alert-warning" style="margin-top:2rem"><span class="alert-icon">⚠</span><span>Wardrobe failed to load. <a href="#/">Go home</a></span></div></div>`;
+  }
+}
+
+function _renderWardrobe(container) {
   const items = store.getItems();
   const sorted = [...items].reverse();
 
@@ -48,7 +57,7 @@ export function renderWardrobe(container) {
     <!-- Tag filter chips -->
     <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px" id="tag-filters">
       ${ALL_WEATHER_TAGS.map(t => `
-        <button class="tag-filter-chip tag" data-tag="${t}" style="cursor:pointer;border:1px solid var(--border);background:var(--bg-subtle);padding:4px 10px;font-size:12px;border-radius:20px;font-weight:600;transition:all 0.15s">${t}</button>
+        <button class="tag-filter-chip tag" data-tag="${t}">${t}</button>
       `).join('')}
     </div>
     ` : ''}

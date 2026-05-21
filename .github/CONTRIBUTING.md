@@ -24,13 +24,13 @@ This project follows our [Code of Conduct](CODE_OF_CONDUCT.md). Please read it b
 
 ## Local Development
 
-Attyre is a static client-side app with no build step — the files are served as-is.
+Attyre uses Vite as a dev server and optionally Tauri for the desktop build.
 
 ### Prerequisites
 
-- Python 3 (for the local dev server)
-  - Verify installation: `python3 --version`
-  - If Python 3 is not installed, download it from [Python](https://www.python.org/downloads/)
+- Node.js 18+ and npm
+  - Verify installation: `node --version && npm --version`
+- (Desktop only) Rust stable toolchain — see [tauri.app/start/prerequisites](https://tauri.app/start/prerequisites/)
 
 ### Setup
 
@@ -39,11 +39,20 @@ Attyre is a static client-side app with no build step — the files are served a
 git clone https://github.com/aetherassembly/attyre.git
 cd attyre
 
-# 2. Start a local dev server
-python3 -m http.server 8000
+# 2. Install dependencies
+npm install
+
+# 3. Start the Vite dev server
+npm run dev
 ```
 
-The app will be available at `http://localhost:8000`.
+The app will be available at `http://localhost:1420`.
+
+To run the desktop app:
+
+```bash
+npm run tauri:dev
+```
 
 > **Note:** The Suggest Outfit feature calls OpenStreetMap Nominatim and Open-Meteo from your browser directly. These work in local dev with no extra config, but if you make frequent requests you may hit provider rate limits (especially Nominatim), and occasional transient CORS/request failures can occur. If that happens, slow down request frequency and retry after a short wait.
 
@@ -134,7 +143,7 @@ Before marking your PR as ready for review:
 
 Every PR automatically runs a smoke test via GitHub Actions — no secrets or credentials needed. It:
 
-- Spins up a `python3 -m http.server` and verifies every static file, JS module, and asset returns 200
+- Spins up a static file server and verifies every static file, JS module, and asset returns 200
 - Validates `manifest.json` is well-formed JSON
 - Confirms `APP_VERSION` is present and correctly formatted in `js/app.js`
 
@@ -144,7 +153,7 @@ Results are posted as a comment on the PR and updated on every new push. If a ch
 
 ## Deployment to Production
 
-Merging to `main` triggers an automatic deployment via Cloudflare's GitHub integration — nothing to configure or run manually. Once your PR is merged, the live site at [attyre.aetherassembly.org](https://attyre.aetherassembly.org) updates within a minute or two.
+Merging to `main` triggers an automatic deployment via Cloudflare's GitHub integration — nothing to configure or run manually. Once your PR is merged, the live site at [attyre.org](https://attyre.org) updates within a minute or two.
 
 If a deploy looks broken after merging, check the Cloudflare dashboard for build logs.
 

@@ -1,6 +1,7 @@
 // pages/item-detail.js - Item detail/edit page
 
 import * as store from '../store.js';
+import { isTauri, resolveImageUri, saveImageFile } from '../tauri-fs.js';
 
 const CATEGORIES = ['top', 'bottom', 'outerwear', 'shoes', 'accessory'];
 const SEASONS = ['spring', 'summer', 'fall', 'winter'];
@@ -102,7 +103,7 @@ export function renderItemDetail(container, itemId) {
           <div id="image-preview-container">
             ${item.imageUri ? `
               <div class="image-preview-wrap">
-                <img src="${esc(item.imageUri)}" alt="Preview" class="image-preview">
+                <img src="${esc(resolveImageUri(item.imageUri))}" alt="Preview" class="image-preview">
                 <button id="existing-crop-btn" type="button" class="btn btn-secondary btn-sm" style="margin-top:8px">Crop Image</button>
               </div>
             ` : ''}
@@ -180,7 +181,7 @@ function attachEventListeners(container, item) {
     reader.readAsDataURL(file);
   });
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     clearErrors(container);
 
@@ -199,7 +200,11 @@ function attachEventListeners(container, item) {
     const weatherTags = Array.from(form.querySelectorAll('input[name="weatherTags"]:checked')).map(cb => cb.value);
 
     const changes = { name, category, color, warmth, seasons, occasions, weatherTags, notes };
-    if (imageInput.dataset.base64) changes.imageUri = imageInput.dataset.base64;
+    if (imageInput.dataset.base64) {
+      changes.imageUri = isTauri()
+        ? await saveImageFile(imageInput.dataset.base64)
+        : imageInput.dataset.base64;
+    }
 
     try {
       store.updateItem(item.id, changes);
@@ -246,7 +251,7 @@ function clearErrors(container) {
 function capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
 
 function getWarmthLabel(level) {
-  return { 1: 'Very Light', 2: 'Light', 3: 'Medium', 4: 'Warm', 5: 'Very Warm' }[level] || '';
+  return { 1: 'Freezing', 2: 'Cold', 3: 'Mild', 4: 'Warm', 5: 'Hot' }[level] || '';
 }
 
 function openCropModal(imageSrc, onCrop) {

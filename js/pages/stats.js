@@ -7,6 +7,15 @@ function esc(t) {
 }
 
 export function renderStats(container) {
+  try {
+    _renderStats(container);
+  } catch (err) {
+    console.error('renderStats failed:', err);
+    container.innerHTML = `<div class="page-wrap"><div class="alert alert-warning" style="margin-top:2rem"><span class="alert-icon">⚠</span><span>Stats failed to load. <a href="#/">Go home</a></span></div></div>`;
+  }
+}
+
+function _renderStats(container) {
   const items = store.getItems();
   const wrap = document.createElement('div');
   wrap.className = 'page-wrap';
@@ -61,7 +70,7 @@ export function renderStats(container) {
     plannedDays = Object.keys(dates).length;
   } catch {}
 
-  const warmthLabel = ['Very light','Light','Medium','Warm','Very warm'];
+  const warmthLabel = ['Freezing','Cold','Mild','Warm','Hot'];
 
   wrap.innerHTML = `
     <div class="page-header">

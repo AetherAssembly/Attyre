@@ -3,12 +3,22 @@
 import * as store from '../store.js';
 import * as engine from '../engine.js';
 import { CATEGORY_EMOJI } from '../components/item-card.js';
+import { isTauri, resolveImageUri } from '../tauri-fs.js';
 
 function esc(t) {
   return String(t ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
 }
 
 export function renderHome(container) {
+  try {
+    _renderHome(container);
+  } catch (err) {
+    console.error('renderHome failed:', err);
+    container.innerHTML = `<div class="page-wrap"><div class="alert alert-warning" style="margin-top:2rem"><span class="alert-icon">⚠</span><span>Home failed to load. <a href="#/">Retry</a></span></div></div>`;
+  }
+}
+
+function _renderHome(container) {
   const items = store.getItems();
 
   const cats = { top: 0, bottom: 0, outerwear: 0, shoes: 0, accessory: 0 };
@@ -37,10 +47,11 @@ export function renderHome(container) {
       </div>
     </div>
 
+    ${!isTauri() ? `
     <div class="alert alert-warning" style="margin-bottom:20px">
       <span class="alert-icon">⚠</span>
       <span>Your data is stored locally in this browser. <strong>Export a backup in Settings</strong> before clearing your cache.</span>
-    </div>
+    </div>` : ''}
 
     <div class="quick-tiles">
       <a href="#/wardrobe" class="quick-tile">
@@ -79,7 +90,7 @@ export function renderHome(container) {
         ${ranked.map(({ item }) => `
           <div class="outfit-item-chip">
             <div class="outfit-item-chip-thumb">
-              ${item.imageUri ? `<img src="${esc(item.imageUri)}" alt="">` : `<span>${CATEGORY_EMOJI[item.category] || '📦'}</span>`}
+              ${item.imageUri ? `<img src="${esc(resolveImageUri(item.imageUri))}" alt="">` : `<span>${CATEGORY_EMOJI[item.category] || '📦'}</span>`}
             </div>
             <span class="outfit-item-chip-name">${esc(item.name)}</span>
           </div>
@@ -141,7 +152,7 @@ export function renderHome(container) {
         chips.innerHTML = shuffled.map(item => `
           <div class="outfit-item-chip">
             <div class="outfit-item-chip-thumb">
-              ${item.imageUri ? `<img src="${esc(item.imageUri)}" alt="">` : `<span>${CATEGORY_EMOJI[item.category] || '📦'}</span>`}
+              ${item.imageUri ? `<img src="${esc(resolveImageUri(item.imageUri))}" alt="">` : `<span>${CATEGORY_EMOJI[item.category] || '📦'}</span>`}
             </div>
             <span class="outfit-item-chip-name">${esc(item.name)}</span>
           </div>

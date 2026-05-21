@@ -28,5 +28,12 @@ desktop.ini
 *.log
 npm-debug.log*
  
+# ── Vite build output ─────────────────────────────────────────────────────────
+dist/
+
+# ── Tauri build artifacts ─────────────────────────────────────────────────────
+src-tauri/target/
+src-tauri/WixTools/
+
 # ── Misc ─────────────────────────────────────────────────────────────────────
 audit-report.json
