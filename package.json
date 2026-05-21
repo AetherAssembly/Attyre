@@ -1,6 +1,6 @@
 {
   "name": "attyre",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Smart wardrobe manager with weather-based suggestions, planning tools, and local-first privacy",
   "type": "module",
   "scripts": {

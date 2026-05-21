@@ -1,6 +1,6 @@
 [package]
 name = "attyre"
-version = "2.0.0"
+version = "2.0.1"
 description = "Attyre — Smart Wardrobe Manager"
 authors = ["AetherAssembly"]
 license = "AGPL-3.0"
