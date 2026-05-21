@@ -654,6 +654,17 @@ button.item-card {
 :root.dark-mode .tag { background: var(--stone-dark); color: var(--ink-mid); }
 :root.dark-mode .tag-accent { background: rgba(201,169,110,0.2); color: var(--gold-light); }
 
+.tag-filter-chip {
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg-subtle);
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
 /* ── Forms ───────────────────────────────────────────────── */
 .form-group {
   margin-bottom: 20px;
@@ -987,6 +998,9 @@ button:disabled,
   color: var(--error);
   margin-top: 4px;
 }
+
+.error   { font-size: 13px; color: var(--error); }
+.success { font-size: 13px; color: var(--success); }
 
 /* ── Loading ─────────────────────────────────────────────── */
 .spinner {

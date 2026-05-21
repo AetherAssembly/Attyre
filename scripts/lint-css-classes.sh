@@ -14,6 +14,7 @@ extract_classes() {
   grep -ohE 'class="[^"]*"' "$@" \
     | grep -ohE '"[^"]*"' \
     | tr -d '"' \
+    | sed 's/\${[^}]*}//g' \
     | tr ' ' '\n'
 
   grep -ohE 'className[= ]+["'"'"'][^"'"'"']*["'"'"']' "$@" \

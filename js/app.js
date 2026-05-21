@@ -28,7 +28,6 @@ export function announceToScreenReader(message) {
 
 export function updateAccessibilityMode(on) {
   document.documentElement.classList.toggle('accessibility-mode', on);
-  document.documentElement.classList.remove('colorblind-mode');
   const icon = document.querySelector('link[rel="icon"]');
   if (icon) icon.href = on ? 'assets/attyre-logo-sm-cb.svg' : 'assets/attyre-logo-small.svg';
   announceToScreenReader(on ? 'Accessibility mode enabled' : 'Accessibility mode disabled');
