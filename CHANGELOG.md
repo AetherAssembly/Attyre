@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Per-page error boundaries — each render function now catches its own failures and shows an inline error message rather than a blank screen
 - `npm run lint:css` script to catch CSS class name regressions before they ship
 - `contact@aetherassembly.org` added as a second support contact in Settings
+- **Auto-updater**: Settings page now shows a "Check for Updates" button (desktop only); a dismissible banner appears on startup if a new version is available
+- **GitHub Actions release workflow**: pushing a version tag (`v*.*.*`) automatically builds Linux, Windows, and macOS artifacts, generates a signed `latest.json` update manifest, and publishes the GitHub release
+- **Add Item overhaul**: photo is now required and moved to the top of the form; dominant color is auto-detected from the uploaded image via Canvas API; item name is optional and auto-generated (`Shirt_001`, `Pants_002`, etc.) if left blank; warmth buttons now show temperature ranges; weather tags are auto-suggested when a warmth level is selected
+- **Warmth scale clarified**: scale now runs 1 (Freezing, ≤0°C) → 5 (Hot, 25°C+) left to right, matching natural temperature intuition
 
 ### Fixed
 

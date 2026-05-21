@@ -70,7 +70,7 @@ function _renderStats(container) {
     plannedDays = Object.keys(dates).length;
   } catch {}
 
-  const warmthLabel = ['Very light','Light','Medium','Warm','Very warm'];
+  const warmthLabel = ['Freezing','Cold','Mild','Warm','Hot'];
 
   wrap.innerHTML = `
     <div class="page-header">

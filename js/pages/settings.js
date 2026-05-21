@@ -2,6 +2,7 @@
 
 import * as store from '../store.js';
 import { updateAccessibilityMode, updateDarkMode, APP_VERSION } from '../app.js';
+import { isTauri } from '../tauri-fs.js';
 
 
 export function renderSettings(container) {
@@ -157,6 +158,21 @@ function _renderSettings(container) {
       </a>
     </div>
 
+    <!-- Updates (desktop only) -->
+    ${isTauri() ? `
+    <div class="section-card" id="updates-card">
+      <div class="section-card-title">Updates</div>
+      <div class="settings-row" style="flex-wrap:wrap;gap:10px">
+        <div>
+          <div class="settings-row-label">Check for updates</div>
+          <div class="settings-row-hint">Current version: ${APP_VERSION}</div>
+        </div>
+        <button id="check-updates-btn" class="btn btn-secondary btn-sm">Check now</button>
+      </div>
+      <p id="update-status" style="font-size:13px;color:var(--text-muted);padding:0 0 4px 0;margin:0"></p>
+    </div>
+    ` : ''}
+
     <!-- Version -->
     <div class="section-card">
       <div class="section-card-title">About</div>
@@ -221,6 +237,15 @@ function _renderSettings(container) {
     };
     reader.readAsText(file);
   });
+
+  // Updates
+  if (isTauri()) {
+    const checkBtn = wrap.querySelector('#check-updates-btn');
+    const statusEl = wrap.querySelector('#update-status');
+    checkBtn.addEventListener('click', () => {
+      import('../updater.js').then(m => m.checkForUpdates(statusEl, checkBtn));
+    });
+  }
 
   // Version
   wrap.querySelector('#version-display').textContent = APP_VERSION;

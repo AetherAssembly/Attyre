@@ -251,7 +251,7 @@ function clearErrors(container) {
 function capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
 
 function getWarmthLabel(level) {
-  return { 1: 'Very Light', 2: 'Light', 3: 'Medium', 4: 'Warm', 5: 'Very Warm' }[level] || '';
+  return { 1: 'Freezing', 2: 'Cold', 3: 'Mild', 4: 'Warm', 5: 'Hot' }[level] || '';
 }
 
 function openCropModal(imageSrc, onCrop) {

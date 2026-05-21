@@ -8,8 +8,8 @@
 [![Tauri](https://img.shields.io/badge/tauri-2-24C8DB?logo=tauri&logoColor=white)](https://tauri.app/)
 
 [![Linux](https://img.shields.io/badge/Linux-AppImage%20%C2%B7%20.deb%20%C2%B7%20.rpm-FCC624?logo=linux&logoColor=black)](https://github.com/AetherAssembly/Attyre/releases)
-[![macOS](https://img.shields.io/badge/macOS-DMG-000000?logo=apple&logoColor=white)](https://github.com/AetherAssembly/Attyre/releases)
 [![Windows](https://img.shields.io/badge/Windows-MSI%20%C2%B7%20NSIS-0078D4?logo=windows&logoColor=white)](https://github.com/AetherAssembly/Attyre/releases)
+[![macOS](https://img.shields.io/badge/macOS-DMG-000000?logo=apple&logoColor=white)](https://github.com/AetherAssembly/Attyre/releases)
 [![Web](https://img.shields.io/badge/web-attyre.org-C9A96E)](https://attyre.org)
 
 Manage your wardrobe, get weather-based outfit suggestions, and plan what to wear — all offline, no account required, all data stays on your device.
@@ -38,9 +38,12 @@ Grab the latest build from the [Releases](https://github.com/AetherAssembly/Atty
 | Platform | Formats |
 | --- | --- |
 | Linux (x86_64) | AppImage · `.deb` (Debian/Ubuntu) · `.rpm` (Fedora/RHEL/openSUSE) |
-| macOS | DMG |
 | Windows | MSI · NSIS installer |
+| macOS (Apple Silicon) | DMG |
+| macOS (Intel) | DMG |
 | Web | [attyre.org](https://attyre.org) |
+
+> **macOS note:** Attyre is not code-signed with an Apple Developer certificate. On first launch, macOS Gatekeeper will block it. To open it: right-click the app → **Open** → **Open** again in the dialog. You only need to do this once.
 
 ---
 
@@ -48,21 +51,11 @@ Grab the latest build from the [Releases](https://github.com/AetherAssembly/Atty
 
 Run the NSIS installer (`Attyre_2.0.0_x64-setup.exe`) and follow the prompts, or use the `.msi` for silent/managed installs.
 
+> Attyre is not signed with a Microsoft certificate. Windows SmartScreen may show a warning. Click **More info** → **Run anyway** to proceed.
+
 ### Uninstall
 
 Go to **Settings → Apps**, find Attyre, and uninstall from there.
-
----
-
-## macOS
-
-Open the `.dmg`, drag Attyre into your Applications folder, and launch it.
-
-### Uninstall
-
-Drag Attyre from your Applications folder into the Trash.
-
-> If macOS blocks the app on first launch, go to **System Settings → Privacy & Security** and click **Open Anyway**.
 
 ---
 
@@ -110,6 +103,23 @@ sudo zypper remove attyre
 
 ---
 
+## macOS
+
+Download the `.dmg` for your chip (Apple Silicon or Intel), open it, and drag **Attyre** to your Applications folder.
+
+Because Attyre is unsigned, Gatekeeper will block it on first launch. To open it anyway:
+
+1. Right-click **Attyre.app** in Applications → **Open**
+2. Click **Open** in the security dialog
+
+You only need to do this once. After that, Attyre opens normally.
+
+### Uninstall
+
+Drag **Attyre** from Applications to the Trash. App data is stored in `~/Library/Application Support/attyre` — delete that folder too if you want a clean removal.
+
+---
+
 ## Development
 
 ### Prerequisites
@@ -148,6 +158,15 @@ npm run tauri:dev
 npm run build          # Vite only → dist/
 npm run tauri:build    # Full desktop build → src-tauri/target/release/bundle/
 ```
+
+The default build targets in `tauri.conf.json` are set for Linux (AppImage, deb, rpm). To build for other platforms locally, pass `--bundles` to override:
+
+```bash
+npm run tauri build -- --bundles nsis       # Windows installer
+npm run tauri build -- --bundles dmg        # macOS disk image
+```
+
+Release builds for all platforms are handled automatically by GitHub Actions when a version tag is pushed.
 
 ---
 

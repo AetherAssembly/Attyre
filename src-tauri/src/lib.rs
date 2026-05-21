@@ -28,6 +28,8 @@ fn save_image(app: tauri::AppHandle, filename: String, data_base64: String) -> R
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
         .invoke_handler(tauri::generate_handler![save_image])
         .on_window_event(|_window, event| {
             if let tauri::WindowEvent::Destroyed = event {

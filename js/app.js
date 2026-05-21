@@ -1,7 +1,7 @@
 // app.js — Router & initialization
 
 import * as store from './store.js';
-import { initTauriFs } from './tauri-fs.js';
+import { initTauriFs, isTauri } from './tauri-fs.js';
 import { renderHome } from './pages/home.js';
 import { renderWardrobe } from './pages/wardrobe.js';
 import { renderAddItem } from './pages/add-item.js';
@@ -119,6 +119,9 @@ async function init() {
   await initTauriFs(); // resolves instantly in the browser (no-op)
   initModes();
   renderPage();
+  if (isTauri()) {
+    import('./updater.js').then(m => m.silentUpdateCheck(app)).catch(() => {});
+  }
 }
 
 window.addEventListener('hashchange', renderPage);
