@@ -16,6 +16,18 @@ function esc(t) {
   return String(t ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 }
 
+function lastWornLabel(lastWorn) {
+  if (!lastWorn) return 'Never worn';
+  const today = new Date();
+  const worn = new Date(lastWorn);
+  const days = Math.round((today - worn) / 86400000);
+  if (days === 0) return 'Worn today';
+  if (days === 1) return 'Worn yesterday';
+  if (days < 7) return `Worn ${days} days ago`;
+  if (days < 30) return `Worn ${Math.floor(days / 7)}w ago`;
+  return `Worn ${Math.floor(days / 30)}mo ago`;
+}
+
 export function renderItemCard(item) {
   const card = document.createElement('button');
   card.type = 'button';
@@ -25,6 +37,13 @@ export function renderItemCard(item) {
     ? `<img src="${esc(resolveImageUri(item.imageUri))}" alt="${esc(item.name)}">`
     : `<span style="color:var(--border-strong)">${CATEGORY_ICON[item.category] || ''}<style>.item-card-thumb svg{width:36px;height:36px}</style></span>`;
 
+  const dirtyBadge = item.laundryStatus === 'dirty'
+    ? `<span class="laundry-badge" title="Needs washing">wash</span>`
+    : '';
+
+  const wornLabel = lastWornLabel(item.lastWorn);
+  const neverWorn = !item.lastWorn;
+
   card.innerHTML = `
     <div class="item-card-thumb">${thumb}</div>
     <div class="item-card-body">
@@ -32,7 +51,9 @@ export function renderItemCard(item) {
       <div class="item-card-meta">
         <span class="tag">${esc(item.category)}</span>
         ${item.color ? `<span class="tag">${esc(item.color)}</span>` : ''}
+        ${dirtyBadge}
       </div>
+      <div class="item-card-worn${neverWorn ? ' item-card-worn--never' : ''}">${esc(wornLabel)}</div>
     </div>
   `;
 

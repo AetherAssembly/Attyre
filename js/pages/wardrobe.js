@@ -11,13 +11,25 @@ export function renderWardrobe(container) {
     _renderWardrobe(container);
   } catch (err) {
     console.error('renderWardrobe failed:', err);
-    container.innerHTML = `<div class="page-wrap"><div class="alert alert-warning" style="margin-top:2rem"><span class="alert-icon">⚠</span><span>Wardrobe failed to load. <a href="#/">Go home</a></span></div></div>`;
+    container.innerHTML = `<div class="page-wrap"><div class="alert alert-warning" style="margin-top:2rem"><span class="alert-icon">&#9888;</span><span>Wardrobe failed to load. <a href="#/">Go home</a></span></div></div>`;
   }
+}
+
+function applyOrder(items) {
+  const order = store.getItemOrder();
+  if (!order || !order.length) return [...items].reverse();
+  const map = new Map(items.map(i => [i.id, i]));
+  const sorted = order.map(id => map.get(id)).filter(Boolean);
+  // append any items not in the saved order (newly added)
+  for (const item of items) {
+    if (!order.includes(item.id)) sorted.unshift(item);
+  }
+  return sorted;
 }
 
 function _renderWardrobe(container) {
   const items = store.getItems();
-  const sorted = [...items].reverse();
+  let ordered = applyOrder(items);
 
   const wrap = document.createElement('div');
   wrap.className = 'page-wrap';
@@ -36,7 +48,7 @@ function _renderWardrobe(container) {
 
     ${items.length > 0 ? `
     <div class="filter-bar">
-      <input type="text" id="search" placeholder="Search by name, color…" style="flex:1;min-width:160px">
+      <input type="text" id="search" placeholder="Search by name, color..." style="flex:1;min-width:160px">
       <select id="cat-filter">
         <option value="">All categories</option>
         <option value="top">Tops</option>
@@ -54,8 +66,8 @@ function _renderWardrobe(container) {
       </select>
     </div>
 
-    <!-- Tag filter chips -->
     <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px" id="tag-filters">
+      <button class="tag-filter-chip tag" data-special="needs-wash">needs wash</button>
       ${ALL_WEATHER_TAGS.map(t => `
         <button class="tag-filter-chip tag" data-tag="${t}">${t}</button>
       `).join('')}
@@ -83,25 +95,34 @@ function _renderWardrobe(container) {
     return;
   }
 
-  // Active tag filters
   let activeTags = new Set();
+  let filterNeedsWash = false;
 
   const search = wrap.querySelector('#search');
   const catFilter = wrap.querySelector('#cat-filter');
   const seasonFilter = wrap.querySelector('#season-filter');
-  const tagChips = wrap.querySelectorAll('.tag-filter-chip');
+  const tagChips = wrap.querySelectorAll('.tag-filter-chip[data-tag]');
+  const washChip = wrap.querySelector('.tag-filter-chip[data-special="needs-wash"]');
+
+  let dragSrcIndex = null;
+
+  function isFiltered() {
+    return search.value.trim() || catFilter.value || seasonFilter.value || activeTags.size > 0 || filterNeedsWash;
+  }
 
   function renderItems() {
     const q = search.value.toLowerCase();
     const cat = catFilter.value;
     const season = seasonFilter.value;
+    const filtered_mode = isFiltered();
 
-    const filtered = sorted.filter(item => {
+    const filtered = ordered.filter(item => {
       const matchQ = !q || item.name.toLowerCase().includes(q) || (item.color && item.color.toLowerCase().includes(q));
       const matchCat = !cat || item.category === cat;
       const matchSeason = !season || (item.seasons && item.seasons.includes(season));
       const matchTags = activeTags.size === 0 || [...activeTags].every(t => item.weatherTags && item.weatherTags.includes(t));
-      return matchQ && matchCat && matchSeason && matchTags;
+      const matchWash = !filterNeedsWash || item.laundryStatus === 'dirty';
+      return matchQ && matchCat && matchSeason && matchTags && matchWash;
     });
 
     area.innerHTML = '';
@@ -116,29 +137,85 @@ function _renderWardrobe(container) {
     const grid = document.createElement('div');
     grid.className = 'item-grid';
 
-    for (const item of filtered) {
+    if (!filtered_mode) {
+      // Drag-and-drop only when no filters are active
+      grid.dataset.draggable = 'true';
+    }
+
+    for (let i = 0; i < filtered.length; i++) {
+      const item = filtered[i];
       const card = renderItemCard(item);
+      card.dataset.id = item.id;
+      card.dataset.index = i;
       card.addEventListener('click', () => { window.location.hash = `#/wardrobe/${item.id}`; });
+
+      if (!filtered_mode) {
+        card.draggable = true;
+
+        card.addEventListener('dragstart', e => {
+          dragSrcIndex = i;
+          card.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+        });
+
+        card.addEventListener('dragend', () => {
+          card.classList.remove('dragging');
+          grid.querySelectorAll('.item-card').forEach(c => c.classList.remove('drag-over'));
+        });
+
+        card.addEventListener('dragover', e => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          grid.querySelectorAll('.item-card').forEach(c => c.classList.remove('drag-over'));
+          if (dragSrcIndex !== i) card.classList.add('drag-over');
+        });
+
+        card.addEventListener('dragleave', () => {
+          card.classList.remove('drag-over');
+        });
+
+        card.addEventListener('drop', e => {
+          e.preventDefault();
+          card.classList.remove('drag-over');
+          if (dragSrcIndex === null || dragSrcIndex === i) return;
+
+          // Reorder in the ordered array
+          const srcId = filtered[dragSrcIndex].id;
+          const srcOrderIdx = ordered.findIndex(it => it.id === srcId);
+          const dstOrderIdx = ordered.findIndex(it => it.id === item.id);
+          if (srcOrderIdx === -1 || dstOrderIdx === -1) return;
+
+          const moved = ordered.splice(srcOrderIdx, 1)[0];
+          ordered.splice(dstOrderIdx, 0, moved);
+          store.saveItemOrder(ordered.map(it => it.id));
+          dragSrcIndex = null;
+          renderItems();
+        });
+      }
+
       grid.appendChild(card);
     }
 
     area.appendChild(grid);
   }
 
-  // Tag chip toggle
+  // "Needs wash" chip toggle
+  washChip.addEventListener('click', () => {
+    filterNeedsWash = !filterNeedsWash;
+    washChip.classList.toggle('chip-active', filterNeedsWash);
+    renderItems();
+  });
+
+  // Weather tag chip toggle
   tagChips.forEach(chip => {
     chip.addEventListener('click', () => {
       const t = chip.dataset.tag;
       if (activeTags.has(t)) {
         activeTags.delete(t);
-        chip.style.background = 'var(--bg-subtle)';
-        chip.style.borderColor = 'var(--border)';
-        chip.style.color = 'var(--ink-soft)';
+        chip.classList.remove('chip-active');
       } else {
         activeTags.add(t);
-        chip.style.background = 'var(--gold-light)';
-        chip.style.borderColor = 'var(--accent)';
-        chip.style.color = 'var(--bark)';
+        chip.classList.add('chip-active');
       }
       renderItems();
     });

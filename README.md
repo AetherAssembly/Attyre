@@ -2,7 +2,7 @@
 
 > Your wardrobe, weather-aware.
 
-[![Version](https://img.shields.io/badge/version-v2.0.1-C9A96E)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-v3.0.0-C9A96E)](CHANGELOG.md)
 [![License: AGPL v3](https://img.shields.io/badge/license-AGPL--3.0-blue)](LICENSE)
 [![Privacy Policy](https://img.shields.io/badge/privacy-policy-16a34a)](Privacy-Policy.html)
 [![Tauri](https://img.shields.io/badge/tauri-2-24C8DB?logo=tauri&logoColor=white)](https://tauri.app/)
@@ -44,7 +44,7 @@ Grab the latest build from the [Releases](https://github.com/AetherAssembly/Atty
 
 ## Windows
 
-Run the NSIS installer (`Attyre_2.0.1_x64-setup.exe`) and follow the prompts, or use the `.msi` for silent/managed installs.
+Run the NSIS installer (`Attyre_3.0.0_x64-setup.exe`) and follow the prompts, or use the `.msi` for silent/managed installs.
 
 > Attyre is not signed with a Microsoft certificate. Windows SmartScreen may show a warning. Click **More info** → **Run anyway** to proceed.
 
@@ -61,7 +61,7 @@ Go to **Settings → Apps**, find Attyre, and uninstall from there.
 ### Debian / Ubuntu
 
 ```bash
-sudo apt install ./Attyre_2.0.1_amd64.deb
+sudo apt install ./Attyre_3.0.0_amd64.deb
 ```
 
 > Using `apt install ./` rather than `dpkg -i` ensures apt resolves any missing dependencies automatically.
@@ -75,7 +75,7 @@ sudo apt remove attyre
 ### Fedora / RHEL / Rocky / Alma
 
 ```bash
-sudo dnf install ./Attyre-2.0.1-1.x86_64.rpm
+sudo dnf install ./Attyre-3.0.0-1.x86_64.rpm
 ```
 
 #### Uninstall
@@ -87,7 +87,7 @@ sudo dnf remove attyre
 ### openSUSE
 
 ```bash
-sudo zypper install ./Attyre-2.0.1-1.x86_64.rpm
+sudo zypper install ./Attyre-3.0.0-1.x86_64.rpm
 ```
 
 #### Uninstall

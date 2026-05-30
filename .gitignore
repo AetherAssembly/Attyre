@@ -37,3 +37,6 @@ src-tauri/WixTools/
 
 # ── Misc ─────────────────────────────────────────────────────────────────────
 audit-report.json
+
+# ── Local Claude Code settings ────────────────────────────────────────────────
+.claude/

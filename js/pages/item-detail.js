@@ -119,6 +119,7 @@ export function renderItemDetail(container, itemId) {
         <div class="btn-stack" style="margin-top:8px">
           <button type="submit" class="btn btn-primary btn-full">Save Changes</button>
           <a href="#/wardrobe" class="btn btn-secondary btn-full">Cancel</a>
+          ${item.laundryStatus === 'dirty' ? `<button type="button" id="mark-clean-btn" class="btn btn-secondary btn-full">Mark as Clean</button>` : ''}
           <button type="button" id="delete-btn" class="btn btn-danger btn-full">Delete Item</button>
         </div>
 
@@ -217,6 +218,15 @@ function attachEventListeners(container, item) {
       }
     }
   });
+
+  const markCleanBtn = container.querySelector('#mark-clean-btn');
+  if (markCleanBtn) {
+    markCleanBtn.addEventListener('click', () => {
+      store.markItemClean(item.id);
+      markCleanBtn.textContent = 'Marked clean';
+      markCleanBtn.disabled = true;
+    });
+  }
 
   deleteBtn.addEventListener('click', () => { deleteBtn.style.display = 'none'; deleteConfirm.style.display = 'block'; });
   cancelDeleteBtn.addEventListener('click', () => { deleteConfirm.style.display = 'none'; deleteBtn.style.display = ''; });

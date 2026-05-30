@@ -11,9 +11,11 @@ import { renderCalendar } from './pages/calendar.js';
 import { renderSavedOutfits } from './pages/saved-outfits.js';
 import { renderSettings } from './pages/settings.js';
 import { renderStats } from './pages/stats.js';
+import { renderHistory } from './pages/history.js';
+import { renderPacking } from './pages/packing.js';
 
 const app = document.getElementById('app');
-export const APP_VERSION = '2.0.0';
+export const APP_VERSION = '3.0.0';
 
 // ── Screen reader announcer ───────────────────────────────
 
@@ -86,6 +88,10 @@ async function renderPage() {
       renderStats(app);
     } else if (parts[0] === 'settings') {
       renderSettings(app);
+    } else if (parts[0] === 'history') {
+      renderHistory(app);
+    } else if (parts[0] === 'packing') {
+      renderPacking(app);
     } else {
       renderHome(app);
     }
@@ -108,6 +114,8 @@ function updateActiveNav(hash) {
   else if (hash.startsWith('/saved-outfits')) route = 'saved-outfits';
   else if (hash.startsWith('/stats'))   route = 'stats';
   else if (hash.startsWith('/settings')) route = 'settings';
+  else if (hash.startsWith('/history')) route = 'history';
+  else if (hash.startsWith('/packing')) route = 'packing';
 
   document.querySelectorAll('[data-route]').forEach(el => {
     el.classList.toggle('active', el.dataset.route === route);

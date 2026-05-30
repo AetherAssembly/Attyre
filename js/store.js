@@ -4,6 +4,7 @@ const ITEMS_KEY = 'attyre_items';
 const DARK_MODE_KEY = 'attyre_dark_mode';
 const SAVED_OUTFITS_KEY = 'attyre_saved_outfits';
 const OUTFIT_DATES_KEY = 'attyre_outfit_dates';
+const ITEM_ORDER_KEY = 'attyre_item_order';
 
 /**
  * Retrieves all items from storage, handling both compressed and uncompressed data.
@@ -68,12 +69,23 @@ export function updateItem(id, changes) {
 }
 
 /**
- * Increments the usage counter for an item.
+ * Increments the usage counter for an item and marks it as worn today (dirty).
  * @param {string} id - Item ID
  */
 export function incrementItemUsage(id) {
   const item = getItemById(id);
-  if (item) updateItem(id, { usage: (item.usage || 0) + 1 });
+  if (item) {
+    const today = new Date().toISOString().slice(0, 10);
+    updateItem(id, { usage: (item.usage || 0) + 1, lastWorn: today, laundryStatus: 'dirty' });
+  }
+}
+
+/**
+ * Sets an item's laundry status to clean.
+ * @param {string} id - Item ID
+ */
+export function markItemClean(id) {
+  updateItem(id, { laundryStatus: 'clean' });
 }
 
 /**
@@ -203,4 +215,23 @@ export function deleteOutfitDate(date) {
 
 export function getOutfitForDate(date) {
   return getOutfitDates()[date] || null;
+}
+
+// Item ordering (manual drag-and-drop order)
+
+export function getItemOrder() {
+  try {
+    const data = localStorage.getItem(ITEM_ORDER_KEY);
+    return data ? JSON.parse(data) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+export function saveItemOrder(orderedIds) {
+  try {
+    localStorage.setItem(ITEM_ORDER_KEY, JSON.stringify(orderedIds));
+  } catch (e) {
+    console.error('Failed to save item order:', e);
+  }
 }

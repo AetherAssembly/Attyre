@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Current Release
 
+## [v3.0.0] - 2026-05-30
+
+### Added
+
+- **Smarter suggestions**: outfit engine now fetches wind speed and WMO weather code from Open-Meteo in addition to temperature
+- **Wind chill adjustment**: applies the Environment Canada formula when temp is <=10°C and wind >= 4.8 km/h, shifting clothing bands so blustery days suggest heavier layers
+- **Weather code to tag mapping**: WMO codes are mapped to weather tags (sunny, cloudy, rain, heavy-rain, snow, wind) and merged with temperature-band tags for more accurate item scoring
+- **Occasion scoring**: `rankItems()` accepts an optional occasion parameter (casual, work, formal) and adds +1 to items whose occasions list includes it
+- **Occasion toggle on Suggest page**: Casual / Work / Formal toggle re-ranks suggestions in memory without re-fetching weather
+- **Recently-worn penalty**: items worn in the last 3 days receive -2 to their suggestion score, nudging the engine toward fresher picks
+- **Laundry tracking**: marking an outfit as worn (via calendar) now sets `laundryStatus: dirty` and records `lastWorn` on each item; dirty items receive a -1 suggestion penalty
+- **Mark as Clean button**: appears on the item detail page when an item is dirty; resets laundry status without a full save
+- **Outfit history timeline**: new History page shows all past calendar outfits in reverse-chronological order, grouped by month, with a "Wear again" button that copies the outfit to today
+- **Packing list generator**: new Pack page accepts a destination city and date range (up to 14 days), fetches a multi-day forecast, runs the suggestion engine per day, deduplicates across days, and renders a grouped checklist organised by category
+- **Drag-and-drop wardrobe reordering**: items can be dragged to a new position when no filters are active; order is persisted to localStorage and restored on reload
+- **Richer item cards**: each card now shows a "Last worn X days ago" / "Never worn" label and a laundry badge when the item needs washing
+- **Card entrance animations**: item cards fade and slide up when the grid renders, with staggered delays on the first eight items
+- **Toast notifications**: a slide-in toast system replaces inline status text for transient feedback
+- **Needs Wash filter**: wardrobe filter bar now includes a "needs wash" chip to show only dirty items
+
+### Changed
+
+- `incrementItemUsage()` in store.js now also sets `lastWorn` to today and `laundryStatus` to `dirty`
+- `suggestForTemp()` is unchanged for backward compatibility; the new `suggestForWeather({ tempC, windspeedKph, weatherCode })` is the preferred call site for full weather data
+- Wardrobe filter chips now use a `.chip-active` CSS class instead of inline style overrides
+- Version bumped to 3.0.0 across `package.json`, `tauri.conf.json`, `Cargo.toml`, `app.js`, `service-worker.js`, and README
+
+## Prior Releases
+
 ## [v2.0.1] - 2026-05-20
 
 ### Fixed
@@ -16,8 +45,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Drop all macOS build targets, artifacts, and documentation.
-
-## Prior Releases
 
 ## [v2.0.0] - 2026-05-20
 
