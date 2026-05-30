@@ -26,9 +26,10 @@ function walkDir(dir, results = []) {
 
 const platforms = {};
 
+// Tauri v2 updater expects bundle-format-suffixed keys: linux-x86_64-appimage, windows-x86_64-nsis
 const platformDirs = {
-  'linux':   { key: 'linux-x86_64',   sigSuffix: '.AppImage.tar.gz.sig' },
-  'windows': { key: 'windows-x86_64', sigSuffix: '.nsis.zip.sig' },
+  'linux':   { key: 'linux-x86_64-appimage', sigSuffix: '.AppImage.tar.gz.sig' },
+  'windows': { key: 'windows-x86_64-nsis',   sigSuffix: '.nsis.zip.sig' },
 };
 
 for (const [dir, { key, sigSuffix }] of Object.entries(platformDirs)) {
