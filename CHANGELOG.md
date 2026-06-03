@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Current Release
 
+## [v3.0.1] - 2026-06-02
+
+- Bumped `actions/setup-node` from 4 to 6
+- Bumped `vite` from 8.0.14 to 8.0.16
+- Bumped `wrangler` from 4.94.0 to 4.96.0
+- Adjusted all Attyre versions to v3.0.1
+
+## Prior Releases
+
 ## [v3.0.0] - 2026-05-30
 
 ### Added
@@ -33,8 +42,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `suggestForTemp()` is unchanged for backward compatibility; the new `suggestForWeather({ tempC, windspeedKph, weatherCode })` is the preferred call site for full weather data
 - Wardrobe filter chips now use a `.chip-active` CSS class instead of inline style overrides
 - Version bumped to 3.0.0 across `package.json`, `tauri.conf.json`, `Cargo.toml`, `app.js`, `service-worker.js`, and README
-
-## Prior Releases
 
 ## [v2.0.1] - 2026-05-20
 

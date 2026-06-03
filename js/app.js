@@ -15,7 +15,7 @@ import { renderHistory } from './pages/history.js';
 import { renderPacking } from './pages/packing.js';
 
 const app = document.getElementById('app');
-export const APP_VERSION = '3.0.0';
+export const APP_VERSION = '3.0.1';
 
 // ── Screen reader announcer ───────────────────────────────
 
