@@ -2073,3 +2073,19 @@ input[type="date"] {
   color: var(--text-muted);
 }
 
+
+
+.link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-primary, #C9A96E);
+  cursor: pointer;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.link-btn:hover {
+  opacity: 0.8;
+}

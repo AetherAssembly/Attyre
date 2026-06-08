@@ -13,6 +13,7 @@ import { renderSettings } from './pages/settings.js';
 import { renderStats } from './pages/stats.js';
 import { renderHistory } from './pages/history.js';
 import { renderPacking } from './pages/packing.js';
+import { renderPrivacy } from './pages/privacy.js';
 
 const app = document.getElementById('app');
 export const APP_VERSION = '3.0.1';
@@ -92,6 +93,8 @@ async function renderPage() {
       renderHistory(app);
     } else if (parts[0] === 'packing') {
       renderPacking(app);
+    } else if (parts[0] === 'privacy') {
+      renderPrivacy(app);
     } else {
       renderHome(app);
     }

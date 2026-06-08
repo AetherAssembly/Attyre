@@ -39,6 +39,16 @@ export async function saveImageFile(dataUrl) {
 //   data:  → pass through (legacy base64 items)
 //   tauri-img:  → convert to an asset:// URL via convertFileSrc
 //   anything else → pass through
+// Open a URL in the system browser (desktop) or a new tab (browser).
+export async function openLink(url) {
+  if (isTauri()) {
+    const { openUrl } = await import(/* @vite-ignore */ '@tauri-apps/plugin-opener');
+    await openUrl(url);
+  } else {
+    window.open(url, '_blank', 'noopener');
+  }
+}
+
 export function resolveImageUri(uri) {
   if (!uri) return '';
   if (!isTauri() || !_appDataPath) return uri;

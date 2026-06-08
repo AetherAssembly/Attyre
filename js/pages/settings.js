@@ -2,7 +2,7 @@
 
 import * as store from '../store.js';
 import { updateAccessibilityMode, updateDarkMode, APP_VERSION } from '../app.js';
-import { isTauri } from '../tauri-fs.js';
+import { isTauri, openLink } from '../tauri-fs.js';
 
 
 export function renderSettings(container) {
@@ -102,7 +102,7 @@ function _renderSettings(container) {
     <div class="section-card">
       <div class="section-card-title">Info &amp; Links</div>
 
-      <a href="Privacy-Policy.html" target="_blank" class="settings-row settings-link-row">
+      <a href="#/privacy" class="settings-row settings-link-row">
         <div class="settings-link-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </div>
@@ -113,7 +113,7 @@ function _renderSettings(container) {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;opacity:0.35"><polyline points="9 18 15 12 9 6"/></svg>
       </a>
 
-      <a href="https://github.com/AetherAssembly/Attyre" target="_blank" rel="noopener" class="settings-row settings-link-row">
+      <div role="button" tabindex="0" data-href="https://github.com/AetherAssembly/Attyre" class="settings-row settings-link-row">
         <div class="settings-link-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
         </div>
@@ -122,9 +122,9 @@ function _renderSettings(container) {
           <div class="settings-row-hint">Source code, issues, and releases</div>
         </div>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;opacity:0.35"><polyline points="9 18 15 12 9 6"/></svg>
-      </a>
+      </div>
 
-      <a href="https://aetherassembly.org/about" target="_blank" rel="noopener" class="settings-row settings-link-row">
+      <div role="button" tabindex="0" data-href="https://aetherassembly.org/about" class="settings-row settings-link-row">
         <div class="settings-link-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
         </div>
@@ -133,9 +133,9 @@ function _renderSettings(container) {
           <div class="settings-row-hint">The team behind Attyre</div>
         </div>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;opacity:0.35"><polyline points="9 18 15 12 9 6"/></svg>
-      </a>
+      </div>
 
-      <a href="mailto:support@aetherassembly.org" class="settings-row settings-link-row">
+      <div role="button" tabindex="0" data-href="mailto:support@aetherassembly.org" class="settings-row settings-link-row">
         <div class="settings-link-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         </div>
@@ -144,9 +144,9 @@ function _renderSettings(container) {
           <div class="settings-row-hint">support@aetherassembly.org</div>
         </div>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;opacity:0.35"><polyline points="9 18 15 12 9 6"/></svg>
-      </a>
+      </div>
 
-      <a href="mailto:contact@aetherassembly.org" class="settings-row settings-link-row">
+      <div role="button" tabindex="0" data-href="mailto:contact@aetherassembly.org" class="settings-row settings-link-row">
         <div class="settings-link-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         </div>
@@ -155,7 +155,7 @@ function _renderSettings(container) {
           <div class="settings-row-hint">contact@aetherassembly.org</div>
         </div>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;opacity:0.35"><polyline points="9 18 15 12 9 6"/></svg>
-      </a>
+      </div>
     </div>
 
     <!-- Updates (desktop only) -->
@@ -236,6 +236,14 @@ function _renderSettings(container) {
       }
     };
     reader.readAsText(file);
+  });
+
+  // External link rows
+  wrap.querySelectorAll('[data-href]').forEach(el => {
+    const url = el.dataset.href;
+    const activate = () => openLink(url);
+    el.addEventListener('click', activate);
+    el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); } });
   });
 
   // Updates

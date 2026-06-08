@@ -19,7 +19,16 @@ export async function checkForUpdates(statusEl, btnEl) {
     await relaunch();
   } catch (err) {
     console.error('[updater] check failed:', err);
-    statusEl.textContent = `Update check failed: ${err.message ?? err}`;
+    const msg = err.message ?? String(err);
+    if (msg.includes('platforms')) {
+      statusEl.innerHTML = 'No update package found for your platform. <a id="releases-link" style="color:var(--color-primary,#C9A96E)">View releases on GitHub</a>';
+      statusEl.querySelector('#releases-link').addEventListener('click', e => {
+        e.preventDefault();
+        import('./tauri-fs.js').then(m => m.openLink('https://github.com/AetherAssembly/Attyre/releases'));
+      });
+    } else {
+      statusEl.textContent = `Update check failed: ${msg}`;
+    }
   } finally {
     btnEl.disabled = false;
   }
