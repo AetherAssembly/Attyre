@@ -6,7 +6,6 @@
   <meta name="theme-color" content="#C9A96E">
   <title>Attyre — Smart Wardrobe Manager</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/svg+xml" href="assets/attyre-logo-small.svg">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js" integrity="sha512-qtX0GLM3qX8rxJN1gyDfcnMFFrKvixfoEOwbBib9VafR5vbChV5LeE5wSI/x+IlCkTY5ZFddFDCCfaVJJNnuKQ==" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js" integrity="sha512-6lplKUSl86rUVprDIjiW8DuOniNX8UDoRATqZSds/7t6zCQZfaCe3e5zcGaQwxa8Kpn5RTM9Fvl3X2lLV4grPQ==" crossorigin="anonymous"></script>
@@ -146,16 +145,6 @@
   <div id="sr-announce" aria-live="polite" aria-atomic="true"
        style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden"></div>
   <div id="toast-container" aria-live="polite"></div>
-  <script>
-    if ('serviceWorker' in navigator) {
-      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
-        // Dev: unregister any existing service workers so localhost always hits the real server
-        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
-      } else {
-        navigator.serviceWorker.register('/service-worker.js');
-      }
-    }
-  </script>
   <script type="module" src="js/app.js"></script>
   <script>
     // Hamburger / sidebar toggle

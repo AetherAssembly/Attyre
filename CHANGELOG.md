@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Current Release
 
+## [v4.0.2] - 2026-06-11
+
+### Fixed
+
+- Electron packaged build rendered a blank white screen: `vite.config.js` was missing `base: './'`, causing Vite to emit absolute asset paths (`/assets/index.css`) that Electron's `loadFile()` cannot resolve. All asset references are now relative (`./assets/…`).
+
+### Removed
+
+- Cloudflare Pages deployment and PWA infrastructure: `wrangler.jsonc`, `service-worker.js`, `manifest.json`, and the `wrangler` npm dependency have been removed. Attyre is now a desktop-only Electron app.
+- `attyre.org` web badge and download table row from README.
+
+### Changed
+
+- Nominatim `User-Agent` strings updated from `attyre.org` to `github.com/AetherAssembly/Attyre`.
+- `area: pwa` GitHub label removed.
+
+---
+
+## [v4.0.1] - 2026-06-11
+
+### Added
+
+- Readded macOS builds for Attyre.
+
+### Fixed
+
+- Bumped `electron` from 36.9.5 to 39.8.5.
+- Resolved npm audit vulnerabilities: overrode `tar` to ^7.5.16 and `shell-quote` to ^1.8.4; audit now reports 0 vulnerabilities.
+- CI release workflow: added `--publish never` to `electron-builder` build steps to prevent accidental artifact publishing during manual runs.
+
+### Changed
+
+- Updated Privacy Policy: corrected Electron app data paths for all three platforms (Windows, Linux, macOS), added macOS path, updated last-updated date.
+
+---
+
 ## [v4.0.0] - 2026-06-11
 
 ### Changed

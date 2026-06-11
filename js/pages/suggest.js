@@ -110,7 +110,7 @@ export function renderSuggest(container) {
       try {
         geoRes = await fetchWithRetry(
           `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`,
-          { headers: { 'User-Agent': 'Attyre/3.0.0 (attyre.org)' } }
+          { headers: { 'User-Agent': 'Attyre/4.0.2 (github.com/AetherAssembly/Attyre)' } }
         );
         geoData = await geoRes.json();
       } catch (geoErr) {

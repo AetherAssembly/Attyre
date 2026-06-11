@@ -148,7 +148,7 @@ export function renderPacking(container) {
       // Geocode
       const geoRes = await fetchWithRetry(
         `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`,
-        { headers: { 'User-Agent': 'Attyre/3.0.1 (attyre.org)' } }
+        { headers: { 'User-Agent': 'Attyre/4.0.2 (github.com/AetherAssembly/Attyre)' } }
       );
       const geoData = await geoRes.json();
 

@@ -10,7 +10,7 @@ export function renderPrivacy(container) {
     <div class="page-header">
       <div>
         <h1 class="page-title">Privacy Policy</h1>
-        <p class="page-subtitle">Last updated: May 2026 &nbsp;&middot;&nbsp; Attyre by AetherAssembly &nbsp;&middot;&nbsp; attyre.org</p>
+        <p class="page-subtitle">Last updated: May 2026 &nbsp;&middot;&nbsp; Attyre by AetherAssembly</p>
       </div>
     </div>
 

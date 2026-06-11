@@ -1,7 +1,7 @@
 version: 2
 
 updates:
-  # ── npm dependencies (wrangler, cropper.js CDN locks, etc.) ──────────────
+  # ── npm dependencies ──────────────────────────────────────────────────────
   - package-ecosystem: npm
     directory: /
     schedule:

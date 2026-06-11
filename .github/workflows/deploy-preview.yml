@@ -53,8 +53,6 @@ jobs:
           echo "── Static files ────────────────────────────────────"
           check "index.html"          http://localhost:8000/index.html
           check "style.css"           http://localhost:8000/style.css
-          check "manifest.json"       http://localhost:8000/manifest.json
-          check "Privacy-Policy.html" http://localhost:8000/Privacy-Policy.html
 
           echo ""
           echo "── JavaScript modules ───────────────────────────────"
@@ -84,15 +82,6 @@ jobs:
             echo "All checks passed."
           else
             echo "One or more checks failed — see above."
-            exit 1
-          fi
-
-      - name: Validate manifest.json is valid JSON
-        run: |
-          if python3 -c "import json,sys; json.load(open('manifest.json'))" 2>&1; then
-            echo "PASS  manifest.json is valid JSON"
-          else
-            echo "FAIL  manifest.json is not valid JSON"
             exit 1
           fi
 
@@ -136,7 +125,7 @@ jobs:
             ${passed ? '**Smoke test passed**' : '**Smoke test failed**'} for \`${sha}\` — [view run](${runUrl})
 
             ${passed
-              ? 'All static files, JS modules, assets, and manifest checked out fine.'
+              ? 'All static files, JS modules, and assets checked out fine.'
               : 'One or more checks failed. See the run log for details.'}`;
 
             if (botComment) {

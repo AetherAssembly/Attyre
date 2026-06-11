@@ -12,8 +12,6 @@ Thanks for wanting to help out! This doc covers everything you need to get up an
 - [Making a Change](#making-a-change)
 - [Pull Request Guidelines](#pull-request-guidelines)
 - [CI Checks](#ci-checks)
-- [Deployment to Production](#deployment-to-production)
-
 ---
 
 ## Code of Conduct
@@ -41,7 +39,7 @@ cd attyre
 # 2. Install dependencies
 npm install
 
-# 3. Start the Vite dev server (browser/PWA)
+# 3. Start the Vite dev server
 npm run dev
 ```
 
@@ -143,18 +141,9 @@ Before marking your PR as ready for review:
 Every PR automatically runs a smoke test via GitHub Actions — no secrets or credentials needed. It:
 
 - Spins up a static file server and verifies every static file, JS module, and asset returns 200
-- Validates `manifest.json` is well-formed JSON
 - Confirms `APP_VERSION` is present and correctly formatted in `js/app.js`
 
 Results are posted as a comment on the PR and updated on every new push. If a check fails, click "view run" in the comment to see exactly which file failed.
-
----
-
-## Deployment to Production
-
-Merging to `main` triggers an automatic deployment via Cloudflare's GitHub integration — nothing to configure or run manually. Once your PR is merged, the live site at [attyre.org](https://attyre.org) updates within a minute or two.
-
-If a deploy looks broken after merging, check the Cloudflare dashboard for build logs.
 
 ---
 
