@@ -12,18 +12,23 @@ jobs:
   build-linux:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v6
+      - name: Setup Node
+        uses: actions/setup-node@v6
         with:
           node-version: 22
+          cache: npm
 
-      - run: npm ci
+      - name: Install
+        run: npm ci
 
       - name: Build (Linux)
         run: npm run build && npx electron-builder --linux AppImage deb rpm --publish never
 
-      - uses: actions/upload-artifact@v7
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
         with:
           name: linux
           path: |
@@ -35,18 +40,23 @@ jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v6
+      - name: Setup Node
+        uses: actions/setup-node@v6
         with:
           node-version: 22
+          cache: npm
 
-      - run: npm ci
+      - name: Install
+        run: npm ci
 
       - name: Build (Windows)
         run: npm run build && npx electron-builder --win nsis --publish never
 
-      - uses: actions/upload-artifact@v7
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
         with:
           name: windows
           path: |
@@ -56,18 +66,23 @@ jobs:
   build-mac:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v6
+      - name: Setup Node
+        uses: actions/setup-node@v6
         with:
           node-version: 22
+          cache: npm
 
-      - run: npm ci
+      - name: Install
+        run: npm ci
 
       - name: Build (macOS)
         run: npm run build && npx electron-builder --mac dmg --publish never
 
-      - uses: actions/upload-artifact@v7
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
         with:
           name: mac
           path: |
@@ -78,7 +93,8 @@ jobs:
     needs: [build-linux, build-windows, build-mac]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
 
       - name: Download all artifacts
         uses: actions/download-artifact@v8
@@ -87,10 +103,11 @@ jobs:
 
       - name: Create release and upload assets
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.ref_name }}
         run: |
+          mapfile -t ASSETS < <(find artifacts -type f | sort)
           gh release create "$TAG" \
             --title "$TAG" \
             --generate-notes \
-            $(find artifacts -type f | sort)
+            "${ASSETS[@]}"
