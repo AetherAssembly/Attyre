@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Have a question or need support?
+    url: mailto:contact@aetherassembly.org
+    about: Send us an email and we'll get back to you. Please include your app version, platform, and as much detail as possible.
