@@ -29,7 +29,7 @@
     "electron-updater": "^6.6.2"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2",
+    "concurrently": "^10.0.3",
     "electron": "^39.8.5",
     "electron-builder": "^25.1.8",
     "vite": "^8.0.16"
