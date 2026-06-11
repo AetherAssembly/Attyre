@@ -2,7 +2,7 @@
 
 > Your wardrobe, weather-aware.
 
-[![Version](https://img.shields.io/badge/version-v4.0.0-C9A96E)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-v4.0.1-C9A96E)](CHANGELOG.md)
 [![License: AGPL v3](https://img.shields.io/badge/license-AGPL--3.0-blue)](LICENSE)
 [![Privacy Policy](https://img.shields.io/badge/privacy-policy-16a34a)](Privacy-Policy.html)
 [![Electron](https://img.shields.io/badge/electron-36-47848F?logo=electron&logoColor=white)](https://www.electronjs.org/)
@@ -46,7 +46,7 @@ Grab the latest build from the [Releases](https://github.com/AetherAssembly/Atty
 
 ## Windows
 
-Run the NSIS installer (`Attyre-4.0.0-Setup.exe`) and follow the prompts.
+Run the NSIS installer (`Attyre-4.0.1-Setup.exe`) and follow the prompts.
 
 > Attyre is not signed with a Microsoft certificate. Windows SmartScreen may show a warning. Click **More info** → **Run anyway** to proceed.
 
@@ -71,7 +71,7 @@ Open the DMG, drag Attyre to your Applications folder, and launch it.
 ### Debian / Ubuntu
 
 ```bash
-sudo apt install ./Attyre_4.0.0_amd64.deb
+sudo apt install ./Attyre_4.0.1_amd64.deb
 ```
 
 > Using `apt install ./` rather than `dpkg -i` ensures apt resolves any missing dependencies automatically.
@@ -85,7 +85,7 @@ sudo apt remove attyre
 ### Fedora / RHEL / Rocky / Alma
 
 ```bash
-sudo dnf install ./Attyre-4.0.0-1.x86_64.rpm
+sudo dnf install ./Attyre-4.0.1-1.x86_64.rpm
 ```
 
 #### Uninstall
@@ -97,7 +97,7 @@ sudo dnf remove attyre
 ### openSUSE
 
 ```bash
-sudo zypper install ./Attyre-4.0.0-1.x86_64.rpm
+sudo zypper install ./Attyre-4.0.1-1.x86_64.rpm
 ```
 
 #### Uninstall
