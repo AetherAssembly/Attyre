@@ -6,9 +6,9 @@ Security fixes are applied to the current release and the two most recent releas
 
 | Version | Status |
 | - | - |
-| v3.0.0 | ✅ Active support |
-| v2.0.1 | ✅ Active support |
-| < v2.0.1 | ❌ Not supported |
+| v4.0.1 | ✅ Active support |
+| v4.0.0 | ✅ Active support |
+| < v4.0.0 | ❌ Not supported |
 
 As new versions are released, this table will be updated to reflect the current support window. Versions outside the support window are no longer actively patched.
 
@@ -21,7 +21,6 @@ Use GitHub private vulnerability reporting if enabled for this repository, or co
 - **Email:** [support@aetherassembly.org](mailto:support@aetherassembly.org)
 - **Contact form:** [https://forms.gle/T4i7GGzaT3HUrffm9](https://forms.gle/T4i7GGzaT3HUrffm9)
 - **Aster (GitHub):** [@Aster1630](https://github.com/Aster1630)
-- **Ollie (GitHub):** [@OllieMochi](https://github.com/olliemochi)
 
 Please include in your report:
 
@@ -34,9 +33,11 @@ You can expect an initial acknowledgement within 7 days of receipt.
 
 ## Scope
 
-Attyre is a client-side browser application. The most relevant security areas are:
+Attyre runs as a PWA in the browser and as an Electron desktop app. The most relevant security areas are:
 
 - localStorage data handling and XSS prevention
+- Electron contextBridge and IPC surface (renderer-to-main communication)
+- Custom `app://` protocol and filesystem image access on desktop
 - Third-party API usage (OpenStreetMap Nominatim, Open-Meteo)
 - PWA service worker behavior and cache integrity
 - Dependency vulnerabilities in the JavaScript toolchain
