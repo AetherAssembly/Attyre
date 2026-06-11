@@ -70,7 +70,7 @@ jobs:
           check "js/pages/add-item.js"             http://localhost:8000/js/pages/add-item.js
           check "js/pages/item-detail.js"          http://localhost:8000/js/pages/item-detail.js
           check "js/pages/saved-outfits.js"        http://localhost:8000/js/pages/saved-outfits.js
-          check "js/tauri-fs.js"                   http://localhost:8000/js/tauri-fs.js
+          check "js/electron-bridge.js"              http://localhost:8000/js/electron-bridge.js
           check "js/components/item-card.js"       http://localhost:8000/js/components/item-card.js
 
           echo ""

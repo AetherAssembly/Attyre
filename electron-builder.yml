@@ -1,0 +1,33 @@
+appId: org.aetherassembly.attyre
+productName: Attyre
+copyright: Copyright © AetherAssembly
+
+directories:
+  output: release
+
+files:
+  - dist/**
+  - electron/**
+  - package.json
+
+publish:
+  provider: github
+  owner: AetherAssembly
+  repo: Attyre
+  releaseType: release
+
+linux:
+  target:
+    - AppImage
+    - deb
+  icon: build/icons/256x256.png
+
+win:
+  target:
+    - nsis
+  icon: build/icons/icon.ico
+
+mac:
+  target:
+    - dmg
+  icon: build/icons/icon.icns

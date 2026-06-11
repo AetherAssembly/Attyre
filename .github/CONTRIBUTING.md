@@ -24,13 +24,12 @@ This project follows our [Code of Conduct](CODE_OF_CONDUCT.md). Please read it b
 
 ## Local Development
 
-Attyre uses Vite as a dev server and optionally Tauri for the desktop build.
+Attyre uses Vite as a dev server and Electron for the desktop build.
 
 ### Prerequisites
 
 - Node.js 18+ and npm
   - Verify installation: `node --version && npm --version`
-- (Desktop only) Rust stable toolchain — see [tauri.app/start/prerequisites](https://tauri.app/start/prerequisites/)
 
 ### Setup
 
@@ -42,7 +41,7 @@ cd attyre
 # 2. Install dependencies
 npm install
 
-# 3. Start the Vite dev server
+# 3. Start the Vite dev server (browser/PWA)
 npm run dev
 ```
 
@@ -51,7 +50,7 @@ The app will be available at `http://localhost:1420`.
 To run the desktop app:
 
 ```bash
-npm run tauri:dev
+npm run electron:dev
 ```
 
 > **Note:** The Suggest Outfit feature calls OpenStreetMap Nominatim and Open-Meteo from your browser directly. These work in local dev with no extra config, but if you make frequent requests you may hit provider rate limits (especially Nominatim), and occasional transient CORS/request failures can occur. If that happens, slow down request frequency and retry after a short wait.

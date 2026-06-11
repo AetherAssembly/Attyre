@@ -2,7 +2,7 @@
 
 import * as store from '../store.js';
 import { updateAccessibilityMode, updateDarkMode, APP_VERSION } from '../app.js';
-import { isTauri, openLink } from '../tauri-fs.js';
+import { isElectron, openLink } from '../electron-bridge.js';
 
 
 export function renderSettings(container) {
@@ -159,7 +159,7 @@ function _renderSettings(container) {
     </div>
 
     <!-- Updates (desktop only) -->
-    ${isTauri() ? `
+    ${isElectron() ? `
     <div class="section-card" id="updates-card">
       <div class="section-card-title">Updates</div>
       <div class="settings-row" style="flex-wrap:wrap;gap:10px">
@@ -247,7 +247,7 @@ function _renderSettings(container) {
   });
 
   // Updates
-  if (isTauri()) {
+  if (isElectron()) {
     const checkBtn = wrap.querySelector('#check-updates-btn');
     const statusEl = wrap.querySelector('#update-status');
     checkBtn.addEventListener('click', () => {

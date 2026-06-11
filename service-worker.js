@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'attyre-v3.0.1';
+const CACHE_VERSION = 'attyre-v4.0.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

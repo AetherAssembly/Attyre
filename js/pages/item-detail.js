@@ -1,7 +1,7 @@
 // pages/item-detail.js - Item detail/edit page
 
 import * as store from '../store.js';
-import { isTauri, resolveImageUri, saveImageFile } from '../tauri-fs.js';
+import { isElectron, resolveImageUri, saveImageFile } from '../electron-bridge.js';
 
 const CATEGORIES = ['top', 'bottom', 'outerwear', 'shoes', 'accessory'];
 const SEASONS = ['spring', 'summer', 'fall', 'winter'];
@@ -202,7 +202,7 @@ function attachEventListeners(container, item) {
 
     const changes = { name, category, color, warmth, seasons, occasions, weatherTags, notes };
     if (imageInput.dataset.base64) {
-      changes.imageUri = isTauri()
+      changes.imageUri = isElectron()
         ? await saveImageFile(imageInput.dataset.base64)
         : imageInput.dataset.base64;
     }

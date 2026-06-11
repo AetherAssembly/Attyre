@@ -3,7 +3,7 @@
 import * as store from '../store.js';
 import * as engine from '../engine.js';
 import { CATEGORY_EMOJI } from '../components/item-card.js';
-import { isTauri, resolveImageUri } from '../tauri-fs.js';
+import { isElectron, resolveImageUri } from '../electron-bridge.js';
 
 function esc(t) {
   return String(t ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
@@ -47,7 +47,7 @@ function _renderHome(container) {
       </div>
     </div>
 
-    ${!isTauri() ? `
+    ${!isElectron() ? `
     <div class="alert alert-warning" style="margin-bottom:20px">
       <span class="alert-icon">⚠</span>
       <span>Your data is stored locally in this browser. <strong>Export a backup in Settings</strong> before clearing your cache.</span>

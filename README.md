@@ -2,13 +2,14 @@
 
 > Your wardrobe, weather-aware.
 
-[![Version](https://img.shields.io/badge/version-v3.1.0-C9A96E)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-v4.0.0-C9A96E)](CHANGELOG.md)
 [![License: AGPL v3](https://img.shields.io/badge/license-AGPL--3.0-blue)](LICENSE)
 [![Privacy Policy](https://img.shields.io/badge/privacy-policy-16a34a)](Privacy-Policy.html)
-[![Tauri](https://img.shields.io/badge/tauri-2-24C8DB?logo=tauri&logoColor=white)](https://tauri.app/)
+[![Electron](https://img.shields.io/badge/electron-36-47848F?logo=electron&logoColor=white)](https://www.electronjs.org/)
 
 [![Linux](https://img.shields.io/badge/Linux-AppImage%20%C2%B7%20.deb%20%C2%B7%20.rpm-FCC624?logo=linux&logoColor=black)](https://github.com/AetherAssembly/Attyre/releases)
-[![Windows](https://img.shields.io/badge/Windows-MSI%20%C2%B7%20NSIS-0078D4?logo=windows&logoColor=white)](https://github.com/AetherAssembly/Attyre/releases)
+[![Windows](https://img.shields.io/badge/Windows-NSIS-0078D4?logo=windows&logoColor=white)](https://github.com/AetherAssembly/Attyre/releases)
+[![macOS](https://img.shields.io/badge/macOS-DMG-000000?logo=apple&logoColor=white)](https://github.com/AetherAssembly/Attyre/releases)
 [![Web](https://img.shields.io/badge/web-attyre.org-C9A96E)](https://attyre.org)
 
 Manage your wardrobe, get weather-based outfit suggestions, and plan what to wear — all offline, no account required, all data stays on your device.
@@ -37,20 +38,29 @@ Grab the latest build from the [Releases](https://github.com/AetherAssembly/Atty
 | Platform | Formats |
 | --- | --- |
 | Linux (x86_64) | AppImage · `.deb` (Debian/Ubuntu) · `.rpm` (Fedora/RHEL/openSUSE) |
-| Windows | MSI · NSIS installer |
+| Windows | NSIS installer |
+| macOS | DMG |
 | Web | [attyre.org](https://attyre.org) |
 
 ---
 
 ## Windows
 
-Run the NSIS installer (`Attyre_3.1.0_x64-setup.exe`) and follow the prompts, or use the `.msi` for silent/managed installs.
+Run the NSIS installer (`Attyre-4.0.0-Setup.exe`) and follow the prompts.
 
 > Attyre is not signed with a Microsoft certificate. Windows SmartScreen may show a warning. Click **More info** → **Run anyway** to proceed.
 
 ### Uninstall
 
 Go to **Settings → Apps**, find Attyre, and uninstall from there.
+
+---
+
+## macOS
+
+Open the DMG, drag Attyre to your Applications folder, and launch it.
+
+> Attyre is not notarized. macOS Gatekeeper will block the first launch. Right-click the app → **Open** → **Open** to allow it. You only need to do this once.
 
 ---
 
@@ -61,7 +71,7 @@ Go to **Settings → Apps**, find Attyre, and uninstall from there.
 ### Debian / Ubuntu
 
 ```bash
-sudo apt install ./Attyre_3.1.0_amd64.deb
+sudo apt install ./Attyre_4.0.0_amd64.deb
 ```
 
 > Using `apt install ./` rather than `dpkg -i` ensures apt resolves any missing dependencies automatically.
@@ -75,7 +85,7 @@ sudo apt remove attyre
 ### Fedora / RHEL / Rocky / Alma
 
 ```bash
-sudo dnf install ./Attyre-3.1.0-1.x86_64.rpm
+sudo dnf install ./Attyre-4.0.0-1.x86_64.rpm
 ```
 
 #### Uninstall
@@ -87,7 +97,7 @@ sudo dnf remove attyre
 ### openSUSE
 
 ```bash
-sudo zypper install ./Attyre-3.1.0-1.x86_64.rpm
+sudo zypper install ./Attyre-4.0.0-1.x86_64.rpm
 ```
 
 #### Uninstall
@@ -102,9 +112,7 @@ sudo zypper remove attyre
 
 ### Prerequisites
 
-- Node.js 18+
-- npm
-- Rust stable toolchain — only needed for the desktop app, see [tauri.app/start/prerequisites](https://tauri.app/start/prerequisites/)
+- Node.js 18+ and npm
 
 ### Setup
 
@@ -116,7 +124,7 @@ npm install
 
 ### Run
 
-**Web (Vite dev server):**
+**Web/PWA (Vite dev server):**
 
 ```bash
 npm run dev
@@ -124,23 +132,17 @@ npm run dev
 
 App available at `http://localhost:1420`.
 
-**Desktop (Tauri):**
+**Desktop (Electron):**
 
 ```bash
-npm run tauri:dev
+npm run electron:dev
 ```
 
 ### Build
 
 ```bash
-npm run build          # Vite only → dist/
-npm run tauri:build    # Full desktop build → src-tauri/target/release/bundle/
-```
-
-The default build targets in `tauri.conf.json` are set for Linux (AppImage, deb, rpm). To build for Windows locally, pass `--bundles` to override:
-
-```bash
-npm run tauri build -- --bundles nsis       # Windows installer
+npm run build           # Vite only (frontend) → dist/
+npm run electron:build  # Full desktop build → release/
 ```
 
 Release builds for all platforms are handled automatically by GitHub Actions when a version tag is pushed.
@@ -149,7 +151,7 @@ Release builds for all platforms are handled automatically by GitHub Actions whe
 
 ## Privacy
 
-All data is stored locally on your device; in `localStorage` on the web, and in the OS app data directory on desktop. Nothing is sent to any server except optional weather lookups (city name only) to [OpenStreetMap Nominatim](https://nominatim.openstreetmap.org) and [Open-Meteo](https://open-meteo.com), which you trigger explicitly. See [Privacy-Policy.html](Privacy-Policy.html).
+All data is stored locally on your device: in `localStorage` on the web, and in the OS app data directory on desktop. Nothing is sent to any server except optional weather lookups (city name only) to [OpenStreetMap Nominatim](https://nominatim.openstreetmap.org) and [Open-Meteo](https://open-meteo.com), which you trigger explicitly. See [Privacy-Policy.html](Privacy-Policy.html).
 
 ---
 

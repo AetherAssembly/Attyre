@@ -1,7 +1,7 @@
 // app.js — Router & initialization
 
 import * as store from './store.js';
-import { initTauriFs, isTauri } from './tauri-fs.js';
+import { initElectronBridge, isElectron } from './electron-bridge.js';
 import { renderHome } from './pages/home.js';
 import { renderWardrobe } from './pages/wardrobe.js';
 import { renderAddItem } from './pages/add-item.js';
@@ -16,7 +16,7 @@ import { renderPacking } from './pages/packing.js';
 import { renderPrivacy } from './pages/privacy.js';
 
 const app = document.getElementById('app');
-export const APP_VERSION = '3.0.1';
+export const APP_VERSION = '4.0.0';
 
 // ── Screen reader announcer ───────────────────────────────
 
@@ -126,10 +126,10 @@ function updateActiveNav(hash) {
 }
 
 async function init() {
-  await initTauriFs(); // resolves instantly in the browser (no-op)
+  await initElectronBridge(); // resolves instantly in the browser (no-op)
   initModes();
   renderPage();
-  if (isTauri()) {
+  if (isElectron()) {
     import('./updater.js').then(m => m.silentUpdateCheck(app)).catch(() => {});
   }
 }

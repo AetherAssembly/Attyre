@@ -1,7 +1,7 @@
 // pages/history.js - Outfit history timeline
 
 import * as store from '../store.js';
-import { resolveImageUri } from '../tauri-fs.js';
+import { resolveImageUri } from '../electron-bridge.js';
 
 function esc(t) {
   return String(t ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));

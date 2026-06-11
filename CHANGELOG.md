@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Current Release
 
+## [v4.0.0] - 2026-06-11
+
+### Changed
+
+- **Desktop shell migrated from Tauri 2 (Rust) to Electron (Node.js)** — removes the entire Rust/GTK/WebKitGTK dependency chain
+- **macOS support restored** — desktop app now builds for Linux, Windows, and macOS (dropped in v2.0.1)
+- `js/tauri-fs.js` replaced by `js/electron-bridge.js`; all `isTauri()` calls updated to `isElectron()`
+- Images on desktop are now served via a custom `app://` protocol registered in the Electron main process, replacing Tauri's `asset://` scheme
+- Auto-updater (electron-updater) active on Linux and Windows; macOS shows a GitHub releases link instead (auto-update requires code signing on macOS)
+- CI workflows updated: Rust toolchain and GTK system deps removed, macOS added as a build target
+- Dev command changed from `npm run tauri:dev` to `npm run electron:dev`
+- Build command changed from `npm run tauri:build` to `npm run electron:build`
+
+### Fixed
+
+- Eliminates RUSTSEC-2024-0429 (unsoundness in `glib::VariantStrIter::impl_get`) by removing the glib dependency entirely
+
 ## [v3.0.1] - 2026-06-02
 
 - Bumped `actions/setup-node` from 4 to 6

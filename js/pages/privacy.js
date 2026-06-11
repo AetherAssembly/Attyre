@@ -1,6 +1,6 @@
 // pages/privacy.js
 
-import { openLink } from '../tauri-fs.js';
+import { openLink } from '../electron-bridge.js';
 
 export function renderPrivacy(container) {
   const wrap = document.createElement('div');

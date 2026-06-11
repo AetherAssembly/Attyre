@@ -1,31 +1,33 @@
-// updater.js — Tauri auto-update helpers (only loaded in the desktop app)
+// updater.js — Auto-update helpers (Electron desktop only, Linux/Windows)
 
-import { check } from '@tauri-apps/plugin-updater';
-import { relaunch } from '@tauri-apps/plugin-process';
+import { isElectron, openLink } from './electron-bridge.js';
 
-// Called from the Settings page "Check for Updates" button.
 export async function checkForUpdates(statusEl, btnEl) {
+  if (!isElectron()) return;
+
   btnEl.disabled = true;
   statusEl.textContent = 'Checking…';
+
+  if (navigator.userAgent.includes('Macintosh')) {
+    showGitHubFallback(statusEl);
+    btnEl.disabled = false;
+    return;
+  }
+
+  window.electron.onUpdateDownloaded(info => {
+    statusEl.textContent = `v${info.version} installed. Restarting…`;
+    window.electron.installUpdate();
+  });
+
   try {
-    const update = await check();
-    if (!update) {
-      statusEl.textContent = "You're on the latest version.";
-      return;
-    }
-    statusEl.textContent = `v${update.version} available — downloading…`;
-    await update.downloadAndInstall();
-    statusEl.textContent = 'Update installed. Restarting…';
-    await relaunch();
+    const version = await window.electron.checkForUpdates();
+    statusEl.textContent = version
+      ? `v${version} available — downloading…`
+      : "You're on the latest version.";
   } catch (err) {
-    console.error('[updater] check failed:', err);
     const msg = err.message ?? String(err);
     if (msg.includes('platforms')) {
-      statusEl.innerHTML = 'No update package found for your platform. <a id="releases-link" style="color:var(--color-primary,#C9A96E)">View releases on GitHub</a>';
-      statusEl.querySelector('#releases-link').addEventListener('click', e => {
-        e.preventDefault();
-        import('./tauri-fs.js').then(m => m.openLink('https://github.com/AetherAssembly/Attyre/releases'));
-      });
+      showGitHubFallback(statusEl);
     } else {
       statusEl.textContent = `Update check failed: ${msg}`;
     }
@@ -34,19 +36,27 @@ export async function checkForUpdates(statusEl, btnEl) {
   }
 }
 
-// Called silently at app startup. Shows a dismissible banner if an update is available.
 export async function silentUpdateCheck(appEl) {
+  if (!isElectron()) return;
+  if (navigator.userAgent.includes('Macintosh')) return;
   try {
-    const update = await check();
-    if (!update) return;
-    showUpdateBanner(appEl, update.version);
+    const version = await window.electron.checkForUpdates();
+    if (version) showUpdateBanner(appEl, version);
   } catch {
     // Silent — don't surface startup check errors to the user
   }
 }
 
+function showGitHubFallback(statusEl) {
+  statusEl.innerHTML = 'Auto-update is not available on macOS. <a id="releases-link" style="color:var(--color-primary,#C9A96E)">View releases on GitHub</a>';
+  statusEl.querySelector('#releases-link').addEventListener('click', e => {
+    e.preventDefault();
+    openLink('https://github.com/AetherAssembly/Attyre/releases');
+  });
+}
+
 function showUpdateBanner(appEl, newVersion) {
-  if (document.getElementById('update-banner')) return; // already shown
+  if (document.getElementById('update-banner')) return;
   const banner = document.createElement('div');
   banner.id = 'update-banner';
   banner.style.cssText = `

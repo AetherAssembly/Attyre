@@ -17,12 +17,10 @@ function copyPwaStatics() {
 }
 
 export default defineConfig({
-  // Keep the same port so tauri.conf.json devUrl doesn't need to change
   server: {
     port: 1420,
     strictPort: true,
   },
-  // Don't clear the terminal — lets Tauri/Rust output stay visible
   clearScreen: false,
   plugins: [copyPwaStatics()],
 });

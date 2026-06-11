@@ -31,9 +31,8 @@ npm-debug.log*
 # ── Vite build output ─────────────────────────────────────────────────────────
 dist/
 
-# ── Tauri build artifacts ─────────────────────────────────────────────────────
-src-tauri/target/
-src-tauri/WixTools/
+# ── Electron build output ─────────────────────────────────────────────────────
+release/
 
 # ── Misc ─────────────────────────────────────────────────────────────────────
 audit-report.json

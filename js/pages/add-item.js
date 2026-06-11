@@ -1,7 +1,7 @@
 // pages/add-item.js - Add item form page
 
 import * as store from '../store.js';
-import { isTauri, saveImageFile } from '../tauri-fs.js';
+import { isElectron, saveImageFile } from '../electron-bridge.js';
 
 const CATEGORIES = ['top', 'bottom', 'outerwear', 'shoes', 'accessory'];
 const SEASONS = ['spring', 'summer', 'fall', 'winter'];
@@ -316,7 +316,7 @@ function attachEventListeners(wrap) {
     const occasions   = Array.from(form.querySelectorAll('input[name="occasions"]:checked')).map(cb => cb.value);
     const weatherTags = Array.from(form.querySelectorAll('input[name="weatherTags"]:checked')).map(cb => cb.value);
 
-    const imageUri = rawImage && isTauri() ? await saveImageFile(rawImage) : rawImage;
+    const imageUri = rawImage && isElectron() ? await saveImageFile(rawImage) : rawImage;
     const itemData = { name, category, color, warmth, seasons, occasions, weatherTags, notes, imageUri };
 
     try {
