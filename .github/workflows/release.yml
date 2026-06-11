@@ -21,7 +21,7 @@ jobs:
       - run: npm ci
 
       - name: Build (Linux)
-        run: npm run build && npx electron-builder --linux AppImage deb rpm
+        run: npm run build && npx electron-builder --linux AppImage deb rpm --publish never
 
       - uses: actions/upload-artifact@v7
         with:
@@ -44,7 +44,7 @@ jobs:
       - run: npm ci
 
       - name: Build (Windows)
-        run: npm run build && npx electron-builder --win nsis
+        run: npm run build && npx electron-builder --win nsis --publish never
 
       - uses: actions/upload-artifact@v7
         with:
@@ -65,7 +65,7 @@ jobs:
       - run: npm ci
 
       - name: Build (macOS)
-        run: npm run build && npx electron-builder --mac dmg
+        run: npm run build && npx electron-builder --mac dmg --publish never
 
       - uses: actions/upload-artifact@v7
         with:
