@@ -3,7 +3,7 @@
 
 import test from 'node:test';
 import assert from 'node:assert';
-import { suggestForTemp, rankItems } from './engine.js';
+import { suggestForTemp, suggestForWeather, rankItems } from './engine.js';
 
 test('suggestForTemp returns correct labels for very cold', () => {
   const suggestion = suggestForTemp(-5);
@@ -158,16 +158,15 @@ test('rankItems handles missing weatherTags gracefully', () => {
   assert.ok(result.length > 0); // Should not crash
 });
 
-test('rankItems case-insensitive category matching', () => {
+test('rankItems category matching is case-insensitive', () => {
   const items = [
     { id: '1', name: 'Item', category: 'TOP' }, // Uppercase
   ];
-  const suggestion = suggestForTemp(20); // labels: ['t-shirt']
+  const suggestion = suggestForTemp(20); // labels: ['t-shirt'], maps to 'top'
 
   const result = rankItems(items, suggestion);
-  // Category matching is case-sensitive in current implementation
-  // This test documents the behavior
-  assert.strictEqual(result.length, 0); // 'TOP' !== 'top'
+  assert.strictEqual(result.length, 1); // 'TOP' matches 'top' after normalization
+  assert.strictEqual(result[0].score, 2);
 });
 
 test('rankItems combined scoring', () => {
@@ -178,4 +177,17 @@ test('rankItems combined scoring', () => {
 
   const result = rankItems(items, suggestion);
   assert.strictEqual(result[0].score, 3); // +2 for category, +1 for tag
+});
+
+test('suggestForWeather merges temperature and weather code tags', () => {
+  // tempC=5 gives 'cold' and 'wind'; weatherCode=61 (rain) adds 'rain'
+  const result = suggestForWeather({ tempC: 5, windspeedKph: 0, weatherCode: 61 });
+  assert.ok(result.weatherTags.includes('cold'), 'should include cold from temp');
+  assert.ok(result.weatherTags.includes('rain'), 'should include rain from weather code');
+});
+
+test('suggestForWeather applies wind chill before suggestion', () => {
+  // 1°C with strong wind drops feelsLike below 0, upgrading Cold to Very cold
+  const result = suggestForWeather({ tempC: 1, windspeedKph: 50, weatherCode: null });
+  assert.strictEqual(result.reason, 'Very cold');
 });

@@ -45,10 +45,19 @@ async function loadWithRetry(w, retries = 40) {
   w.loadURL('http://localhost:1420');
 }
 
+function safeImagePath(filename) {
+  if (!filename || filename.includes('..') || /[/\\]/.test(filename)) return null;
+  const imagesDir = path.join(app.getPath('userData'), 'images');
+  const resolved = path.join(imagesDir, filename);
+  return resolved.startsWith(imagesDir + path.sep) ? resolved : null;
+}
+
 app.whenReady().then(() => {
   protocol.registerFileProtocol('app', (request, callback) => {
     const filename = new URL(request.url).pathname.replace(/^\//, '');
-    callback({ path: path.join(app.getPath('userData'), 'images', filename) });
+    const imagePath = safeImagePath(filename);
+    if (!imagePath) return callback({ error: -6 }); // net::ERR_FILE_NOT_FOUND
+    callback({ path: imagePath });
   });
 
   createWindow();
@@ -78,7 +87,9 @@ ipcMain.handle('get-app-data-path', () => app.getPath('userData'));
 ipcMain.handle('save-image', (_event, filename, dataBase64) => {
   const imagesDir = path.join(app.getPath('userData'), 'images');
   fs.mkdirSync(imagesDir, { recursive: true });
-  fs.writeFileSync(path.join(imagesDir, filename), Buffer.from(dataBase64, 'base64'));
+  const imagePath = safeImagePath(filename);
+  if (!imagePath) throw new Error('Invalid image filename');
+  fs.writeFileSync(imagePath, Buffer.from(dataBase64, 'base64'));
 });
 
 app.on('window-all-closed', () => app.quit());

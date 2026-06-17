@@ -131,7 +131,7 @@ export function rankItems(items, suggestion, options = {}) {
 
     for (const label of labels) {
       const expectedCategory = mapLabelToCategory(label);
-      if (expectedCategory && item.category === expectedCategory) score += 2;
+      if (expectedCategory && item.category?.toLowerCase() === expectedCategory) score += 2;
     }
 
     for (const tag of weatherTags) {

@@ -180,10 +180,14 @@ export function renderCalendar(container) {
 
     outfitPanel.querySelector('#save-sel-btn').addEventListener('click', () => {
       if (selected.size === 0) { alert('Select at least one item.'); return; }
-      store.saveOutfitDate(selectedDateStr, [...selected]);
-      selected.forEach(id => store.incrementItemUsage(id));
-      renderCalGrid();
-      renderOutfitPanel();
+      try {
+        store.saveOutfitDate(selectedDateStr, [...selected]);
+        selected.forEach(id => store.incrementItemUsage(id));
+        renderCalGrid();
+        renderOutfitPanel();
+      } catch (err) {
+        alert(err.message || 'Failed to save outfit. Your storage may be full.');
+      }
     });
     outfitPanel.querySelector('#cancel-sel-btn').addEventListener('click', renderOutfitPanel);
   }

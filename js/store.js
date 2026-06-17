@@ -15,7 +15,14 @@ export function getItems() {
     const data = localStorage.getItem(ITEMS_KEY);
     if (!data) return [];
     const decompressed = LZString.decompress(data);
-    return decompressed !== null ? JSON.parse(decompressed) : JSON.parse(data);
+    if (decompressed !== null) return JSON.parse(decompressed);
+    // Legacy path: data stored before compression was introduced
+    try {
+      return JSON.parse(data);
+    } catch {
+      console.error('Storage data is corrupted (neither compressed nor valid JSON). Items reset.');
+      return [];
+    }
   } catch (e) {
     console.error('Failed to get items from storage:', e);
     return [];
@@ -118,6 +125,8 @@ export function exportJSON() {
  * @param {string} jsonString
  * @returns {number} Count of imported items
  */
+const VALID_CATEGORIES = ['top', 'bottom', 'outerwear', 'shoes', 'accessory'];
+
 export function importJSON(jsonString) {
   let parsed;
   try { parsed = JSON.parse(jsonString); } catch (e) { throw new Error('Invalid JSON format'); }
@@ -126,7 +135,7 @@ export function importJSON(jsonString) {
     const item = parsed[i];
     if (!item.id || typeof item.id !== 'string') throw new Error(`Item ${i}: missing or invalid id`);
     if (!item.name || typeof item.name !== 'string') throw new Error(`Item ${i}: missing or invalid name`);
-    if (!item.category || typeof item.category !== 'string') throw new Error(`Item ${i}: missing or invalid category`);
+    if (!item.category || !VALID_CATEGORIES.includes(item.category)) throw new Error(`Item ${i}: category must be one of ${VALID_CATEGORIES.join(', ')}`);
     if (!item.createdAt || typeof item.createdAt !== 'string') throw new Error(`Item ${i}: missing or invalid createdAt timestamp`);
   }
   saveItems(parsed);

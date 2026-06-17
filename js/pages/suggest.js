@@ -114,7 +114,8 @@ export function renderSuggest(container) {
         );
         geoData = await geoRes.json();
       } catch (geoErr) {
-        throw new Error(`Geocoding service unavailable. If you're offline or blocking third-party APIs, the suggestion will not work. Error: ${geoErr.message}`);
+        console.error('Geocoding failed:', geoErr);
+        throw new Error("Geocoding service unavailable. Check your connection or try adding the country name, e.g. \"Lyon France\".");
       }
 
       if (!geoData?.length) {
@@ -135,7 +136,8 @@ export function renderSuggest(container) {
         );
         wxData = await wxRes.json();
       } catch (wxErr) {
-        throw new Error(`Weather service unavailable. Please check your connection and try again. Error: ${wxErr.message}`);
+        console.error('Weather fetch failed:', wxErr);
+        throw new Error('Weather service unavailable. Please check your connection and try again.');
       }
 
       const current = wxData.current ?? wxData.current_weather;

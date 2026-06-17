@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Current Release
 
+## [v4.1.0] - 2026-06-16
+
+### Fixed
+
+- Path traversal vulnerability in Electron image handling: filenames from the `app://` protocol and the `save-image` IPC handler are now validated to reject `..` sequences and path separators, preventing reads/writes outside the `images/` directory.
+- Silent wardrobe data loss when localStorage contained neither valid compressed nor valid plain JSON: the corrupted-data case is now distinguished from the legacy uncompressed path and logs an explicit error instead of silently returning an empty array.
+- `importJSON` no longer accepts items with unrecognised category values; category is now validated against the valid set (`top`, `bottom`, `outerwear`, `shoes`, `accessory`) and throws a descriptive error on mismatch.
+- Outfit suggestion scoring now matches categories case-insensitively, so items with uppercase category values in pre-existing data are no longer silently excluded from suggestions.
+- Saving an outfit in the calendar page no longer leaves the UI silent on storage errors (such as `QuotaExceededError`); the error message is now shown to the user.
+- Raw API and network error text is no longer surfaced to users in the suggest page; geocoding and weather fetch failures now show a clean message while logging the raw error to the console.
+
+### Tests
+
+- Added tests for `suggestForWeather`: tag merging between temperature and WMO weather code, and wind chill crossing a suggestion band boundary.
+- Updated the category case-sensitivity test to reflect the corrected case-insensitive behaviour.
+
+---
+
 ## [v4.0.2] - 2026-06-11
 
 ### Fixed
