@@ -87,7 +87,6 @@ export async function renderCalendar(container) {
   async function renderOutfitPanel() {
     const outfitDates = store.getOutfitDates();
     const itemIds = outfitDates[selectedDateStr] || [];
-    const allItems = await store.getItems();
     const d = new Date(selectedDateStr + 'T12:00:00');
     const dateLabel = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
     announceToScreenReader(itemIds.length > 0 ? `${dateLabel}: ${itemIds.length} item outfit planned` : `${dateLabel}: no outfit planned`);
