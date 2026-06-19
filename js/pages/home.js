@@ -9,17 +9,17 @@ function esc(t) {
   return String(t ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
 }
 
-export function renderHome(container) {
+export async function renderHome(container) {
   try {
-    _renderHome(container);
+    await _renderHome(container);
   } catch (err) {
     console.error('renderHome failed:', err);
     container.innerHTML = `<div class="page-wrap"><div class="alert alert-warning" style="margin-top:2rem"><span class="alert-icon">⚠</span><span>Home failed to load. <a href="#/">Retry</a></span></div></div>`;
   }
 }
 
-function _renderHome(container) {
-  const items = store.getItems();
+async function _renderHome(container) {
+  const items = await store.getItems();
 
   const cats = { top: 0, bottom: 0, outerwear: 0, shoes: 0, accessory: 0 };
   items.forEach(i => { if (cats[i.category] !== undefined) cats[i.category]++; });
@@ -143,8 +143,8 @@ function _renderHome(container) {
   // Shuffle: Fisher-Yates random pick instead of same 18°C suggestion every time
   const shuffleBtn = wrap.querySelector('#shuffle-btn');
   if (shuffleBtn) {
-    shuffleBtn.addEventListener('click', () => {
-      const allItems = store.getItems();
+    shuffleBtn.addEventListener('click', async () => {
+      const allItems = await store.getItems();
       if (!allItems.length) return;
       const shuffled = [...allItems].sort(() => Math.random() - 0.5).slice(0, 4);
       const chips = wrap.querySelector('#outfit-chips');

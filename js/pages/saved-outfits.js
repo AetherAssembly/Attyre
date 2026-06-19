@@ -7,16 +7,16 @@ function esc(t) {
   return String(t ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
 }
 
-export function renderSavedOutfits(container) {
+export async function renderSavedOutfits(container) {
   try {
-    _renderSavedOutfits(container);
+    await _renderSavedOutfits(container);
   } catch (err) {
     console.error('renderSavedOutfits failed:', err);
     container.innerHTML = `<div class="page-wrap"><div class="alert alert-warning" style="margin-top:2rem"><span class="alert-icon">⚠</span><span>Saved Outfits failed to load. <a href="#/">Go home</a></span></div></div>`;
   }
 }
 
-function _renderSavedOutfits(container) {
+async function _renderSavedOutfits(container) {
   const outfits = store.getSavedOutfits();
 
   const wrap = document.createElement('div');
@@ -50,7 +50,7 @@ function _renderSavedOutfits(container) {
       const outfitEl = document.createElement('div');
       outfitEl.className = 'outfit-section';
 
-      const outfitItems = outfit.itemIds.map(id => store.getItemById(id)).filter(Boolean);
+      const outfitItems = (await Promise.all(outfit.itemIds.map(id => store.getItemById(id)))).filter(Boolean);
 
       outfitEl.innerHTML = `
         <div class="outfit-section-header">

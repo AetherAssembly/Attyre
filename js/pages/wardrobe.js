@@ -6,9 +6,9 @@ import { announceToScreenReader } from '../app.js';
 
 const ALL_WEATHER_TAGS = ['sunny','cloudy','rain','light-rain','heavy-rain','snow','wind','humid','foggy','cold','hot'];
 
-export function renderWardrobe(container) {
+export async function renderWardrobe(container) {
   try {
-    _renderWardrobe(container);
+    await _renderWardrobe(container);
   } catch (err) {
     console.error('renderWardrobe failed:', err);
     container.innerHTML = `<div class="page-wrap"><div class="alert alert-warning" style="margin-top:2rem"><span class="alert-icon">&#9888;</span><span>Wardrobe failed to load. <a href="#/">Go home</a></span></div></div>`;
@@ -27,8 +27,8 @@ function applyOrder(items) {
   return sorted;
 }
 
-function _renderWardrobe(container) {
-  const items = store.getItems();
+async function _renderWardrobe(container) {
+  const items = await store.getItems();
   let ordered = applyOrder(items);
 
   const wrap = document.createElement('div');
