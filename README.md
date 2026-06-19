@@ -10,6 +10,7 @@
 [![Linux](https://img.shields.io/badge/Linux-AppImage%20%C2%B7%20.deb%20%C2%B7%20.rpm-FCC624?logo=linux&logoColor=black)](https://github.com/AetherAssembly/Attyre/releases)
 [![Windows](https://img.shields.io/badge/Windows-NSIS-0078D4?logo=windows&logoColor=white)](https://github.com/AetherAssembly/Attyre/releases)
 [![macOS](https://img.shields.io/badge/macOS-DMG-000000?logo=apple&logoColor=white)](https://github.com/AetherAssembly/Attyre/releases)
+[![Wiki](https://img.shields.io/badge/wiki-documentation-555555?logo=github&logoColor=white)](https://aetherassembly.org/wiki/attyre)
 
 Manage your wardrobe, get weather-based outfit suggestions, and plan what to wear — all offline, no account required, all data stays on your device.
 
