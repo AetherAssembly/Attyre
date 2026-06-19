@@ -55,6 +55,30 @@
 
   /* Typography */
   --font: 'Century Gothic', 'Trebuchet MS', 'Gill Sans', Futura, system-ui, sans-serif;
+
+  /* @aetherAssembly/ui token mappings */
+  --ae-color-primary:        var(--gold);
+  --ae-color-primary-hover:  var(--gold-dark);
+  --ae-color-secondary:      var(--bark-light);
+  --ae-color-danger:         var(--error);
+  --ae-color-success:        var(--success);
+  --ae-color-warning:        var(--warning);
+  --ae-color-bg:             var(--bg-surface);
+  --ae-color-bg-subtle:      var(--bg-subtle);
+  --ae-color-text:           var(--text-primary);
+  --ae-color-text-muted:     var(--text-muted);
+  --ae-color-border:         var(--border);
+  --ae-space-xs:             4px;
+  --ae-space-sm:             8px;
+  --ae-space-md:             16px;
+  --ae-space-lg:             24px;
+  --ae-space-xl:             32px;
+  --ae-radius-sm:            var(--radius-sm);
+  --ae-radius-md:            var(--radius-md);
+  --ae-radius-lg:            var(--radius-lg);
+  --ae-shadow-sm:            var(--shadow-sm);
+  --ae-shadow-md:            var(--shadow-md);
+  --ae-shadow-lg:            var(--shadow-lg);
 }
 
 /* Dark mode */

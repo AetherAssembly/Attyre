@@ -35,9 +35,9 @@ function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function generateAutoName(category) {
+async function generateAutoName(category) {
   const prefix = CATEGORY_PREFIX[category] || 'Item';
-  const count = store.getItems().filter(i => i.category === category).length + 1;
+  const count = (await store.getItems()).filter(i => i.category === category).length + 1;
   return `${prefix}_${String(count).padStart(3, '0')}`;
 }
 
@@ -118,16 +118,16 @@ function detectDominantColor(dataUrl) {
 
 // ── Render ────────────────────────────────────────────────────────────────────
 
-export function renderAddItem(container) {
+export async function renderAddItem(container) {
   try {
-    _renderAddItem(container);
+    await _renderAddItem(container);
   } catch (err) {
     console.error('renderAddItem failed:', err);
     container.innerHTML = `<div class="page-wrap"><div class="alert alert-warning" style="margin-top:2rem"><span class="alert-icon">⚠</span><span>Add Item failed to load. <a href="#/">Go home</a></span></div></div>`;
   }
 }
 
-function _renderAddItem(container) {
+async function _renderAddItem(container) {
   const wrap = document.createElement('div');
   wrap.className = 'page-wrap';
 
@@ -259,9 +259,9 @@ function attachEventListeners(wrap) {
   const previewContainer = wrap.querySelector('#image-preview-container');
 
   // Update name placeholder when category changes
-  categorySelect.addEventListener('change', () => {
+  categorySelect.addEventListener('change', async () => {
     const cat = categorySelect.value;
-    nameInput.placeholder = cat ? generateAutoName(cat) : 'Auto-generated from category';
+    nameInput.placeholder = cat ? await generateAutoName(cat) : 'Auto-generated from category';
   });
 
   // Warmth buttons: select + auto-suggest weather tags
@@ -310,7 +310,7 @@ function attachEventListeners(wrap) {
     if (!valid) return;
 
     // Auto-generate name if blank
-    if (!name) name = generateAutoName(category);
+    if (!name) name = await generateAutoName(category);
 
     const seasons     = Array.from(form.querySelectorAll('input[name="seasons"]:checked')).map(cb => cb.value);
     const occasions   = Array.from(form.querySelectorAll('input[name="occasions"]:checked')).map(cb => cb.value);
@@ -320,7 +320,7 @@ function attachEventListeners(wrap) {
     const itemData = { name, category, color, warmth, seasons, occasions, weatherTags, notes, imageUri };
 
     try {
-      store.addItem(itemData);
+      await store.addItem(itemData);
       window.location.hash = '#/wardrobe';
     } catch (err) {
       if (err.code === 'QUOTA_EXCEEDED') {
