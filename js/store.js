@@ -5,7 +5,18 @@ import { IDBAdapter } from '@aetherAssembly/core';
 
 const ITEMS_STORE = 'wardrobe-items';
 const DB_NAME = 'attyre';
-const itemsAdapter = new IDBAdapter(DB_NAME, ITEMS_STORE);
+
+let _adapter = null;
+function getAdapter() {
+  if (!_adapter) _adapter = new IDBAdapter(DB_NAME, ITEMS_STORE);
+  return _adapter;
+}
+
+// For test injection only — do not call in production code.
+export function _setAdapterForTest(adapter) {
+  _adapter = adapter;
+  _initPromise = null;
+}
 
 // ── One-time migration from legacy LZString localStorage ────────────────────
 
@@ -27,7 +38,7 @@ async function migrateFromLocalStorage() {
         items = JSON.parse(raw);
       }
       if (Array.isArray(items)) {
-        await Promise.all(items.map(item => itemsAdapter.set(item.id, item)));
+        await Promise.all(items.map(item => getAdapter().set(item.id, item)));
       }
     } catch (e) {
       console.error('[Attyre] Migration from localStorage failed:', e);
@@ -50,41 +61,41 @@ export function initStore() {
 
 export async function getItems() {
   await initStore();
-  const keys = await itemsAdapter.keys();
-  const items = await Promise.all(keys.map(k => itemsAdapter.get(k)));
+  const keys = await getAdapter().keys();
+  const items = await Promise.all(keys.map(k => getAdapter().get(k)));
   return items.filter(Boolean);
 }
 
 export async function saveItems(items) {
   await initStore();
-  await itemsAdapter.clear();
-  await Promise.all(items.map(item => itemsAdapter.set(item.id, item)));
+  await getAdapter().clear();
+  await Promise.all(items.map(item => getAdapter().set(item.id, item)));
 }
 
 export async function addItem(itemData) {
   await initStore();
   const newItem = { id: crypto.randomUUID(), ...itemData, createdAt: new Date().toISOString() };
-  await itemsAdapter.set(newItem.id, newItem);
+  await getAdapter().set(newItem.id, newItem);
   return newItem;
 }
 
 export async function updateItem(id, changes) {
   await initStore();
-  const existing = await itemsAdapter.get(id);
+  const existing = await getAdapter().get(id);
   if (!existing) return null;
   const updated = { ...existing, ...changes };
-  await itemsAdapter.set(id, updated);
+  await getAdapter().set(id, updated);
   return updated;
 }
 
 export async function deleteItem(id) {
   await initStore();
-  await itemsAdapter.delete(id);
+  await getAdapter().delete(id);
 }
 
 export async function getItemById(id) {
   await initStore();
-  return itemsAdapter.get(id);
+  return getAdapter().get(id);
 }
 
 export async function incrementItemUsage(id) {
