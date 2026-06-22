@@ -13,7 +13,7 @@ function toDateStr(d) { return d.toISOString().split('T')[0]; }
 const WEEKDAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-export function renderCalendar(container) {
+export async function renderCalendar(container) {
   const wrap = document.createElement('div');
   wrap.className = 'page-wrap';
 
@@ -75,19 +75,18 @@ export function renderCalendar(container) {
       </div>
     `;
 
-    calRoot.querySelector('#prev-month').addEventListener('click', () => { viewDate.setMonth(viewDate.getMonth() - 1); renderCalGrid(); renderOutfitPanel(); });
-    calRoot.querySelector('#next-month').addEventListener('click', () => { viewDate.setMonth(viewDate.getMonth() + 1); renderCalGrid(); renderOutfitPanel(); });
+    calRoot.querySelector('#prev-month').addEventListener('click', async () => { viewDate.setMonth(viewDate.getMonth() - 1); renderCalGrid(); await renderOutfitPanel(); });
+    calRoot.querySelector('#next-month').addEventListener('click', async () => { viewDate.setMonth(viewDate.getMonth() + 1); renderCalGrid(); await renderOutfitPanel(); });
 
     calRoot.querySelectorAll('.calendar-day[data-date]').forEach(el => {
-      el.addEventListener('click', () => { selectedDateStr = el.dataset.date; renderCalGrid(); renderOutfitPanel(); });
+      el.addEventListener('click', async () => { selectedDateStr = el.dataset.date; renderCalGrid(); await renderOutfitPanel(); });
       el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); } });
     });
   }
 
-  function renderOutfitPanel() {
+  async function renderOutfitPanel() {
     const outfitDates = store.getOutfitDates();
     const itemIds = outfitDates[selectedDateStr] || [];
-    const allItems = store.getItems();
     const d = new Date(selectedDateStr + 'T12:00:00');
     const dateLabel = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
     announceToScreenReader(itemIds.length > 0 ? `${dateLabel}: ${itemIds.length} item outfit planned` : `${dateLabel}: no outfit planned`);
@@ -102,9 +101,9 @@ export function renderCalendar(container) {
           <button class="btn btn-primary" id="select-btn">Choose items</button>
         </div>
       `;
-      outfitPanel.querySelector('#select-btn').addEventListener('click', () => showSelector());
+      outfitPanel.querySelector('#select-btn').addEventListener('click', async () => { await showSelector(); });
     } else {
-      const outfitItems = itemIds.map(id => store.getItemById(id)).filter(Boolean);
+      const outfitItems = (await Promise.all(itemIds.map(id => store.getItemById(id)))).filter(Boolean);
       outfitPanel.innerHTML = `
         <div class="section-card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
@@ -125,7 +124,7 @@ export function renderCalendar(container) {
         card.addEventListener('click', () => { window.location.hash = `#/wardrobe/${item.id}`; });
         grid.appendChild(card);
       });
-      outfitPanel.querySelector('#change-btn').addEventListener('click', () => showSelector());
+      outfitPanel.querySelector('#change-btn').addEventListener('click', async () => { await showSelector(); });
       // Use store.deleteOutfitDate instead of writing localStorage directly
       outfitPanel.querySelector('#delete-btn').addEventListener('click', () => {
         store.deleteOutfitDate(selectedDateStr);
@@ -135,8 +134,8 @@ export function renderCalendar(container) {
     }
   }
 
-  function showSelector() {
-    const allItems = store.getItems();
+  async function showSelector() {
+    const allItems = await store.getItems();
     if (allItems.length === 0) { alert('Your wardrobe is empty — add items first.'); return; }
 
     const outfitDates = store.getOutfitDates();
@@ -178,20 +177,20 @@ export function renderCalendar(container) {
       grid.appendChild(card);
     });
 
-    outfitPanel.querySelector('#save-sel-btn').addEventListener('click', () => {
+    outfitPanel.querySelector('#save-sel-btn').addEventListener('click', async () => {
       if (selected.size === 0) { alert('Select at least one item.'); return; }
       try {
         store.saveOutfitDate(selectedDateStr, [...selected]);
-        selected.forEach(id => store.incrementItemUsage(id));
+        await Promise.all([...selected].map(id => store.incrementItemUsage(id)));
         renderCalGrid();
-        renderOutfitPanel();
+        await renderOutfitPanel();
       } catch (err) {
         alert(err.message || 'Failed to save outfit. Your storage may be full.');
       }
     });
-    outfitPanel.querySelector('#cancel-sel-btn').addEventListener('click', renderOutfitPanel);
+    outfitPanel.querySelector('#cancel-sel-btn').addEventListener('click', async () => { await renderOutfitPanel(); });
   }
 
   renderCalGrid();
-  renderOutfitPanel();
+  await renderOutfitPanel();
 }

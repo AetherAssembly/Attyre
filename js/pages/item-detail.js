@@ -12,8 +12,8 @@ function esc(t) {
   return String(t ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
 }
 
-export function renderItemDetail(container, itemId) {
-  const item = store.getItemById(itemId);
+export async function renderItemDetail(container, itemId) {
+  const item = await store.getItemById(itemId);
   if (!item) { window.location.hash = '#/wardrobe'; return; }
 
   const wrap = document.createElement('div');
@@ -208,7 +208,7 @@ function attachEventListeners(container, item) {
     }
 
     try {
-      store.updateItem(item.id, changes);
+      await store.updateItem(item.id, changes);
       window.location.hash = '#/wardrobe';
     } catch (err) {
       if (err.code === 'QUOTA_EXCEEDED') {
@@ -221,8 +221,8 @@ function attachEventListeners(container, item) {
 
   const markCleanBtn = container.querySelector('#mark-clean-btn');
   if (markCleanBtn) {
-    markCleanBtn.addEventListener('click', () => {
-      store.markItemClean(item.id);
+    markCleanBtn.addEventListener('click', async () => {
+      await store.markItemClean(item.id);
       markCleanBtn.textContent = 'Marked clean';
       markCleanBtn.disabled = true;
     });
@@ -230,7 +230,7 @@ function attachEventListeners(container, item) {
 
   deleteBtn.addEventListener('click', () => { deleteBtn.style.display = 'none'; deleteConfirm.style.display = 'block'; });
   cancelDeleteBtn.addEventListener('click', () => { deleteConfirm.style.display = 'none'; deleteBtn.style.display = ''; });
-  confirmDeleteBtn.addEventListener('click', () => { store.deleteItem(item.id); window.location.hash = '#/wardrobe'; });
+  confirmDeleteBtn.addEventListener('click', async () => { await store.deleteItem(item.id); window.location.hash = '#/wardrobe'; });
 }
 
 function attachCropHandler(btn, srcUrl, imageInput, previewContainer) {

@@ -6,17 +6,17 @@ function esc(t) {
   return String(t ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 }
 
-export function renderStats(container) {
+export async function renderStats(container) {
   try {
-    _renderStats(container);
+    await _renderStats(container);
   } catch (err) {
     console.error('renderStats failed:', err);
     container.innerHTML = `<div class="page-wrap"><div class="alert alert-warning" style="margin-top:2rem"><span class="alert-icon">⚠</span><span>Stats failed to load. <a href="#/">Go home</a></span></div></div>`;
   }
 }
 
-function _renderStats(container) {
-  const items = store.getItems();
+async function _renderStats(container) {
+  const items = await store.getItems();
   const wrap = document.createElement('div');
   wrap.className = 'page-wrap';
 

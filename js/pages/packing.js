@@ -28,7 +28,7 @@ function datesBetween(from, to) {
   return dates;
 }
 
-export function renderPacking(container) {
+export async function renderPacking(container) {
   const wrap = document.createElement('div');
   wrap.className = 'page-wrap';
 
@@ -186,7 +186,7 @@ export function renderPacking(container) {
         }
       }
 
-      const items = store.getItems();
+      const items = await store.getItems();
       if (items.length === 0) {
         results.innerHTML = `
           <div class="section-card" style="text-align:center;padding:32px">

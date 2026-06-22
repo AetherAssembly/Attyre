@@ -30,7 +30,7 @@ function daysAgo(dateStr) {
   return null;
 }
 
-export function renderHistory(container) {
+export async function renderHistory(container) {
   const wrap = document.createElement('div');
   wrap.className = 'page-wrap';
 
@@ -63,7 +63,7 @@ export function renderHistory(container) {
     return;
   }
 
-  const itemMap = new Map(store.getItems().map(i => [i.id, i]));
+  const itemMap = new Map((await store.getItems()).map(i => [i.id, i]));
 
   // Group by month
   const byMonth = new Map();
@@ -128,14 +128,14 @@ export function renderHistory(container) {
 
   // "Wear again" - pre-fill today's calendar slot with the same item IDs
   wrap.querySelectorAll('.history-wear-again').forEach(btn => {
-    btn.addEventListener('click', e => {
+    btn.addEventListener('click', async e => {
       e.stopPropagation();
       const sourceDate = btn.dataset.date;
       const itemIds = allDates[sourceDate];
       if (!itemIds?.length) return;
 
       store.saveOutfitDate(today, itemIds);
-      itemIds.forEach(id => store.incrementItemUsage(id));
+      await Promise.all(itemIds.map(id => store.incrementItemUsage(id)));
       showToast('Outfit copied to today!');
     });
   });

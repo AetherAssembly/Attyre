@@ -74,29 +74,29 @@ async function renderPage() {
 
   try {
     if (hash === '/' || hash === '') {
-      renderHome(app);
+      await renderHome(app);
     } else if (parts[0] === 'wardrobe') {
-      if (parts.length === 1)       renderWardrobe(app);
-      else if (parts[1] === 'add')  renderAddItem(app);
-      else                          renderItemDetail(app, parts[1]);
+      if (parts.length === 1)       await renderWardrobe(app);
+      else if (parts[1] === 'add')  await renderAddItem(app);
+      else                          await renderItemDetail(app, parts[1]);
     } else if (parts[0] === 'suggest') {
-      renderSuggest(app);
+      await renderSuggest(app);
     } else if (parts[0] === 'calendar') {
-      renderCalendar(app);
+      await renderCalendar(app);
     } else if (parts[0] === 'saved-outfits') {
-      renderSavedOutfits(app);
+      await renderSavedOutfits(app);
     } else if (parts[0] === 'stats') {
-      renderStats(app);
+      await renderStats(app);
     } else if (parts[0] === 'settings') {
-      renderSettings(app);
+      await renderSettings(app);
     } else if (parts[0] === 'history') {
-      renderHistory(app);
+      await renderHistory(app);
     } else if (parts[0] === 'packing') {
-      renderPacking(app);
+      await renderPacking(app);
     } else if (parts[0] === 'privacy') {
-      renderPrivacy(app);
+      await renderPrivacy(app);
     } else {
-      renderHome(app);
+      await renderHome(app);
     }
   } catch (err) {
     console.error('Page render failed:', err);

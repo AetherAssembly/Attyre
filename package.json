@@ -1,6 +1,6 @@
 {
   "name": "attyre",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "description": "Smart wardrobe manager with weather-based suggestions, planning tools, and local-first privacy",
   "type": "module",
   "main": "electron/main.cjs",
@@ -26,6 +26,7 @@
   },
   "license": "AGPL-3.0",
   "dependencies": {
+    "@aetherAssembly/core": "^1.0.0",
     "electron-updater": "^6.6.2"
   },
   "devDependencies": {
@@ -41,6 +42,7 @@
   "allowScripts": {
     "electron@39.8.5": true,
     "esbuild@0.27.3": true,
-    "sharp@0.34.5": true
+    "sharp@0.34.5": true,
+    "electron-winstaller@5.4.0": true
   }
 }

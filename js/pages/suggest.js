@@ -11,7 +11,7 @@ function esc(t) {
 const CATEGORY_EMOJI = { top:'👕', bottom:'👖', outerwear:'🧥', shoes:'👟', accessory:'👜' };
 const OCCASIONS = ['casual', 'work', 'formal'];
 
-export function renderSuggest(container) {
+export async function renderSuggest(container) {
   const wrap = document.createElement('div');
   wrap.className = 'page-wrap';
 
@@ -149,7 +149,7 @@ export function renderSuggest(container) {
 
       const suggestion = engine.suggestForWeather({ tempC, windspeedKph, weatherCode });
       lastSuggestion = { suggestion, tempC, windspeedKph, displayName: display_name };
-      lastItems = store.getItems();
+      lastItems = await store.getItems();
 
       renderWeatherCard(results, tempC, windspeedKph, suggestion, display_name);
 

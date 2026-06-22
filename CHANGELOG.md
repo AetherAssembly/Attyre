@@ -5,7 +5,20 @@ All notable changes to Attyre will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Current Release
+## [4.2.0] - Unreleased
+
+### Added
+
+- **`@aetherAssembly/core` dependency:** wardrobe storage is now backed by `IDBAdapter` from the shared package, replacing the previous localStorage+LZString approach.
+- **IndexedDB storage:** `js/store.js` fully rewritten to use `IDBAdapter`. All item functions (`getItems`, `saveItems`, `addItem`, `updateItem`, `deleteItem`, `getItemById`, `incrementItemUsage`, `markItemClean`, `exportJSON`, `importJSON`) are now async. Settings, saved outfits, outfit dates, and item order remain in localStorage.
+- **LZString migration shim:** on first launch after upgrade, existing wardrobe data is read from localStorage, decompressed with LZString, imported into IndexedDB, and the `attyre_idb_migrated_v1` flag is set. No data loss on upgrade.
+- **`.npmrc`:** scopes `@aetherAssembly` to the GitHub Package Registry (`https://npm.pkg.github.com`).
+- **`CODEOWNERS`:** Aster owns all files by default; Milo (`@EvilLickCompany`) co-owns `docs/` and `.github/CONTRIBUTING.md`.
+- **`--ae-*` CSS token mappings:** `style.css` now maps Attyre's warm palette variables (`--gold`, `--bark`, `--stone`, `--ink`, etc.) to the `--ae-*` custom properties expected by `@aetherAssembly/ui` components.
+
+### Changed
+
+- **All page render functions are now async** (`renderHome`, `renderWardrobe`, `renderAddItem`, `renderItemDetail`, `renderSuggest`, `renderCalendar`, `renderSavedOutfits`, `renderStats`, `renderHistory`, `renderPacking`) to accommodate the async IDB store. `app.js` `renderPage()` awaits each render call before fading in and announcing to screen readers.
 
 ## [v4.1.0] - 2026-06-16
 

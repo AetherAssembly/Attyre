@@ -1,133 +1,124 @@
-// store.js - localStorage management for Attyre
+// store.js — wardrobe storage backed by IndexedDB via @aetherAssembly/core
+// Settings, saved outfits, outfit dates, and item order stay in localStorage (small data).
 
-const ITEMS_KEY = 'attyre_items';
-const DARK_MODE_KEY = 'attyre_dark_mode';
-const SAVED_OUTFITS_KEY = 'attyre_saved_outfits';
-const OUTFIT_DATES_KEY = 'attyre_outfit_dates';
-const ITEM_ORDER_KEY = 'attyre_item_order';
+import { IDBAdapter } from '@aetherAssembly/core';
 
-/**
- * Retrieves all items from storage, handling both compressed and uncompressed data.
- * @returns {Array<Object>} Array of items, or empty array on error
- */
-export function getItems() {
-  try {
-    const data = localStorage.getItem(ITEMS_KEY);
-    if (!data) return [];
-    const decompressed = LZString.decompress(data);
-    if (decompressed !== null) return JSON.parse(decompressed);
-    // Legacy path: data stored before compression was introduced
+const ITEMS_STORE = 'wardrobe-items';
+const DB_NAME = 'attyre';
+
+let _adapter = null;
+function getAdapter() {
+  if (!_adapter) _adapter = new IDBAdapter(DB_NAME, ITEMS_STORE);
+  return _adapter;
+}
+
+// For test injection only — do not call in production code.
+export function _setAdapterForTest(adapter) {
+  _adapter = adapter;
+  _initPromise = null;
+}
+
+// ── One-time migration from legacy LZString localStorage ────────────────────
+
+const MIGRATION_KEY = 'attyre_idb_migrated_v1';
+const LEGACY_ITEMS_KEY = 'attyre_items';
+
+async function migrateFromLocalStorage() {
+  if (typeof localStorage === 'undefined') return;
+  if (localStorage.getItem(MIGRATION_KEY)) return;
+
+  const raw = localStorage.getItem(LEGACY_ITEMS_KEY);
+  if (raw) {
     try {
-      return JSON.parse(data);
-    } catch {
-      console.error('Storage data is corrupted (neither compressed nor valid JSON). Items reset.');
-      return [];
+      let items;
+      if (typeof LZString !== 'undefined') {
+        const decompressed = LZString.decompress(raw);
+        items = decompressed ? JSON.parse(decompressed) : JSON.parse(raw);
+      } else {
+        items = JSON.parse(raw);
+      }
+      if (Array.isArray(items)) {
+        await Promise.all(items.map(item => getAdapter().set(item.id, item)));
+      }
+    } catch (e) {
+      console.error('[Attyre] Migration from localStorage failed:', e);
     }
-  } catch (e) {
-    console.error('Failed to get items from storage:', e);
-    return [];
+    localStorage.removeItem(LEGACY_ITEMS_KEY);
   }
+
+  localStorage.setItem(MIGRATION_KEY, '1');
 }
 
-/**
- * Saves items to storage with LZString compression.
- * @param {Array<Object>} items - Items to save
- * @throws {Error} If storage quota is exceeded
- */
-export function saveItems(items) {
-  try {
-    localStorage.setItem(ITEMS_KEY, LZString.compress(JSON.stringify(items)));
-  } catch (e) {
-    if (e.name === 'QuotaExceededError') {
-      const error = new Error('Storage quota exceeded. Please delete some items or clear your browser data.');
-      error.code = 'QUOTA_EXCEEDED';
-      throw error;
-    }
-    console.error('Failed to save items:', e);
-  }
+// Run migration once at module load; pages await initStore() before first use.
+let _initPromise = null;
+
+export function initStore() {
+  if (!_initPromise) _initPromise = migrateFromLocalStorage();
+  return _initPromise;
 }
 
-/**
- * Creates and saves a new item to storage.
- * @param {Object} itemData - Item data (id and createdAt are auto-generated)
- * @returns {Object} The created item with id and createdAt
- */
-export function addItem(itemData) {
-  const items = getItems();
+// ── Wardrobe items (IDB, async) ─────────────────────────────────────────────
+
+export async function getItems() {
+  await initStore();
+  const keys = await getAdapter().keys();
+  const items = await Promise.all(keys.map(k => getAdapter().get(k)));
+  return items.filter(Boolean);
+}
+
+export async function saveItems(items) {
+  await initStore();
+  await getAdapter().clear();
+  await Promise.all(items.map(item => getAdapter().set(item.id, item)));
+}
+
+export async function addItem(itemData) {
+  await initStore();
   const newItem = { id: crypto.randomUUID(), ...itemData, createdAt: new Date().toISOString() };
-  items.push(newItem);
-  saveItems(items);
+  await getAdapter().set(newItem.id, newItem);
   return newItem;
 }
 
-/**
- * Updates a specific item in storage.
- * @param {string} id - Item ID to update
- * @param {Object} changes - Partial item data to merge
- * @returns {Object|null} Updated item, or null if not found
- */
-export function updateItem(id, changes) {
-  const items = getItems();
-  const index = items.findIndex(item => item.id === id);
-  if (index === -1) return null;
-  items[index] = { ...items[index], ...changes };
-  saveItems(items);
-  return items[index];
+export async function updateItem(id, changes) {
+  await initStore();
+  const existing = await getAdapter().get(id);
+  if (!existing) return null;
+  const updated = { ...existing, ...changes };
+  await getAdapter().set(id, updated);
+  return updated;
 }
 
-/**
- * Increments the usage counter for an item and marks it as worn today (dirty).
- * @param {string} id - Item ID
- */
-export function incrementItemUsage(id) {
-  const item = getItemById(id);
+export async function deleteItem(id) {
+  await initStore();
+  await getAdapter().delete(id);
+}
+
+export async function getItemById(id) {
+  await initStore();
+  return getAdapter().get(id);
+}
+
+export async function incrementItemUsage(id) {
+  await initStore();
+  const item = await getItemById(id);
   if (item) {
     const today = new Date().toISOString().slice(0, 10);
-    updateItem(id, { usage: (item.usage || 0) + 1, lastWorn: today, laundryStatus: 'dirty' });
+    await updateItem(id, { usage: (item.usage || 0) + 1, lastWorn: today, laundryStatus: 'dirty' });
   }
 }
 
-/**
- * Sets an item's laundry status to clean.
- * @param {string} id - Item ID
- */
-export function markItemClean(id) {
-  updateItem(id, { laundryStatus: 'clean' });
+export async function markItemClean(id) {
+  return updateItem(id, { laundryStatus: 'clean' });
 }
 
-/**
- * Deletes an item from storage.
- * @param {string} id - Item ID to delete
- */
-export function deleteItem(id) {
-  const items = getItems();
-  saveItems(items.filter(item => item.id !== id));
+export async function exportJSON() {
+  const items = await getItems();
+  return JSON.stringify(items, null, 2);
 }
 
-/**
- * Retrieves a single item by ID.
- * @param {string} id - Item ID to find
- * @returns {Object|null}
- */
-export function getItemById(id) {
-  return getItems().find(item => item.id === id) || null;
-}
-
-/**
- * Exports all items as a JSON string.
- */
-export function exportJSON() {
-  return JSON.stringify(getItems(), null, 2);
-}
-
-/**
- * Imports items from a JSON string, replacing existing items.
- * @param {string} jsonString
- * @returns {number} Count of imported items
- */
 const VALID_CATEGORIES = ['top', 'bottom', 'outerwear', 'shoes', 'accessory'];
 
-export function importJSON(jsonString) {
+export async function importJSON(jsonString) {
   let parsed;
   try { parsed = JSON.parse(jsonString); } catch (e) { throw new Error('Invalid JSON format'); }
   if (!Array.isArray(parsed)) throw new Error('Import data must be an array of items');
@@ -138,18 +129,23 @@ export function importJSON(jsonString) {
     if (!item.category || !VALID_CATEGORIES.includes(item.category)) throw new Error(`Item ${i}: category must be one of ${VALID_CATEGORIES.join(', ')}`);
     if (!item.createdAt || typeof item.createdAt !== 'string') throw new Error(`Item ${i}: missing or invalid createdAt timestamp`);
   }
-  saveItems(parsed);
+  await saveItems(parsed);
   return parsed.length;
 }
 
+// ── Settings (localStorage, sync) ──────────────────────────────────────────
+
+const DARK_MODE_KEY = 'attyre_dark_mode';
+const ACCESSIBILITY_KEY = 'attyre_accessibility';
+
 export function isDarkMode() { return localStorage.getItem(DARK_MODE_KEY) === 'true'; }
 export function setDarkMode(bool) { localStorage.setItem(DARK_MODE_KEY, bool ? 'true' : 'false'); }
-
-const ACCESSIBILITY_KEY = 'attyre_accessibility';
 export function isAccessibilityMode() { return localStorage.getItem(ACCESSIBILITY_KEY) === 'true'; }
 export function setAccessibilityMode(bool) { localStorage.setItem(ACCESSIBILITY_KEY, bool ? 'true' : 'false'); }
 
-// Saved outfits
+// ── Saved outfits (localStorage, sync) ─────────────────────────────────────
+
+const SAVED_OUTFITS_KEY = 'attyre_saved_outfits';
 
 export function getSavedOutfits() {
   try {
@@ -184,7 +180,9 @@ export function deleteSavedOutfit(id) {
   }
 }
 
-// Outfit dates (calendar)
+// ── Outfit dates / calendar (localStorage, sync) ────────────────────────────
+
+const OUTFIT_DATES_KEY = 'attyre_outfit_dates';
 
 export function getOutfitDates() {
   try {
@@ -207,10 +205,6 @@ export function saveOutfitDate(date, itemIds) {
   }
 }
 
-/**
- * Deletes the outfit assignment for a specific date.
- * @param {string} date - Date string in YYYY-MM-DD format
- */
 export function deleteOutfitDate(date) {
   const dates = getOutfitDates();
   delete dates[date];
@@ -226,7 +220,9 @@ export function getOutfitForDate(date) {
   return getOutfitDates()[date] || null;
 }
 
-// Item ordering (manual drag-and-drop order)
+// ── Item order (localStorage, sync) ─────────────────────────────────────────
+
+const ITEM_ORDER_KEY = 'attyre_item_order';
 
 export function getItemOrder() {
   try {
