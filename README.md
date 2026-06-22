@@ -12,17 +12,17 @@
 [![macOS](https://img.shields.io/badge/macOS-DMG-000000?logo=apple&logoColor=white)](https://github.com/AetherAssembly/Attyre/releases)
 [![Wiki](https://img.shields.io/badge/wiki-documentation-555555?logo=github&logoColor=white)](https://aetherassembly.org/wiki/attyre)
 
-Manage your wardrobe, get weather-based outfit suggestions, and plan what to wear — all offline, no account required, all data stays on your device.
+Attyre is a desktop app that helps you manage your wardrobe and decide what to wear based on the actual weather. It works completely offline — no account, no cloud sync, no tracking. Your data lives on your device and nowhere else.
 
 ---
 
 ## Features
 
-- **Wardrobe management** — add items with category, color, warmth, seasons, occasions, weather tags, notes, and an optional photo
+- **Wardrobe management** — add items with category, color, warmth, seasons, occasions, weather tags, and an optional photo
 - **Weather-based suggestions** — enter any city to get ranked outfit picks based on live temperature and conditions
-- **Outfit planning** — calendar view to assign outfits to specific dates; usage counts update automatically
+- **Outfit planning** — calendar view to assign outfits to specific dates; wear counts update automatically
 - **Saved outfits** — name and save combinations to reuse later
-- **Stats dashboard** — total wears, most worn, never worn, breakdowns by category, season, warmth, and occasion
+- **Stats dashboard** — total wears, most worn, never worn, and breakdowns by category, season, warmth, and occasion
 - **Wardrobe filters** — search by name or color, filter by category, season, or weather tags
 - **Image cropping** — built-in crop tool when adding or editing item photos
 - **Dark mode and accessibility mode** — colorblind-friendly palette, larger text, stronger borders
@@ -33,76 +33,54 @@ Manage your wardrobe, get weather-based outfit suggestions, and plan what to wea
 
 ## Download
 
-Grab the latest build from the [Releases](https://github.com/AetherAssembly/Attyre/releases) page.
+Grab the latest release from the [Releases](https://github.com/AetherAssembly/Attyre/releases) page.
 
-| Platform | Formats |
-| --- | --- |
-| Linux (x86_64) | AppImage · `.deb` (Debian/Ubuntu) · `.rpm` (Fedora/RHEL/openSUSE) |
-| Windows | NSIS installer |
-| macOS | DMG |
-
----
-
-## Windows
+### Windows
 
 Run the NSIS installer (`Attyre-4.2.0-Setup.exe`) and follow the prompts.
 
-> Attyre is not signed with a Microsoft certificate. Windows SmartScreen may show a warning. Click **More info** → **Run anyway** to proceed.
+> Attyre is not signed with a Microsoft certificate. Windows SmartScreen may show a warning — click **More info** then **Run anyway** to proceed.
 
-### Uninstall
-
-Go to **Settings → Apps**, find Attyre, and uninstall from there.
+To uninstall: **Settings → Apps**, find Attyre, and remove it from there.
 
 ---
 
-## macOS
+### macOS
 
-Open the DMG, drag Attyre to your Applications folder, and launch it.
+Open the DMG, drag Attyre to your Applications folder, and try to launch it. macOS will block it because the app is unsigned.
 
-> Attyre is not notarized. macOS Gatekeeper will block the first launch. Right-click the app → **Open** → **Open** to allow it. You only need to do this once.
+To allow it, open **System Settings → Privacy & Security**, scroll down to the blocked app, and click **Open Anyway**. You only need to do this once.
+
+Alternatively, run this in Terminal:
+
+```bash
+xattr -d com.apple.quarantine /Applications/Attyre.app
+```
 
 ---
 
-## Linux
+### Linux
+
+Three formats are available for x86_64: **AppImage**, **.deb** (Debian/Ubuntu), and **.rpm** (Fedora/RHEL/openSUSE).
 
 > To run AppImages easily, try [Gear Lever](https://github.com/mijorus/gearlever) (GNOME) or [Shelly](https://shellyalpm.com/) (CachyOS).
 
-### Debian / Ubuntu
-
+**Debian / Ubuntu**
 ```bash
 sudo apt install ./Attyre_4.2.0_amd64.deb
+sudo apt remove attyre        # to uninstall
 ```
 
-> Using `apt install ./` rather than `dpkg -i` ensures apt resolves any missing dependencies automatically.
-
-#### Uninstall
-
-```bash
-sudo apt remove attyre
-```
-
-### Fedora / RHEL / Rocky / Alma
-
+**Fedora / RHEL / Rocky / Alma**
 ```bash
 sudo dnf install ./Attyre-4.2.0-1.x86_64.rpm
+sudo dnf remove attyre        # to uninstall
 ```
 
-#### Uninstall
-
-```bash
-sudo dnf remove attyre
-```
-
-### openSUSE
-
+**openSUSE**
 ```bash
 sudo zypper install ./Attyre-4.2.0-1.x86_64.rpm
-```
-
-#### Uninstall
-
-```bash
-sudo zypper remove attyre
+sudo zypper remove attyre     # to uninstall
 ```
 
 ---
@@ -111,7 +89,7 @@ sudo zypper remove attyre
 
 ### Prerequisites
 
-- Node.js 18+ and npm
+Node.js 18+ and npm.
 
 ### Setup
 
@@ -123,34 +101,40 @@ npm install
 
 ### Run
 
-**Browser (Vite dev server):**
-
 ```bash
-npm run dev
-```
-
-App available at `http://localhost:1420`.
-
-**Desktop (Electron):**
-
-```bash
-npm run electron:dev
+npm run dev            # Vite dev server at http://localhost:1420
+npm run electron:dev   # Full desktop app (Vite + Electron together)
 ```
 
 ### Build
 
 ```bash
-npm run build           # Vite only (frontend) → dist/
+npm run build           # Vite frontend only → dist/
 npm run electron:build  # Full desktop build → release/
 ```
 
 Release builds for all platforms are handled automatically by GitHub Actions when a version tag is pushed.
 
+### Tests
+
+```bash
+npm test          # Unit tests
+npm run lint:css  # CSS class regression check
+```
+
 ---
 
 ## Privacy
 
-All data is stored locally on your device in the OS app data directory. Nothing is sent to any server except optional weather lookups (city name only) to [OpenStreetMap Nominatim](https://nominatim.openstreetmap.org) and [Open-Meteo](https://open-meteo.com), which you trigger explicitly. See [PRIVACY.md](PRIVACY.md).
+All your data stays on your device. The only outbound requests Attyre ever makes are optional weather lookups (city name only) to [OpenStreetMap Nominatim](https://nominatim.openstreetmap.org) and [Open-Meteo](https://open-meteo.com) when you use the Suggest or Pack features. No telemetry, no analytics, no accounts.
+
+See [PRIVACY.md](PRIVACY.md) for the full policy.
+
+---
+
+## Contributing
+
+Contributions are welcome. See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for setup instructions, branching conventions, and the PR checklist.
 
 ---
 
