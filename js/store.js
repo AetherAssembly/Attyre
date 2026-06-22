@@ -103,22 +103,52 @@ export async function incrementItemUsage(id) {
   const item = await getItemById(id);
   if (item) {
     const today = new Date().toISOString().slice(0, 10);
-    await updateItem(id, { usage: (item.usage || 0) + 1, lastWorn: today, laundryStatus: 'dirty' });
+    updateItem(id, { usage: (item.usage || 0) + 1, lastWorn: today, laundryStatus: 'dirty' });
   }
 }
 
-export async function markItemClean(id) {
-  return updateItem(id, { laundryStatus: 'clean' });
+
+/**
+ * Sets an item's laundry status to clean.
+ * @param {string} id - Item ID
+ */
+export function markItemClean(id) {
+  updateItem(id, { laundryStatus: 'clean' });
 }
 
-export async function exportJSON() {
-  const items = await getItems();
-  return JSON.stringify(items, null, 2);
+/**
+ * Deletes an item from storage.
+ * @param {string} id - Item ID to delete
+ */
+export function deleteItem(id) {
+  const items = getItems();
+  saveItems(items.filter(item => item.id !== id));
 }
 
+/**
+ * Retrieves a single item by ID.
+ * @param {string} id - Item ID to find
+ * @returns {Object|null}
+ */
+export function getItemById(id) {
+  return getItems().find(item => item.id === id) || null;
+}
+
+/**
+ * Exports all items as a JSON string.
+ */
+export function exportJSON() {
+  return JSON.stringify(getItems(), null, 2);
+}
+
+/**
+ * Imports items from a JSON string, replacing existing items.
+ * @param {string} jsonString
+ * @returns {number} Count of imported items
+ */
 const VALID_CATEGORIES = ['top', 'bottom', 'outerwear', 'shoes', 'accessory'];
 
-export async function importJSON(jsonString) {
+export function importJSON(jsonString) {
   let parsed;
   try { parsed = JSON.parse(jsonString); } catch (e) { throw new Error('Invalid JSON format'); }
   if (!Array.isArray(parsed)) throw new Error('Import data must be an array of items');
@@ -129,23 +159,18 @@ export async function importJSON(jsonString) {
     if (!item.category || !VALID_CATEGORIES.includes(item.category)) throw new Error(`Item ${i}: category must be one of ${VALID_CATEGORIES.join(', ')}`);
     if (!item.createdAt || typeof item.createdAt !== 'string') throw new Error(`Item ${i}: missing or invalid createdAt timestamp`);
   }
-  await saveItems(parsed);
+  saveItems(parsed);
   return parsed.length;
 }
 
-// ── Settings (localStorage, sync) ──────────────────────────────────────────
-
-const DARK_MODE_KEY = 'attyre_dark_mode';
-const ACCESSIBILITY_KEY = 'attyre_accessibility';
-
 export function isDarkMode() { return localStorage.getItem(DARK_MODE_KEY) === 'true'; }
 export function setDarkMode(bool) { localStorage.setItem(DARK_MODE_KEY, bool ? 'true' : 'false'); }
+
+const ACCESSIBILITY_KEY = 'attyre_accessibility';
 export function isAccessibilityMode() { return localStorage.getItem(ACCESSIBILITY_KEY) === 'true'; }
 export function setAccessibilityMode(bool) { localStorage.setItem(ACCESSIBILITY_KEY, bool ? 'true' : 'false'); }
 
-// ── Saved outfits (localStorage, sync) ─────────────────────────────────────
-
-const SAVED_OUTFITS_KEY = 'attyre_saved_outfits';
+// Saved outfits
 
 export function getSavedOutfits() {
   try {
@@ -180,9 +205,7 @@ export function deleteSavedOutfit(id) {
   }
 }
 
-// ── Outfit dates / calendar (localStorage, sync) ────────────────────────────
-
-const OUTFIT_DATES_KEY = 'attyre_outfit_dates';
+// Outfit dates (calendar)
 
 export function getOutfitDates() {
   try {
@@ -205,6 +228,10 @@ export function saveOutfitDate(date, itemIds) {
   }
 }
 
+/**
+ * Deletes the outfit assignment for a specific date.
+ * @param {string} date - Date string in YYYY-MM-DD format
+ */
 export function deleteOutfitDate(date) {
   const dates = getOutfitDates();
   delete dates[date];
@@ -220,9 +247,7 @@ export function getOutfitForDate(date) {
   return getOutfitDates()[date] || null;
 }
 
-// ── Item order (localStorage, sync) ─────────────────────────────────────────
-
-const ITEM_ORDER_KEY = 'attyre_item_order';
+// Item ordering (manual drag-and-drop order)
 
 export function getItemOrder() {
   try {
