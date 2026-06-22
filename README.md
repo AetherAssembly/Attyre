@@ -18,16 +18,16 @@ Attyre is a desktop app that helps you manage your wardrobe and decide what to w
 
 ## Features
 
-- **Wardrobe management** — add items with category, color, warmth, seasons, occasions, weather tags, and an optional photo
-- **Weather-based suggestions** — enter any city to get ranked outfit picks based on live temperature and conditions
-- **Outfit planning** — calendar view to assign outfits to specific dates; wear counts update automatically
-- **Saved outfits** — name and save combinations to reuse later
-- **Stats dashboard** — total wears, most worn, never worn, and breakdowns by category, season, warmth, and occasion
-- **Wardrobe filters** — search by name or color, filter by category, season, or weather tags
-- **Image cropping** — built-in crop tool when adding or editing item photos
-- **Dark mode and accessibility mode** — colorblind-friendly palette, larger text, stronger borders
-- **Backup and restore** — export your wardrobe as JSON; import merges with existing items
-- **Fully offline** — no account, no backend, no tracking
+- **Wardrobe management:** add items with category, color, warmth, seasons, occasions, weather tags, and an optional photo
+- **Weather-based suggestions:** enter any city to get ranked outfit picks based on live temperature and conditions
+- **Outfit planning:** calendar view to assign outfits to specific dates; wear counts update automatically
+- **Saved outfits:** name and save combinations to reuse later
+- **Stats dashboard:** total wears, most worn, never worn, and breakdowns by category, season, warmth, and occasion
+- **Wardrobe filters:** search by name or color, filter by category, season, or weather tags
+- **Image cropping:** built-in crop tool when adding or editing item photos
+- **Dark mode and accessibility mode:** colorblind-friendly palette, larger text, stronger borders
+- **Backup and restore:** export your wardrobe as JSON; import merges with existing items
+- **Fully offline:** no account, no backend, no tracking
 
 ---
 
