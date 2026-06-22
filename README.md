@@ -5,7 +5,7 @@
 [![Version](https://img.shields.io/badge/version-v4.2.0-C9A96E)](CHANGELOG.md)
 [![License: AGPL v3](https://img.shields.io/badge/license-AGPL--3.0-blue)](LICENSE)
 [![Privacy Policy](https://img.shields.io/badge/privacy-policy-16a34a)](PRIVACY.md)
-[![Electron](https://img.shields.io/badge/electron-39-47848F?logo=electron&logoColor=white)](https://www.electronjs.org/)
+[![Electron](https://img.shields.io/badge/electron-42-47848F?logo=electron&logoColor=white)](https://www.electronjs.org/)
 
 [![Linux](https://img.shields.io/badge/Linux-AppImage%20%C2%B7%20.deb%20%C2%B7%20.rpm-FCC624?logo=linux&logoColor=black)](https://github.com/AetherAssembly/Attyre/releases)
 [![Windows](https://img.shields.io/badge/Windows-NSIS-0078D4?logo=windows&logoColor=white)](https://github.com/AetherAssembly/Attyre/releases)
