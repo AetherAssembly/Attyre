@@ -5,19 +5,20 @@ import { updateAccessibilityMode, updateDarkMode, APP_VERSION } from '../app.js'
 import { isElectron, openLink } from '../electron-bridge.js';
 
 
-export function renderSettings(container) {
+export async function renderSettings(container) {
   try {
-    _renderSettings(container);
+    await _renderSettings(container);
   } catch (err) {
     console.error('renderSettings failed:', err);
     container.innerHTML = `<div class="page-wrap"><div class="alert alert-warning" style="margin-top:2rem"><span class="alert-icon">⚠</span><span>Settings failed to load. <a href="#/">Go home</a></span></div></div>`;
   }
 }
 
-function _renderSettings(container) {
+async function _renderSettings(container) {
   const isAccessibility = store.isAccessibilityMode();
   const isDarkMode = store.isDarkMode();
-  const itemCount = store.getItems().length;
+  const items = await store.getItems();
+  const itemCount = items.length;
 
   const wrap = document.createElement('div');
   wrap.className = 'page-wrap';
@@ -203,8 +204,8 @@ function _renderSettings(container) {
   // Export
   const exportBtn = wrap.querySelector('#export-btn');
   const downloadLink = wrap.querySelector('#download-link');
-  exportBtn.addEventListener('click', () => {
-    const json = store.exportJSON();
+  exportBtn.addEventListener('click', async () => {
+    const json = await store.exportJSON();
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     downloadLink.href = url;
@@ -226,9 +227,9 @@ function _renderSettings(container) {
     if (importLabel) importLabel.textContent = file ? file.name : 'Choose file…';
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = e => {
+    reader.onload = async e => {
       try {
-        const count = store.importJSON(e.target.result);
+        const count = await store.importJSON(e.target.result);
         importSuccess.textContent = `Imported ${count} item${count !== 1 ? 's' : ''} successfully.`;
         setTimeout(() => { window.location.hash = '#/wardrobe'; }, 1000);
       } catch (err) {

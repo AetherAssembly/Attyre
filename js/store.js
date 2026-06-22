@@ -5,6 +5,10 @@ import { IDBAdapter } from '@aetherAssembly/core';
 
 const ITEMS_STORE = 'wardrobe-items';
 const DB_NAME = 'attyre';
+const DARK_MODE_KEY = 'attyre_dark_mode';
+const SAVED_OUTFITS_KEY = 'attyre_saved_outfits';
+const OUTFIT_DATES_KEY = 'attyre_outfit_dates';
+const ITEM_ORDER_KEY = 'attyre_item_order';
 
 let _adapter = null;
 function getAdapter() {
@@ -103,42 +107,24 @@ export async function incrementItemUsage(id) {
   const item = await getItemById(id);
   if (item) {
     const today = new Date().toISOString().slice(0, 10);
-    updateItem(id, { usage: (item.usage || 0) + 1, lastWorn: today, laundryStatus: 'dirty' });
+    await updateItem(id, { usage: (item.usage || 0) + 1, lastWorn: today, laundryStatus: 'dirty' });
   }
 }
-
 
 /**
  * Sets an item's laundry status to clean.
  * @param {string} id - Item ID
  */
-export function markItemClean(id) {
-  updateItem(id, { laundryStatus: 'clean' });
-}
-
-/**
- * Deletes an item from storage.
- * @param {string} id - Item ID to delete
- */
-export function deleteItem(id) {
-  const items = getItems();
-  saveItems(items.filter(item => item.id !== id));
-}
-
-/**
- * Retrieves a single item by ID.
- * @param {string} id - Item ID to find
- * @returns {Object|null}
- */
-export function getItemById(id) {
-  return getItems().find(item => item.id === id) || null;
+export async function markItemClean(id) {
+  await updateItem(id, { laundryStatus: 'clean' });
 }
 
 /**
  * Exports all items as a JSON string.
  */
-export function exportJSON() {
-  return JSON.stringify(getItems(), null, 2);
+export async function exportJSON() {
+  const items = await getItems();
+  return JSON.stringify(items, null, 2);
 }
 
 /**
@@ -148,7 +134,7 @@ export function exportJSON() {
  */
 const VALID_CATEGORIES = ['top', 'bottom', 'outerwear', 'shoes', 'accessory'];
 
-export function importJSON(jsonString) {
+export async function importJSON(jsonString) {
   let parsed;
   try { parsed = JSON.parse(jsonString); } catch (e) { throw new Error('Invalid JSON format'); }
   if (!Array.isArray(parsed)) throw new Error('Import data must be an array of items');
@@ -159,7 +145,7 @@ export function importJSON(jsonString) {
     if (!item.category || !VALID_CATEGORIES.includes(item.category)) throw new Error(`Item ${i}: category must be one of ${VALID_CATEGORIES.join(', ')}`);
     if (!item.createdAt || typeof item.createdAt !== 'string') throw new Error(`Item ${i}: missing or invalid createdAt timestamp`);
   }
-  saveItems(parsed);
+  await saveItems(parsed);
   return parsed.length;
 }
 
