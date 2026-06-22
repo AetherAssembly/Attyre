@@ -23,6 +23,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          registry-url: 'https://npm.pkg.github.com'
 
       - name: Install
         run: npm ci
@@ -60,6 +61,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          registry-url: 'https://npm.pkg.github.com'
 
       - name: Install
         run: npm ci
