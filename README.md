@@ -2,7 +2,7 @@
 
 > Your wardrobe, weather-aware.
 
-[![Version](https://img.shields.io/badge/version-v4.2.0-C9A96E)](CHANGELOG.md)
+[![Version](https://img.shields.io/github/v/release/AetherAssembly/Attyre?color=C9A96E&label=version)](https://github.com/AetherAssembly/Attyre/releases/latest)
 [![License: AGPL v3](https://img.shields.io/badge/license-AGPL--3.0-blue)](LICENSE)
 [![Privacy Policy](https://img.shields.io/badge/privacy-policy-16a34a)](PRIVACY.md)
 [![Electron](https://img.shields.io/badge/electron-42-47848F?logo=electron&logoColor=white)](https://www.electronjs.org/)
@@ -37,7 +37,7 @@ Grab the latest release from the [Releases](https://github.com/AetherAssembly/At
 
 ### Windows
 
-Run the NSIS installer (`Attyre-4.2.0-Setup.exe`) and follow the prompts.
+Run the NSIS installer (`Attyre-4.2.1-Setup.exe`) and follow the prompts.
 
 > Attyre is not signed with a Microsoft certificate. Windows SmartScreen may show a warning — click **More info** then **Run anyway** to proceed.
 
@@ -61,35 +61,46 @@ xattr -d com.apple.quarantine /Applications/Attyre.app
 
 ### Linux
 
-Three formats are available for x86_64: **AppImage**, **.deb** (Debian/Ubuntu), and **.rpm** (Fedora/RHEL/openSUSE).
+Three formats are available for x86_64: **AppImage**, **.deb** (Debian/Ubuntu), and **.rpm** (Fedora/openSUSE).
 
 > To run AppImages easily, try [Gear Lever](https://github.com/mijorus/gearlever) (GNOME) or [Shelly](https://shellyalpm.com/) (CachyOS).
 
 **Debian / Ubuntu**
+
 ```bash
-sudo apt install ./Attyre_4.2.0_amd64.deb
+sudo apt install ./Attyre_4.2.1_amd64.deb
 sudo apt remove attyre        # to uninstall
 ```
 
-**Fedora / RHEL / Rocky / Alma**
+**Fedora / Rocky / Alma**
+
 ```bash
-sudo dnf install ./Attyre-4.2.0-1.x86_64.rpm
+sudo dnf install ./Attyre-4.2.1-1.x86_64.rpm
 sudo dnf remove attyre        # to uninstall
 ```
 
 **openSUSE**
+
 ```bash
-sudo zypper install ./Attyre-4.2.0-1.x86_64.rpm
+sudo zypper install ./Attyre-4.2.1-1.x86_64.rpm
 sudo zypper remove attyre     # to uninstall
 ```
 
 ---
 
-## Development
+## Development / Build From Source
 
 ### Prerequisites
 
 Node.js 18+ and npm.
+
+> **Note:** `npm install` requires a GitHub personal access token with `read:packages` scope to pull the private `@aetherAssembly/core` package from GitHub Packages. Set it before installing:
+>
+> ```bash
+> export NODE_AUTH_TOKEN=your_token_here
+> ```
+>
+> You can create a token at **GitHub → Settings → Developer settings → Personal access tokens**.
 
 ### Setup
 

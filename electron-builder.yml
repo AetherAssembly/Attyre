@@ -21,6 +21,8 @@ linux:
     - AppImage
     - deb
   icon: build/icons/256x256.png
+  category: Utility
+  syncDesktopName: true
 
 win:
   target:

@@ -16,7 +16,7 @@ import { renderPacking } from './pages/packing.js';
 import { renderPrivacy } from './pages/privacy.js';
 
 const app = document.getElementById('app');
-export const APP_VERSION = '4.2.0';
+export const APP_VERSION = '4.2.1';
 
 // ── Screen reader announcer ───────────────────────────────
 

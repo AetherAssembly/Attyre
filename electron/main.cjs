@@ -1,5 +1,5 @@
 'use strict';
-const { app, BrowserWindow, ipcMain, protocol } = require('electron');
+const { app, BrowserWindow, ipcMain, protocol, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -24,6 +24,19 @@ function createWindow() {
       contextIsolation: true,
       nodeIntegration: false,
     },
+  });
+
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: 'deny' };
+  });
+
+  win.webContents.on('will-navigate', (event, url) => {
+    const base = isDev ? 'http://localhost:1420' : 'file://';
+    if (!url.startsWith(base)) {
+      event.preventDefault();
+      shell.openExternal(url);
+    }
   });
 
   if (isDev) {
@@ -81,6 +94,8 @@ app.whenReady().then(() => {
     }
   }
 });
+
+ipcMain.handle('open-link', (_event, url) => shell.openExternal(url));
 
 ipcMain.handle('get-app-data-path', () => app.getPath('userData'));
 

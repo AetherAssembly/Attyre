@@ -5,6 +5,19 @@ All notable changes to Attyre will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.1] - Unreleased
+
+### Fixed
+
+- **External links open in system browser:** clicking wiki, GitHub, about, and support links no longer opens a second Electron window. `setWindowOpenHandler` and a `will-navigate` guard in the main process now route all external URLs through `shell.openExternal()`.
+- **Link buttons unresponsive in packaged builds:** `shell.openExternal()` was called directly from the preload, which is unreliable in AppImage/deb/rpm environments. Moved to an `open-link` IPC handler in the main process; the preload now uses `ipcRenderer.invoke('open-link', url)`.
+
+### Changed
+
+- **Linux desktop integration:** `desktopName` set to `org.aetherassembly.attyre` in `package.json` and `syncDesktopName: true` added to `electron-builder.yml` so desktop environments correctly associate running windows with the `.desktop` entry. `linux.category` explicitly set to `Utility`.
+
+---
+
 ## [4.2.0] - 2026-06-22
 
 ### Added
@@ -97,8 +110,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumped `vite` from 8.0.14 to 8.0.16
 - Bumped `wrangler` from 4.94.0 to 4.96.0
 - Adjusted all Attyre versions to v3.0.1
-
-## Prior Releases
 
 ## [v3.0.0] - 2026-05-30
 
