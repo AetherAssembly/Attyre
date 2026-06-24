@@ -11,6 +11,7 @@
 [![Windows](https://img.shields.io/badge/Windows-NSIS-0078D4?logo=windows&logoColor=white)](https://github.com/AetherAssembly/Attyre/releases)
 [![macOS](https://img.shields.io/badge/macOS-DMG-000000?logo=apple&logoColor=white)](https://github.com/AetherAssembly/Attyre/releases)
 [![Wiki](https://img.shields.io/badge/wiki-documentation-555555?logo=github&logoColor=white)](https://aetherassembly.org/wiki/attyre)
+[![GitLab Mirror](https://img.shields.io/badge/mirror-GitLab-FC6D26?logo=gitlab&logoColor=white)](https://gitlab.com/Aster1630/Attyre)
 
 Attyre is a desktop app that helps you manage your wardrobe and decide what to wear based on the actual weather. It works completely offline — no account, no cloud sync, no tracking. Your data lives on your device and nowhere else.
 
