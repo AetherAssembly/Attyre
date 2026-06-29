@@ -31,9 +31,9 @@
   },
   "devDependencies": {
     "concurrently": "^10.0.3",
-    "electron": "^42.4.1",
+    "electron": "^42.5.0",
     "electron-builder": "^26.15.3",
-    "vite": "^8.0.16"
+    "vite": "^8.1.0"
   },
   "overrides": {
     "tar": "^7.5.16",
